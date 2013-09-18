@@ -21,6 +21,8 @@ namespace UMLDesigner.ViewModel
         /// </summary>
         public MainViewModel()
         {
+
+            //Testkode
             ////if (IsInDesignMode)
             ////{
             ////    // Code runs in Blend --> create design time data.
