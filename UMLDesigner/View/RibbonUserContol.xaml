@@ -41,6 +41,7 @@
                     <RibbonButton LargeImageSource="..\Images\paste.png" Label="Paste" KeyTip="V"/>
                     <RibbonButton LargeImageSource="..\Images\copy.png" Label="Copy" KeyTip="C" />
                     <RibbonButton SmallImageSource="..\Images\cut.png" Label="Cut" KeyTip="X" />
+                    <RibbonButton SmallImageSource="..\Images\save.png" Label="Delete" KeyTip="D" />
                 </RibbonGroup>
             </RibbonTab>
             <!-- Ribbon Tab #2: -->
@@ -54,8 +55,6 @@
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Association" />
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Composition" />
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Generalization" />
-
-
                 </RibbonGroup>
             </RibbonTab>
             <!-- Ribbon Tab #3: -->

@@ -4,8 +4,8 @@
         xmlns:View="clr-namespace:UMLDesigner.View"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
         Title="MainWindow" Height="400" Width="525">
-
-    <DockPanel>
+    <Grid>
+        <DockPanel>
         <View:RibbonUserContol DockPanel.Dock="Top"/>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
@@ -15,4 +15,5 @@
         <Canvas>
         </Canvas>
     </DockPanel>
+    </Grid>
 </Window>
