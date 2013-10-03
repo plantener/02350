@@ -1,35 +1,29 @@
 using GalaSoft.MvvmLight;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
+using UMLDesigner.Model;
 
 namespace UMLDesigner.ViewModel
 {
-    /// <summary>
-    /// This class contains properties that the main View can data bind to.
-    /// <para>
-    /// Use the <strong>mvvminpc</strong> snippet to add bindable properties to this ViewModel.
-    /// </para>
-    /// <para>
-    /// You can also use Blend to data bind with the tool's support.
-    /// </para>
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
-    /// </summary>
+ 
     public class MainViewModel : ViewModelBase
     {
-        /// <summary>
-        /// Initializes a new instance of the MainViewModel class.
-        /// </summary>
+        public ObservableCollection<Class> Classes { get; set; }
+
+        // Kommandoer som UI bindes til.
+        public ICommand AddClassCommand { get; private set; }
+
+
         public MainViewModel()
         {
 
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
+            // Her fyldes listen af classes med to classes. Her benyttes et alternativ til konstruktorer med syntaksen 'new Type(){ Attribut = Værdi }'
+            // Det der sker er at der først laves et nyt object og så sættes objektets attributer til de givne værdier.
+            Classes = new ObservableCollection<Class>()
+            { 
+                new Class() { ClassName = "TestClass", X = 30, Y = 40, Attributes = {"Hej","Test"}, Methods = {"Vi","tester","mere"}, Properties={"properties"}},
+                new Class() { ClassName = "TestClass", X = 140, Y = 230, Methods = {"Endnu", "En", "test"}, Attributes = {"Attribut"}, Properties= {"properties", "her"}} 
+            };
         }
     }
 }
