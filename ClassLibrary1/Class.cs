@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace UMLDesigner.Model
 {
-    public class Class : NotifyBase
+    public class Class : ViewModelBase
     {
         private int x;
         public int X
         {
             get { return x; }
-            set { x = value; NotifyPropertyChanged("X"); }
+            set { x = value;  RaisePropertyChanged(() => X);}
         }
         private int y;
         public int Y
         {
             get { return y; }
-            set { y = value; NotifyPropertyChanged("Y"); }
+            set { y = value; RaisePropertyChanged(() => Y); }
         }
 
         //Height and Width are not binded to currently, in order for the control to autoexpand. We might need it in the future.
@@ -27,14 +28,14 @@ namespace UMLDesigner.Model
         public int Width
         {
             get { return width; }
-            set { width = value; NotifyPropertyChanged("Width"); }
+            set { width = value; RaisePropertyChanged(() => Width); }
         }
 
         private int height;
         public int Height
         {
             get { return height; }
-            set { height = value; NotifyPropertyChanged("Height"); }
+            set { height = value; RaisePropertyChanged(() => Height); }
         }
 
         private String className;
@@ -58,7 +59,7 @@ namespace UMLDesigner.Model
             Properties = new ObservableCollection<String>();
             Methods = new ObservableCollection<String>();
 
-            X = Y = 70;
+            X = Y = 0;
            // Width = Height = 100;
         }  
     }  
