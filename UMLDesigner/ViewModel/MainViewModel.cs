@@ -19,12 +19,6 @@ namespace UMLDesigner.ViewModel
 
         public MainViewModel()
         {
-
-        AddClassCommand = new RelayCommand(AddClass);
-
-       
-
-
             // Her fyldes listen af classes med to classes. Her benyttes et alternativ til konstruktorer med syntaksen 'new Type(){ Attribut = Værdi }'
             // Det der sker er at der først laves et nyt object og så sættes objektets attributer til de givne værdier.
             Classes = new ObservableCollection<Class>()
@@ -33,11 +27,17 @@ namespace UMLDesigner.ViewModel
                 new Class() { ClassName = "TestClass", X = 140, Y = 230, Methods = {"Endnu", "En", "test"}, Attributes = {"Attribut"}, Properties= {"properties", "her"}},
                 new Class() { ClassName = "NewClass", Attributes = {"Attributtest", "Attributtest2"}, Methods = { "MethodTest", "MethodTest2"}, Properties = {"PropertiesTest", "ProperTiesTest2"}}
             };
+
+            AddClassCommand = new AddClassCommand(Classes);
+
+
+            
+            
         }
 
-        public void AddClass()
-        {
-            Classes.Add(new Class() { ClassName = "AddedClass", X = 100, Y = 100 });
-        }
+        //public void AddClass()
+        //{
+        //    Classes.Add(new Class() { ClassName = "AddedClass", X = 100, Y = 100 });
+        //}
     }
 }
