@@ -11,7 +11,7 @@
 
 
     <Border BorderBrush="#FF000000" BorderThickness="1" CornerRadius="8">
-        <DockPanel>
+        <DockPanel MinHeight="50">
             <DockPanel.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.0">
                     <LinearGradientBrush.GradientStops>
@@ -20,15 +20,26 @@
                     </LinearGradientBrush.GradientStops>
                 </LinearGradientBrush>
             </DockPanel.Background>
-            <TextBox Text="{Binding ClassName}" HorizontalAlignment="Center" DockPanel.Dock="Top"/>
+            <TextBox Text="{Binding ClassName}" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="5,0,5,0"/>
          
+            <!--Note the " : " is acutally being written to the GUI-->
             <ItemsControl  Name="attributeList" ItemsSource="{Binding Attributes}" Margin="5,0,5,0" DockPanel.Dock="Top">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock><Run Text="{Binding Path=.}"/> : <Run Text="Type her"/></TextBlock>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
             </ItemsControl>
             
             <ItemsControl Name="propertiesList" ItemsSource="{Binding Properties}" Margin="5,0,5,0" DockPanel.Dock="Top">
             </ItemsControl>
             
             <ItemsControl Name="methodsList" ItemsSource="{Binding Methods}" Margin="5,0,5,0" DockPanel.Dock="Top">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock><Run Text="{Binding Path=.}"/>() : <Run Text="Type her"/></TextBlock>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
             </ItemsControl> 
 
         </DockPanel>
