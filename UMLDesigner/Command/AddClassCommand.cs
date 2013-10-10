@@ -14,11 +14,11 @@ namespace UMLDesigner.Command
     {
 
         public event EventHandler CanExecuteChanged;
-        private ObservableCollection<Class> classes;
-        private Class _class;
+        private ObservableCollection<Node> classes;
+        private Node _class;
 
 
-        public AddClassCommand(ObservableCollection<Class> _classes)
+        public AddClassCommand(ObservableCollection<Node> _classes)
         {
             classes = _classes;
         }
@@ -34,7 +34,7 @@ namespace UMLDesigner.Command
 
         public void Execute(object parameter)
         {
-            classes.Add(_class = new Class() { ClassName = "AddedClass", X = 100, Y = 100 });
+            classes.Add(_class = new Node() { ClassName = "AddedClass", X = 100, Y = 100 });
         }
     }
 }

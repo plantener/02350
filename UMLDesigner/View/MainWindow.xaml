@@ -7,7 +7,7 @@
         Title="MainWindow" Height="400" Width="525">
     <Window.Resources>
         <!-- Dette DataTemplate fortæller vinduet hvordan Node klassen skal vises grafisk. Denne grafiske beskrivelse er samlet i NodeUserControl. -->
-        <DataTemplate DataType="{x:Type Model:Class}">
+        <DataTemplate DataType="{x:Type Model:Node}">
             <Canvas>
                 <View:ClassUserControl/>
             </Canvas>

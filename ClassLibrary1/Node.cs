@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace UMLDesigner.Model
 {
-    public class Class : ViewModelBase
+    public class Node : ViewModelBase
     {
         private int x;
         public int X
@@ -53,7 +53,7 @@ namespace UMLDesigner.Model
 
 
         // Konstruktoren bruges i dette tilfælde til at sætte standard værdi for attributerne.
-        public Class()
+        public Node()
         {
             Attributes = new ObservableCollection<String>();
             Properties = new ObservableCollection<String>();
