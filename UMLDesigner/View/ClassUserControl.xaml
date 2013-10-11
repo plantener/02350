@@ -35,7 +35,8 @@
             <TextBox Text="{Binding ClassName}" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="5,0,5,0"/>
          
             <!--Note the " : " is acutally being written to the GUI-->
-            <ItemsControl  Name="attributeList" ItemsSource="{Binding Attributes}" Margin="5,0,5,0" DockPanel.Dock="Top">
+            <!--IsHitTestVisible set to false, so the itemscontrols cannot be clicked -->
+            <ItemsControl  Name="attributeList" ItemsSource="{Binding Attributes}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock><Run Text="{Binding Path=.}"/> : <Run Text="Type her"/></TextBlock>
@@ -43,10 +44,10 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
             
-            <ItemsControl Name="propertiesList" ItemsSource="{Binding Properties}" Margin="5,0,5,0" DockPanel.Dock="Top">
+            <ItemsControl Name="propertiesList" ItemsSource="{Binding Properties}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
             </ItemsControl>
             
-            <ItemsControl Name="methodsList" ItemsSource="{Binding Methods}" Margin="5,0,5,0" DockPanel.Dock="Top">
+            <ItemsControl Name="methodsList" ItemsSource="{Binding Methods}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock><Run Text="{Binding Path=.}"/>() : <Run Text="Type her"/></TextBlock>
