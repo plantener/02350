@@ -15,6 +15,9 @@ namespace UMLDesigner.ViewModel
 
     public class MainViewModel : ViewModelBase
     {
+        private int relativeMousePositionX = -1;
+        private int relativeMousePositionY = -1;
+
         private Point moveNodePoint;
         public ObservableCollection<Node> Classes { get; set; }
 
@@ -23,6 +26,7 @@ namespace UMLDesigner.ViewModel
         public ICommand MouseDownNodeCommand { get; private set; }
         public ICommand MouseMoveNodeCommand { get; private set; }
         public ICommand MouseUpNodeCommand { get; private set; }
+        public ICommand KeyDownCommand { get; private set; }
 
 
         public MainViewModel()
@@ -40,7 +44,18 @@ namespace UMLDesigner.ViewModel
             MouseDownNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseDownNode);
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
             MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
+            KeyDownCommand = new RelayCommand<KeyEventArgs>(KeyDownNode);
      
+        }
+
+        //Captures a keyboard press if on a node
+        public void KeyDownNode(KeyEventArgs e)
+        {
+            //clears focus from current node if 'enter' is pressed
+            if (e.Key == Key.Return)
+            {
+                Keyboard.ClearFocus();
+            }
         }
 
         // Captures the mouse, to move nodes
@@ -60,7 +75,22 @@ namespace UMLDesigner.ViewModel
 
                 
                 FrameworkElement movingClass = (FrameworkElement)e.MouseDevice.Target;
-                
+
+                //If the clicked field in the node is the textfield, we dont want to move it around
+                if (movingClass is System.Windows.Controls.TextBox)
+                {
+                    return;
+                }
+
+                //sets the relative offset when a node is moved around. Done so the cursor doesnt jump to the corner of the class. This is set back to -1 when mouse is released
+                if (relativeMousePositionX == -1 && relativeMousePositionY == -1)
+                {
+                    relativeMousePositionX = (int)Mouse.GetPosition(movingClass).X;
+                    relativeMousePositionY = (int)Mouse.GetPosition(movingClass).Y;
+
+                }
+
+
                 // Fra ellipsen skaffes punktet som den er bundet til.
                 Node movingNode = (Node)movingClass.DataContext;
 
@@ -74,8 +104,8 @@ namespace UMLDesigner.ViewModel
                 if (moveNodePoint == default(Point)) moveNodePoint = mousePosition;
                 // Punktets position ændres og beskeden bliver så sendt til UI med INotifyPropertyChanged mønsteret.
                 
-                movingNode.X = (int)mousePosition.X;
-                movingNode.Y = (int)mousePosition.Y;
+                movingNode.X = (int)mousePosition.X - relativeMousePositionX;
+                movingNode.Y = (int)mousePosition.Y - relativeMousePositionY;
             }
         }
 
@@ -96,6 +126,9 @@ namespace UMLDesigner.ViewModel
            new MoveNodeCommand(movingNode, (int)mousePosition.X, (int)mousePosition.Y, (int)moveNodePoint.X, (int)moveNodePoint.Y);
             // Nulstil værdier.
             moveNodePoint = new Point();
+            //Reset the relative offsets for the moved node
+            relativeMousePositionX = -1;
+            relativeMousePositionY = -1;
             // Musen frigøres.
             e.MouseDevice.Target.ReleaseMouseCapture(); 
         }
