@@ -46,7 +46,7 @@ namespace UMLDesigner.Model
         }
 
 
-        public ObservableCollection<String> Attributes { get; set; }
+        public ObservableCollection<Attribute> Attributes { get; set; }
         public ObservableCollection<String> Properties { get; set; }
         public ObservableCollection<String> Methods { get; set; }
 
@@ -55,14 +55,38 @@ namespace UMLDesigner.Model
         // Konstruktoren bruges i dette tilfælde til at sætte standard værdi for attributerne.
         public Node()
         {
-            Attributes = new ObservableCollection<String>();
+            Attributes = new ObservableCollection<Attribute>();
             Properties = new ObservableCollection<String>();
             Methods = new ObservableCollection<String>();
 
             X = Y = 0;
            // Width = Height = 100;
         }  
-    }  
-}
+    }
 
-//Add some private classes, for attributes. They should consist of a name and a type, like: Counter: Integer
+    public class Attribute : ViewModelBase
+    {
+        //private or public
+       private bool modifier;
+
+        public bool Modifier
+        {
+            get { return modifier; }
+            set { modifier = value; RaisePropertyChanged(() => Modifier); }
+        }
+        private String name;
+
+        public String Name
+        {
+            get { return name; }
+            set { name = value; RaisePropertyChanged(() => Name); }
+        }
+       private String type;
+
+        public String Type
+        {
+            get { return type; }
+            set { type = value; RaisePropertyChanged(() => Type); }
+        }
+    }
+}

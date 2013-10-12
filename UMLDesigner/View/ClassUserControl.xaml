@@ -6,12 +6,16 @@
              mc:Ignorable="d" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
+              xmlns:Util="clr-namespace:UMLDesigner.Utilities"
              Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}"
              d:DesignHeight="300" d:DesignWidth="300">
 
-
     <Border BorderBrush="#FF000000" BorderThickness="1" CornerRadius="8">
         <DockPanel MinHeight="50">
+            <DockPanel.Resources>
+                <!--Bool to value generic converter, used in some usercontrols-->
+                <Util:BoolToStringConverter x:Key="CPrivatePublic" FalseValue="-" TrueValue="+"/>
+            </DockPanel.Resources>
             <!--Her bliver de tre events MouseDown, MouseMove og MouseUp bundet til de tilsvarende kommandoer på MainViewModel.-->
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDown">
@@ -42,7 +46,7 @@
             <ItemsControl  Name="attributeList" ItemsSource="{Binding Attributes}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock><Run Text="{Binding Path=.}"/> : <Run Text="Type her"/></TextBlock>
+                        <TextBlock><Run Text="{Binding Path=Modifier, Converter={StaticResource CPrivatePublic}}"/><Run Text="{Binding Name}"/> : <Run Text="{Binding Type}"/></TextBlock>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

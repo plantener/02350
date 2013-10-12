@@ -68,6 +68,7 @@
     </ApplicationDefinition>
     <Compile Include="Command\AddClassCommand.cs" />
     <Compile Include="Command\MoveNodeCommand.cs" />
+    <Compile Include="Utilities\BoolToValueConverter.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\ClassUserControl.xaml.cs">

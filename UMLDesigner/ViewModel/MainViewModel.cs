@@ -35,9 +35,9 @@ namespace UMLDesigner.ViewModel
             // Det der sker er at der først laves et nyt object og så sættes objektets attributer til de givne værdier.
             Classes = new ObservableCollection<Node>()
             { 
-                new Node() { ClassName = "TestClass", X = 30, Y = 40, Attributes = {"Hej","Test"}, Methods = {"Vi","tester","mere"}, Properties={"properties"}},
-                new Node() { ClassName = "TestClass", X = 140, Y = 230, Methods = {"Endnu", "En", "test"}, Attributes = {"Attribut"}, Properties= {"properties", "her"}},
-                new Node() { ClassName = "NewClass", Attributes = {"Attributtest", "Attributtest2"}, Methods = { "MethodTest", "MethodTest2"}, Properties = {"PropertiesTest", "ProperTiesTest2"}}
+                new Node() { ClassName = "TestClass", X = 30, Y = 40,  Methods = {"Vi","tester","mere"}, Properties={"properties"}},
+                new Node() { ClassName = "TestClass", X = 140, Y = 230, Methods = {"Endnu", "En", "test"},Properties= {"properties", "her"}},
+                new Node() { ClassName = "NewClass", Attributes = {new Attribute {Name = "Testattribut", Modifier = true, Type = "int"}} , Methods = { "MethodTest", "MethodTest2"}, Properties = {"PropertiesTest", "ProperTiesTest2"}}
             };
 
             AddClassCommand = new AddClassCommand(Classes);
