@@ -47,7 +47,7 @@
             <!-- Ribbon Tab #2: -->
             <RibbonTab Header="Class Diagram" KeyTip="I">
                 <RibbonGroup x:Name="NewGroup" Header="New..">
-                    <RibbonButton LargeImageSource="../Images/save.png" Label="Class"/>
+                    <RibbonButton LargeImageSource="../Images/save.png" Label="Class" Command="{Binding AddClassCommand}"/>
                     <RibbonButton LargeImageSource="../Images/save.png" Label="Interface" />
                 </RibbonGroup>
                 <RibbonGroup x:Name="ArrowGroup" Header="Arrows">

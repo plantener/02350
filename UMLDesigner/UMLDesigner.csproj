@@ -66,11 +66,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Command\AddClassCommand.cs" />
+    <Compile Include="Command\MoveNodeCommand.cs" />
+    <Compile Include="Utilities\BoolToValueConverter.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="View\ClassUserControl.xaml.cs">
+      <DependentUpon>ClassUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\RibbonUserContol.xaml.cs">
       <DependentUpon>RibbonUserContol.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\ClassUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -136,6 +146,12 @@
     <Resource Include="Images\redo.png" />
     <Resource Include="Images\save.png" />
     <Resource Include="Images\undo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary1\UMLDesigner.Model.csproj">
+      <Project>{a3b4f6cc-6820-4327-8163-d2854513cba8}</Project>
+      <Name>UMLDesigner.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
