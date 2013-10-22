@@ -27,6 +27,7 @@ namespace UMLDesigner.ViewModel
         public ICommand MouseMoveNodeCommand { get; private set; }
         public ICommand MouseUpNodeCommand { get; private set; }
         public ICommand KeyDownCommand { get; private set; }
+        public ICommand AddItemToNodeCommand { get; private set; }
 
 
         public MainViewModel()
@@ -45,6 +46,7 @@ namespace UMLDesigner.ViewModel
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
             MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
             KeyDownCommand = new RelayCommand<KeyEventArgs>(KeyDownNode);
+            AddItemToNodeCommand = new AddItemToNodeCommand<object>();
      
         }
 
@@ -61,6 +63,7 @@ namespace UMLDesigner.ViewModel
         // Captures the mouse, to move nodes
         public void MouseDownNode(MouseButtonEventArgs e)
         {
+           
            e.MouseDevice.Target.CaptureMouse();
           
            
@@ -103,9 +106,10 @@ namespace UMLDesigner.ViewModel
                 // derfor gemmes her positionen før det første ryk så den sammen med den sidste position kan benyttes til at flytte punktet med en kommando.
                 if (moveNodePoint == default(Point)) moveNodePoint = mousePosition;
                 // Punktets position ændres og beskeden bliver så sendt til UI med INotifyPropertyChanged mønsteret.
+
+                    movingNode.X = (int)mousePosition.X - relativeMousePositionX;
+                    movingNode.Y = (int)mousePosition.Y - relativeMousePositionY;
                 
-                movingNode.X = (int)mousePosition.X - relativeMousePositionX;
-                movingNode.Y = (int)mousePosition.Y - relativeMousePositionY;
             }
         }
 

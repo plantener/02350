@@ -56,6 +56,11 @@
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Composition" />
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Generalization" />
                 </RibbonGroup>
+                <RibbonGroup x:Name="AddItemGroup" Header="Add..">
+                    <RibbonButton SmallImageSource="../Images/save.png" Label="Attribute" Command="{Binding AddItemToNodeCommand}" CommandParameter="Attribute"/>
+                    <RibbonButton SmallImageSource="../Images/save.png" Label="Method" Command="{Binding AddItemToNodeCommand}" CommandParameter="Method" />
+
+                </RibbonGroup>
             </RibbonTab>
             <!-- Ribbon Tab #3: -->
             <RibbonTab Header="View" KeyTip="L">
