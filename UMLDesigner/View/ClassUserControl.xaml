@@ -11,7 +11,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
 
     <Border BorderBrush="#2E8DEF" BorderThickness="2" CornerRadius="1" Cursor="Hand" >
-        <DockPanel MinHeight="50">
+        <DockPanel MinHeight="50" Background="White">
             <DockPanel.Resources>
                 <!--Bool to value generic converter, used in some usercontrols-->
                 <Util:BoolToStringConverter x:Key="CPrivatePublic" FalseValue="-" TrueValue="+"/>
@@ -33,26 +33,16 @@
             </i:Interaction.Triggers>
             
             <!--Styling af Class-boksen-->
-           
-            <Border DockPanel.Dock="Top">
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.0">
-                        <LinearGradientBrush.GradientStops>
-                            <GradientStop Color="#2E8DEF" Offset="0"/>
-                            <GradientStop Color="#2672EC" Offset="1"/>
-                        </LinearGradientBrush.GradientStops>
-                    </LinearGradientBrush>
-                </Border.Background>
+
+            <Border DockPanel.Dock="Top" Background="#2E8DEF">
                 <Border.Resources>  
-                    <Style TargetType="{x:Type TextBlock}">
+                    <Style TargetType="{x:Type TextBox}">
                         <Setter Property="Foreground" Value="White" />
                     </Style>
                 </Border.Resources>
-                <TextBlock Text="{Binding ClassName}" HorizontalAlignment="Center"></TextBlock>
+                <TextBox Text="{Binding ClassName}" HorizontalAlignment="Center" BorderThickness="0" Background="#2E8DEF" Margin="5,0,5,0"></TextBox>
             </Border>
 
-            <!--<TextBox Text="{Binding ClassName}" HorizontalAlignment="Center"  DockPanel.Dock="Top" Margin="5,0,5,0"/>-->
-         
             <!--Note the " : " is acutally being written to the GUI-->
             <!--IsHitTestVisible set to false, so the itemscontrols cannot be clicked -->
             <ItemsControl  Name="attributeList" ItemsSource="{Binding Attributes}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
@@ -61,8 +51,9 @@
                         <TextBlock><Run Text="{Binding Path=Modifier, Converter={StaticResource CPrivatePublic}}"/><Run Text="{Binding Name}"/> : <Run Text="{Binding Type}"/></TextBlock>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
+                <Rectangle Stroke="#2E8DEF" Height="1" StrokeThickness="1" StrokeDashArray="4 4" SnapsToDevicePixels="True"/>
             </ItemsControl>
-            
+
             <ItemsControl Name="propertiesList" ItemsSource="{Binding Properties}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
             </ItemsControl>
             
