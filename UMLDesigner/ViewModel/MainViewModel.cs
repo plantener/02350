@@ -21,6 +21,7 @@ namespace UMLDesigner.ViewModel
 
         private int relativeMousePositionX = -1;
         private int relativeMousePositionY = -1;
+        private Point _oldMousePos;
 
         private Point moveNodePoint;
         public ObservableCollection<Node> Classes { get; set; }
@@ -79,6 +80,7 @@ namespace UMLDesigner.ViewModel
         // Captures the mouse, to move nodes
         public void MouseDownNode(MouseButtonEventArgs e)
         {
+            _oldMousePos = e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target));
            e.MouseDevice.Target.CaptureMouse();
           
            
@@ -128,6 +130,11 @@ namespace UMLDesigner.ViewModel
 
         public void MouseUpNode(MouseEventArgs e)
         {
+            if (_oldMousePos == e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target)))
+            {
+                e.MouseDevice.Target.ReleaseMouseCapture(); 
+                return;
+            }
             //Used to move node
             // noden skaffes.
             FrameworkElement movingClass =(FrameworkElement) e.MouseDevice.Target;
@@ -139,7 +146,9 @@ namespace UMLDesigner.ViewModel
             Canvas canvas = FindParent<Canvas>(movingClass);
             // Musens position på canvas skaffes.
             Point mousePosition = Mouse.GetPosition(canvas);
+                       
             // Punktet flyttes med kommando. Den flyttes egentlig bare det sidste stykke i en række af mange men da de originale punkt gemmes er der ikke noget problem med undo/redo.
+
             undoRedoController.AddAndExecute(new MoveNodeCommand(movingNode, (int)mousePosition.X - relativeMousePositionX, (int)mousePosition.Y - relativeMousePositionY, (int)moveNodePoint.X - relativeMousePositionX, (int)moveNodePoint.Y - relativeMousePositionY));
             // Nulstil værdier.
             moveNodePoint = new Point();
