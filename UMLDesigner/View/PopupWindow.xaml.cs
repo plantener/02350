@@ -19,9 +19,15 @@ namespace UMLDesigner.View
     /// </summary>
     public partial class PopupWindow : Window
     {
+        public String Test { get; set; }
         public PopupWindow()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
         }
     }
 }

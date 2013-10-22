@@ -5,6 +5,8 @@
     <Grid>
         <Label Content="Name" HorizontalAlignment="Left" Margin="50,43,0,0" VerticalAlignment="Top"/>
         <TextBox Name="textBoxName" HorizontalAlignment="Left" Height="23" Margin="97,46,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Button Content="OK"  HorizontalAlignment="Left" Margin="65,0,0,42" Width="75" Height="20" VerticalAlignment="Bottom" Click="Button_Click"/>
+        <Button Content="Cancel" IsCancel="True" HorizontalAlignment="Left" Margin="149,0,0,42" Width="75" Height="20" VerticalAlignment="Bottom"/>
 
     </Grid>
 </Window>

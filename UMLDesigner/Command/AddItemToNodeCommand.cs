@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
+using UMLDesigner.View;
 
 namespace UMLDesigner.ViewModel
 {
@@ -20,6 +21,17 @@ namespace UMLDesigner.ViewModel
 
         public void Execute(object parameter)
         {
+          PopupWindow PopupWindow =  new PopupWindow();
+          PopupWindow.ShowDialog();
+
+          if (PopupWindow.DialogResult.HasValue && PopupWindow.DialogResult.Value)
+          {
+              Debug.WriteLine("HEY HO DET VIRKER");
+          }
+          else
+          {
+              Debug.WriteLine("Der blev trykket cancel!");
+          }
 
 
             Debug.WriteLine("Parameter er: " + parameter);
