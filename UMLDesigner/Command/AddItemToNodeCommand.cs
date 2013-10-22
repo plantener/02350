@@ -6,20 +6,12 @@ using System.Text;
 using System.Windows.Input;
 using UMLDesigner.View;
 
-namespace UMLDesigner.ViewModel
+namespace UMLDesigner.Command
 {
-    class AddItemToNodeCommand<T> : ICommand
+    class AddItemToNodeCommand : IUndoRedoCommand
     {
-        public bool CanExecute(object parameter)
-        {
-            Debug.WriteLine("fokuselement er: " + Keyboard.FocusedElement);    
-           return true;
-          //  throw new NotImplementedException();
-        }
 
-        public event EventHandler CanExecuteChanged;
-
-        public void Execute(object parameter)
+        public void Execute()
         {
           PopupWindow PopupWindow =  new PopupWindow();
           PopupWindow.ShowDialog();
@@ -34,10 +26,16 @@ namespace UMLDesigner.ViewModel
           }
 
 
-            Debug.WriteLine("Parameter er: " + parameter);
+           // Debug.WriteLine("Parameter er: " + parameter);
             Debug.WriteLine("fokuselement er: " + Keyboard.FocusedElement);
 
             //throw new NotImplementedException();
+        }
+
+
+        public void UnExecute()
+        {
+            throw new NotImplementedException();
         }
     }
 }
