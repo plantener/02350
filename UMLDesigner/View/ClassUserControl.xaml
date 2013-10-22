@@ -10,8 +10,8 @@
              Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}"
              d:DesignHeight="300" d:DesignWidth="300">
 
-    <Border BorderBrush="#FF000000" BorderThickness="1" CornerRadius="8">
-        <DockPanel MinHeight="50">
+    <Border BorderBrush="#2E8DEF" BorderThickness="2" CornerRadius="1" Cursor="Hand" >
+        <DockPanel MinHeight="50" Background="White">
             <DockPanel.Resources>
                 <!--Bool to value generic converter, used in some usercontrols-->
                 <Util:BoolToStringConverter x:Key="CPrivatePublic" FalseValue="-" TrueValue="+"/>
@@ -31,16 +31,18 @@
                     <cmd:EventToCommand Command="{Binding DataContext.KeyDownCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-            <DockPanel.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.0">
-                    <LinearGradientBrush.GradientStops>
-                        <GradientStop Color="Azure" Offset="0"/>
-                        <GradientStop Color="Transparent" Offset="1"/>
-                    </LinearGradientBrush.GradientStops>
-                </LinearGradientBrush>
-            </DockPanel.Background>
-            <TextBox Text="{Binding ClassName}" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="5,0,5,0"/>
-         
+            
+            <!--Styling af Class-boksen-->
+
+            <Border DockPanel.Dock="Top" Background="#2E8DEF">
+                <Border.Resources>  
+                    <Style TargetType="{x:Type TextBox}">
+                        <Setter Property="Foreground" Value="White" />
+                    </Style>
+                </Border.Resources>
+                <TextBox Text="{Binding ClassName}" HorizontalAlignment="Center" BorderThickness="0" Background="#2E8DEF" Margin="5,0,5,0"></TextBox>
+            </Border>
+
             <!--Note the " : " is acutally being written to the GUI-->
             <!--IsHitTestVisible set to false, so the itemscontrols cannot be clicked -->
             <ItemsControl  Name="attributeList" ItemsSource="{Binding Attributes}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
@@ -50,7 +52,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            
+   
             <ItemsControl Name="propertiesList" ItemsSource="{Binding Properties}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
             </ItemsControl>
             

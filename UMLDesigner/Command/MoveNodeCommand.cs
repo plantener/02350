@@ -8,7 +8,7 @@ using UMLDesigner.Model;
 
 namespace UMLDesigner.Command
 {
-    class MoveNodeCommand : ICommand
+    class MoveNodeCommand : IUndoRedoCommand
     {
 
         private Node node;
@@ -23,19 +23,17 @@ namespace UMLDesigner.Command
             this.oldY = _oldY;
         }
 
-        public bool CanExecute(object parameter)
-        {
-           // throw new NotImplementedException();
-            return true;
-            //TODO Implementer den her
-        }
-
-        public event EventHandler CanExecuteChanged;
-
-        public void Execute(object parameter)
+        public void Execute()
         {
             node.X = newX;
             node.Y = newY;
         }
+
+        public void UnExecute()
+        {
+            node.X = oldX;
+            node.Y = oldY;
+        }
+
     }
 }
