@@ -10,10 +10,9 @@ using UMLDesigner.Model;
 
 namespace UMLDesigner.Command
 {
-    class AddClassCommand : ICommand
+    class AddClassCommand : IUndoRedoCommand
     {
 
-        public event EventHandler CanExecuteChanged;
         private ObservableCollection<Node> classes;
         private Node _class;
 
@@ -23,18 +22,15 @@ namespace UMLDesigner.Command
             classes = _classes;
         }
 
-
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        //    throw new NotImplementedException();
-        }
-
-   
-
-        public void Execute(object parameter)
+        public void Execute()
         {
             classes.Add(_class = new Node() { ClassName = "AddedClass", X = 100, Y = 100 });
         }
+
+        public void UnExecute()
+        {
+            classes.Remove(_class);
+        }
+
     }
 }
