@@ -51,9 +51,8 @@
                         <TextBlock><Run Text="{Binding Path=Modifier, Converter={StaticResource CPrivatePublic}}"/><Run Text="{Binding Name}"/> : <Run Text="{Binding Type}"/></TextBlock>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
-                <Rectangle Stroke="#2E8DEF" Height="1" StrokeThickness="1" StrokeDashArray="4 4" SnapsToDevicePixels="True"/>
             </ItemsControl>
-
+   
             <ItemsControl Name="propertiesList" ItemsSource="{Binding Properties}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
             </ItemsControl>
             
