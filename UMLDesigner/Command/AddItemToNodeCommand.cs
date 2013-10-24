@@ -11,19 +11,27 @@ namespace UMLDesigner.Command
     class AddItemToNodeCommand : IUndoRedoCommand
     {
 
+
         public void Execute()
         {
           PopupWindow PopupWindow =  new PopupWindow();
           PopupWindow.ShowDialog();
 
+         
+
           if (PopupWindow.DialogResult.HasValue && PopupWindow.DialogResult.Value)
           {
+              
               Debug.WriteLine("HEY HO DET VIRKER");
+              String selectedType = PopupWindow.getSelectedItem;
+              Debug.WriteLine("TYPEN ER: " + selectedType);
+             
           }
           else
           {
               Debug.WriteLine("Der blev trykket cancel!");
           }
+          
 
 
            // Debug.WriteLine("Parameter er: " + parameter);

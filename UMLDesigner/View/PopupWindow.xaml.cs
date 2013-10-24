@@ -19,15 +19,30 @@ namespace UMLDesigner.View
     /// </summary>
     public partial class PopupWindow : Window
     {
+
+        public String visibility;
+        public String selectedType;
         public String Test { get; set; }
+        public String getSelectedItem { get { return cmbTypes.Text; } }
         public PopupWindow()
         {
             InitializeComponent();
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
         }
+
+        private void RadioButtonChecked(object sender, RoutedEventArgs e)
+        {
+            var radioButton = sender as RadioButton;
+            if (radioButton == null)
+                return;
+            visibility = radioButton.Content.ToString();
+        }
+
+        
     }
 }
