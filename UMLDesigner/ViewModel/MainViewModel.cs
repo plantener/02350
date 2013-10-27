@@ -37,7 +37,7 @@ namespace UMLDesigner.ViewModel
             Classes = new ObservableCollection<Node>()
             { 
                 new Node() { ClassName = "TestClass", X = 30, Y = 40,  Methods = {"Vi","tester","mere"}, Properties={"properties"}},
-                new Node() { ClassName = "TestClass", X = 140, Y = 230, Methods = {"Endnu", "En", "test"},Properties= {"properties", "her"}},
+                new Node() { ClassName = "TestClass", X = 140, Y = 230, Methods = {"Endnu", "En", "test"},Properties= {"properties", "her"},},
                 new Node() { ClassName = "NewClass", Attributes = {new Attribute {Name = "Testattribut", Modifier = true, Type = "int"}} , Methods = { "MethodTest", "MethodTest2"}, Properties = {"PropertiesTest", "ProperTiesTest2"}}
             };
 
@@ -50,6 +50,24 @@ namespace UMLDesigner.ViewModel
      
         }
 
+        public void CanvasMouseDown(MouseButtonEventArgs e)
+        {
+            Classes[0].IsFocused = false;
+            //if (e.MouseDevice.Target is Node)
+            //{
+            //}
+            //else
+            //{
+            //    foreach (Node node in Classes)
+            //    {
+            //        if (node.IsFocused == true)
+            //        {
+            //            node.IsFocused = false;
+            //        }
+            //    }
+            //}
+        }
+
         //Captures a keyboard press if on a node
         public void KeyDownNode(KeyEventArgs e)
         {
@@ -57,15 +75,24 @@ namespace UMLDesigner.ViewModel
             if (e.Key == Key.Return)
             {
                 Keyboard.ClearFocus();
+                foreach (Node node in Classes)
+                {
+                    if (node.IsFocused == true)
+                    {
+                        node.IsFocused = false;
+                    }
+                }
             }
         }
 
         // Captures the mouse, to move nodes
         public void MouseDownNode(MouseButtonEventArgs e)
         {
-           
-           e.MouseDevice.Target.CaptureMouse();
-          
+            e.MouseDevice.Target.CaptureMouse();
+            FrameworkElement movingClass = (FrameworkElement)e.MouseDevice.Target;
+                Node nodeClass = (Node)movingClass.DataContext;
+                int index = Classes.IndexOf(nodeClass);
+                Classes[index].IsFocused = true;
            
         }
 
@@ -90,13 +117,11 @@ namespace UMLDesigner.ViewModel
                 {
                     relativeMousePositionX = (int)Mouse.GetPosition(movingClass).X;
                     relativeMousePositionY = (int)Mouse.GetPosition(movingClass).Y;
-
                 }
 
 
                 // Fra ellipsen skaffes punktet som den er bundet til.
                 Node movingNode = (Node)movingClass.DataContext;
-
                 
                 // Canvaset findes her udfra ellipsen.
                 Canvas canvas = FindParent<Canvas>(movingClass);

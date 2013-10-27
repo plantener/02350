@@ -45,6 +45,13 @@ namespace UMLDesigner.Model
             set { className = value; }
         }
 
+        private bool isFocused = false;
+        public bool IsFocused
+        { 
+            get { return isFocused; } 
+            set { isFocused = value; RaisePropertyChanged(() => IsFocused) ; }
+        }
+
 
         public ObservableCollection<Attribute> Attributes { get; set; }
         public ObservableCollection<String> Properties { get; set; }
