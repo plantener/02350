@@ -14,6 +14,7 @@ namespace UMLDesigner.Command
     {
         private object _parameter;
         private Node _focusedClass;
+        private UMLDesigner.Model.Attribute itemToAdd;
 
         public AddItemToNodeCommand(Node focusedClass, object parameter)
         {
@@ -23,38 +24,62 @@ namespace UMLDesigner.Command
 
         public void Execute()
         {
-
-            MessageBox.Show("parameteren er: " + _parameter);
           PopupWindow PopupWindow =  new PopupWindow();
+
+            //Populate type list on popupwindow
+          PopupWindow.cmbTypes.Items.Add("Int");
+          PopupWindow.cmbTypes.Items.Add("String");
+          PopupWindow.cmbTypes.Items.Add("Float");
+          PopupWindow.cmbTypes.Items.Add("Double");
+
+          PopupWindow.cmbTypes.SelectedIndex = 0;
+         
+          if ((String)_parameter == "Method")
+          {
+              PopupWindow.cmbTypes.Items.Add("void");
+          }
+
           PopupWindow.ShowDialog();
 
          
 
           if (PopupWindow.DialogResult.HasValue && PopupWindow.DialogResult.Value)
           {
-              
-              Debug.WriteLine("HEY HO DET VIRKER");
-              String selectedType = PopupWindow.getSelectedItem;
-              Debug.WriteLine("TYPEN ER: " + selectedType);
-             
+              //Get info from popup
+              String _selectedType = PopupWindow.GetSelectedItem;
+              String _selectedName = PopupWindow.GetName;
+              bool _visibility = PopupWindow.visibility;
+
+              itemToAdd = new UMLDesigner.Model.Attribute { Name = _selectedName, Modifier = _visibility, Type = _selectedType };
+
+              //Cast object to String, since we know the commandparameter is String, this is possible
+              if ((String)_parameter == "Attribute")
+              {      
+                  _focusedClass.Attributes.Add(itemToAdd);
+              }
+              else if ((String)_parameter == "Method")
+              {
+                  _focusedClass.Methods.Add(itemToAdd);
+
+              }           
           }
           else
+              //Cancel was pressed
           {
-              Debug.WriteLine("Der blev trykket cancel!");
+              return;
           }
-          
-
-
-           // Debug.WriteLine("Parameter er: " + parameter);
-            Debug.WriteLine("fokuselement er: " + Keyboard.FocusedElement);
-
-            //throw new NotImplementedException();
         }
 
 
         public void UnExecute()
         {
-            throw new NotImplementedException();
+            if ((String)_parameter == "Method")
+            {
+                _focusedClass.Methods.Remove(itemToAdd);
+            }else if ((String)_parameter == "Attribute")
+            {
+                _focusedClass.Attributes.Remove(itemToAdd);
+            }
         }
     }
 }

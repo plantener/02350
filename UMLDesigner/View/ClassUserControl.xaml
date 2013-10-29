@@ -59,7 +59,7 @@
             <ItemsControl Name="methodsList" ItemsSource="{Binding Methods}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock><Run Text="{Binding Path=.}"/>() : <Run Text="Type her"/></TextBlock>
+                        <TextBlock><Run Text="{Binding Path=Modifier, Converter={StaticResource CPrivatePublic}}"/><Run Text="{Binding Name}"/>() : <Run Text="{Binding Type}"/></TextBlock>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl> 
