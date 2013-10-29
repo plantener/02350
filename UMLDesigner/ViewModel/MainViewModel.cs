@@ -28,6 +28,7 @@ namespace UMLDesigner.ViewModel
         private Point _oldMousePos;
         private Point moveNodePoint;
         public ObservableCollection<Node> Classes { get; set; }
+        public ObservableCollection<Edge> Edges { get; set; }
 
         // Kommandoer som UI bindes til.
         public ICommand UndoCommand { get; private set; }
@@ -35,6 +36,7 @@ namespace UMLDesigner.ViewModel
 
         // Kommandoer som UI bindes til.
         public ICommand AddClassCommand { get; private set; }
+        public ICommand AddEdgeCommand { get; private set; }
         public ICommand MouseDownNodeCommand { get; private set; }
         public ICommand MouseMoveNodeCommand { get; private set; }
         public ICommand MouseUpNodeCommand { get; private set; }
@@ -54,12 +56,18 @@ namespace UMLDesigner.ViewModel
                 new Node() { ClassName = "NewClass", Attributes = { new Attribute { Name = "Testattribut", Modifier = true, Type = "int" } }, Properties = { "PropertiesTest", "ProperTiesTest2" } }
             };
 
+            Edges = new ObservableCollection<Edge>()
+            { 
+                new Edge(Classes[0], Classes[1]) {  }
+            };
+
             // Kommandoerne som UI kan kaldes bindes til de metoder der skal kaldes. Her vidersendes metode kaldne til UndoRedoControlleren.
             UndoCommand = new RelayCommand(undoRedoController.Undo, undoRedoController.CanUndo);
             RedoCommand = new RelayCommand(undoRedoController.Redo, undoRedoController.CanRedo);
 
             // Kommandoerne som UI kan kaldes bindes til de metoder der skal kaldes.
             AddClassCommand = new RelayCommand(AddNode);
+            AddEdgeCommand = new RelayCommand(AddEdge);
             MouseDownNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseDownNode);
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
             MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
@@ -68,6 +76,8 @@ namespace UMLDesigner.ViewModel
          //   AddItemToNodeCommand = new RelayCommand(AddItemToNode);
           AddItemToNodeCommand = new RelayCommand<object>(param => AddItemToNode(FocusedClass,param));
           MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
+
+            Debug.WriteLine("Højde" + Classes[0].Height);
         }
 
        
@@ -83,7 +93,12 @@ namespace UMLDesigner.ViewModel
 
         public void AddNode()
         {
-           undoRedoController.AddAndExecute(new AddClassCommand(Classes));
+            undoRedoController.AddAndExecute(new AddClassCommand(Classes));
+        }
+
+        public void AddEdge()
+        {
+            
         }
 
         //Captures a keyboard press if on a node
@@ -144,9 +159,14 @@ namespace UMLDesigner.ViewModel
                 if (moveNodePoint == default(Point)) moveNodePoint = mousePosition;
                 // Punktets position ændres og beskeden bliver så sendt til UI med INotifyPropertyChanged mønsteret.
 
-                    movingNode.X = (int)mousePosition.X - relativeMousePositionX;
-                    movingNode.Y = (int)mousePosition.Y - relativeMousePositionY;
-                
+                movingNode.X = (int)mousePosition.X - relativeMousePositionX;
+                movingNode.Y = (int)mousePosition.Y - relativeMousePositionY;
+
+                for (int i = 0; i < Edges.Count; i++)
+                {
+                    if (movingNode == Edges[i].Start || movingNode == Edges[i].End)
+                        Edges[i].Path = "";
+                }
             }
         }
 
@@ -171,7 +191,7 @@ namespace UMLDesigner.ViewModel
                        
             // Punktet flyttes med kommando. Den flyttes egentlig bare det sidste stykke i en række af mange men da de originale punkt gemmes er der ikke noget problem med undo/redo.
 
-            undoRedoController.AddAndExecute(new MoveNodeCommand(movingNode, (int)mousePosition.X - relativeMousePositionX, (int)mousePosition.Y - relativeMousePositionY, (int)moveNodePoint.X - relativeMousePositionX, (int)moveNodePoint.Y - relativeMousePositionY));
+            undoRedoController.AddAndExecute(new MoveNodeCommand(movingNode, (int)mousePosition.X - relativeMousePositionX, (int)mousePosition.Y - relativeMousePositionY, (int)moveNodePoint.X - relativeMousePositionX, (int)moveNodePoint.Y - relativeMousePositionY, Edges));
             // Nulstil værdier.
             moveNodePoint = new Point();
             //Reset the relative offsets for the moved node
