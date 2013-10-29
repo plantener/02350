@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
 using UMLDesigner.View;
 
@@ -10,10 +11,17 @@ namespace UMLDesigner.Command
 {
     class AddItemToNodeCommand : IUndoRedoCommand
     {
+        private object _parameter;
 
+        public AddItemToNodeCommand(object parameter)
+        {
+            _parameter = parameter;
+        }
 
         public void Execute()
         {
+
+            MessageBox.Show("parameteren er: " + _parameter);
           PopupWindow PopupWindow =  new PopupWindow();
           PopupWindow.ShowDialog();
 

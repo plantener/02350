@@ -61,14 +61,15 @@ namespace UMLDesigner.ViewModel
             MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
             KeyDownCommand = new RelayCommand<KeyEventArgs>(KeyDownNode);
          //   AddItemToNodeCommand = new RelayCommand(AddItemToNode);
-          AddItemToNodeCommand = new RelayCommand(param => AddItemToNode(param));
+          AddItemToNodeCommand = new RelayCommand<object>(param => AddItemToNode(param));
      
         }
 
        
-        public void AddItemToNode()
+        public void AddItemToNode(object parameter)
         {
-            undoRedoController.AddAndExecute( new AddItemToNodeCommand());
+
+            undoRedoController.AddAndExecute( new AddItemToNodeCommand(parameter));
 
         }
 
