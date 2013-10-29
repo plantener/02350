@@ -3,29 +3,58 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
+using UMLDesigner.Model;
+using UMLDesigner.View;
 
-namespace UMLDesigner.ViewModel
+namespace UMLDesigner.Command
 {
-    class AddItemToNodeCommand<T> : ICommand
+    class AddItemToNodeCommand : IUndoRedoCommand
     {
-        public bool CanExecute(object parameter)
+        private object _parameter;
+        private Node _focusedClass;
+
+        public AddItemToNodeCommand(Node focusedClass, object parameter)
         {
-            Debug.WriteLine("fokuselement er: " + Keyboard.FocusedElement);    
-           return true;
-          //  throw new NotImplementedException();
+            _focusedClass = focusedClass;
+            _parameter = parameter;
         }
 
-        public event EventHandler CanExecuteChanged;
-
-        public void Execute(object parameter)
+        public void Execute()
         {
 
+            MessageBox.Show("parameteren er: " + _parameter);
+          PopupWindow PopupWindow =  new PopupWindow();
+          PopupWindow.ShowDialog();
 
-            Debug.WriteLine("Parameter er: " + parameter);
+         
+
+          if (PopupWindow.DialogResult.HasValue && PopupWindow.DialogResult.Value)
+          {
+              
+              Debug.WriteLine("HEY HO DET VIRKER");
+              String selectedType = PopupWindow.getSelectedItem;
+              Debug.WriteLine("TYPEN ER: " + selectedType);
+             
+          }
+          else
+          {
+              Debug.WriteLine("Der blev trykket cancel!");
+          }
+          
+
+
+           // Debug.WriteLine("Parameter er: " + parameter);
             Debug.WriteLine("fokuselement er: " + Keyboard.FocusedElement);
 
             //throw new NotImplementedException();
+        }
+
+
+        public void UnExecute()
+        {
+            throw new NotImplementedException();
         }
     }
 }

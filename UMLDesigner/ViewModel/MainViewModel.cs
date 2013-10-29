@@ -64,9 +64,16 @@ namespace UMLDesigner.ViewModel
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
             MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
             KeyDownCommand = new RelayCommand<KeyEventArgs>(KeyDownNode);
-            AddItemToNodeCommand = new AddItemToNodeCommand<object>();
-            MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
-     
+
+         //   AddItemToNodeCommand = new RelayCommand(AddItemToNode);
+          AddItemToNodeCommand = new RelayCommand<object>(param => AddItemToNode(FocusedClass,param));
+          MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
+        }
+
+       
+        public void AddItemToNode(Node FocusedClass, object parameter)
+        {
+            undoRedoController.AddAndExecute( new AddItemToNodeCommand(FocusedClass,parameter));
         }
 
         private void MouseDownCanvas(MouseEventArgs obj)
@@ -95,10 +102,11 @@ namespace UMLDesigner.ViewModel
         // Captures the mouse, to move nodes
         public void MouseDownNode(MouseButtonEventArgs e)
         {
+
             _oldMousePos = e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target));
            e.MouseDevice.Target.CaptureMouse();
-            FrameworkElement movingClass = (FrameworkElement)e.MouseDevice.Target;
-            FocusedClass = (Node) movingClass.DataContext;
+           FrameworkElement movingClass = (FrameworkElement)e.MouseDevice.Target;
+           FocusedClass = (Node)movingClass.DataContext;
         }
 
         //Used to move nodes around
