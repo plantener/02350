@@ -79,6 +79,7 @@ namespace UMLDesigner.Model
                 PathX.Add(End.X + End.Width / 2);
                 PathY.Add(End.Y + End.Height / 2);
 
+
                 setPath();
             }
         }

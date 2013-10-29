@@ -45,7 +45,6 @@ namespace UMLDesigner.Model
             set { className = value; }
         }
 
-
         public ObservableCollection<Attribute> Attributes { get; set; }
         public ObservableCollection<String> Properties { get; set; }
         public ObservableCollection<String> Methods { get; set; }
@@ -60,7 +59,7 @@ namespace UMLDesigner.Model
             Methods = new ObservableCollection<String>();
 
             X = Y = 0;
-           // Width = Height = 100;
+           Width = Height = 100;
         }  
     }
 
