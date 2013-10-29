@@ -67,6 +67,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Command\AddClassCommand.cs" />
+    <Compile Include="Command\AddEdgeCommand.cs" />
     <Compile Include="Command\IUndoRedoCommand.cs" />
     <Compile Include="Command\UndoRedoController.cs" />
     <Compile Include="Command\MoveNodeCommand.cs" />
@@ -76,10 +77,17 @@
     <Compile Include="View\ClassUserControl.xaml.cs">
       <DependentUpon>ClassUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\EdgeUserControl.xaml.cs">
+      <DependentUpon>EdgeUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\RibbonUserContol.xaml.cs">
       <DependentUpon>RibbonUserContol.xaml</DependentUpon>
     </Compile>
     <Page Include="View\ClassUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\EdgeUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

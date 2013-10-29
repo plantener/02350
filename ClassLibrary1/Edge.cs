@@ -1,88 +1,96 @@
 ﻿using GalaSoft.MvvmLight;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace UMLDesigner.Model
 {
-    class Edge : ViewModelBase
+    public class Edge : ViewModelBase
     {
         private Node start;
         public Node Start
         {
-            get { return start; }
-            set { start = value; RaisePropertyChanged(() => Start); }
+            get
+            {
+                //Console.WriteLine(Path);
+                return start; }
+            set
+            {
+                start = value;
+                newPath(Start, End);
+                RaisePropertyChanged(() => Start);
+                RaisePropertyChanged(() => Path);
+            }
         }
 
         private Node end;
         public Node End
         {
             get { return end; }
-            set { end = value; RaisePropertyChanged(() => End); }
+            set 
+            {
+                end = value;
+                newPath(Start, End);
+                RaisePropertyChanged(() => End);
+                RaisePropertyChanged(() => Path);
+            }
         }
 
-        private int startX;
-        public int StartX
+        private String path;
+        public String Path
         {
-            get { return startX; }
-            set { startX = value; RaisePropertyChanged(() => StartX); }
+            get { return path; }
+            set
+            {
+                path = value; RaisePropertyChanged(() => Path);
+            }
         }
 
-        private int startY;
-        public int StartY
+        public ObservableCollection<int> PathX { get; set; }
+        public ObservableCollection<int> PathY { get; set; }
+
+        public Edge(Node _start, Node _end)
         {
-            get { return startY; }
-            set { startY = value; RaisePropertyChanged(() => StartY); }
+            Start = _start;
+            End = _end;
+            PathX = new ObservableCollection<int>();
+            PathY = new ObservableCollection<int>();
+
+            newPath(Start, End);
         }
 
-        private int endX;
-        public int EndX
+        private void newPath(Node _start, Node _end)
         {
-            get { return endX; }
-            set { endX = value; RaisePropertyChanged(() => EndX); }
+            if (PathX != null && PathY != null)
+            {
+                PathX.Clear();
+                PathY.Clear();
+                Console.WriteLine(Start.X + Start.Width / 2);
+                Console.WriteLine(Start.X);
+                PathX.Add(Start.X + Start.Width / 2);
+                PathY.Add(Start.Y + Start.Height / 2);
+
+                PathX.Add(Start.X + Start.Width / 2);
+                PathY.Add(End.Y + End.Height / 2);
+
+                PathX.Add(End.X + End.Width / 2);
+                PathY.Add(End.Y + End.Height / 2);
+
+                setPath();
+            }
         }
 
-        private int endY;
-        public int EndY
+        private void setPath()
         {
-            get { return endY; }
-            set { endY = value; RaisePropertyChanged(() => EndY); }
-        }
-        
-        private string multiplicityStart = "";
-        public string MultiplicityStart
-        {
-            get { return multiplicityStart; }
-            set { multiplicityStart = value; RaisePropertyChanged(() => MultiplicityStart); }
-        }
-
-        private string multiplicityEnd = "";
-        public string MultiplicityEnd
-        {
-            get { return multiplicityEnd; }
-            set { multiplicityEnd = value; RaisePropertyChanged(() => MultiplicityEnd); }
-        }
-
-        private string name = "";
-        public string Name
-        {
-            get { return name; }
-            set { name = value; RaisePropertyChanged(() => Name); }
-        }
-
-        private string type = "Assosiation";
-
-        public Edge(Node start, Node end)
-        {
-            this.start = start;
-            this.end = end;
-
-            startX = start.X;
-            startY = start.Y;
-            endX = end.X;
-            endY = end.Y;
+            Path = "M";
+            for (int i = 0; i <= PathX.Count - 1; i++)
+            {
+                Path += " " + PathX[i] + "," + PathY[i];
+            }
+            Console.WriteLine(Path);
         }
     }
 }

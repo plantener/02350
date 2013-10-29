@@ -25,6 +25,7 @@ namespace UMLDesigner.ViewModel
 
         private Point moveNodePoint;
         public ObservableCollection<Node> Classes { get; set; }
+        public ObservableCollection<Edge> Edges { get; set; }
 
         // Kommandoer som UI bindes til.
         public ICommand UndoCommand { get; private set; }
@@ -32,6 +33,7 @@ namespace UMLDesigner.ViewModel
 
         // Kommandoer som UI bindes til.
         public ICommand AddClassCommand { get; private set; }
+        public ICommand AddEdgeCommand { get; private set; }
         public ICommand MouseDownNodeCommand { get; private set; }
         public ICommand MouseMoveNodeCommand { get; private set; }
         public ICommand MouseUpNodeCommand { get; private set; }
@@ -49,12 +51,18 @@ namespace UMLDesigner.ViewModel
                 new Node() { ClassName = "NewClass", Attributes = {new Attribute {Name = "Testattribut", Modifier = true, Type = "int"}} , Methods = { "MethodTest", "MethodTest2"}, Properties = {"PropertiesTest", "ProperTiesTest2"}}
             };
 
+            Edges = new ObservableCollection<Edge>()
+            { 
+                new Edge(Classes[0], Classes[1]) {  }
+            };
+
             // Kommandoerne som UI kan kaldes bindes til de metoder der skal kaldes. Her vidersendes metode kaldne til UndoRedoControlleren.
             UndoCommand = new RelayCommand(undoRedoController.Undo, undoRedoController.CanUndo);
             RedoCommand = new RelayCommand(undoRedoController.Redo, undoRedoController.CanRedo);
 
             // Kommandoerne som UI kan kaldes bindes til de metoder der skal kaldes.
             AddClassCommand = new RelayCommand(AddNode);
+            AddEdgeCommand = new RelayCommand(AddEdge);
             MouseDownNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseDownNode);
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
             MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
@@ -64,7 +72,12 @@ namespace UMLDesigner.ViewModel
 
         public void AddNode()
         {
-           undoRedoController.AddAndExecute(new AddClassCommand(Classes));
+            undoRedoController.AddAndExecute(new AddClassCommand(Classes));
+        }
+
+        public void AddEdge()
+        {
+            
         }
 
         //Captures a keyboard press if on a node
