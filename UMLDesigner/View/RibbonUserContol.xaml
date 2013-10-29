@@ -24,7 +24,7 @@
                 </RibbonQuickAccessToolBar>
             </Ribbon.QuickAccessToolBar>
             <!-- Application Menu, located at the left-hand side (down arrow) -->
-            <Ribbon.ApplicationMenu> 
+            <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu KeyTip="F">
                     <RibbonApplicationMenuItem Header="New File" />
                     <RibbonApplicationMenuItem Header="Open" />
@@ -57,8 +57,8 @@
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Generalization" />
                 </RibbonGroup>
                 <RibbonGroup x:Name="AddItemGroup" Header="Add..">
-                    <RibbonButton SmallImageSource="../Images/save.png" Label="Attribute" Command="{Binding AddItemToNodeCommand}" CommandParameter="Attribute"/>
-                    <RibbonButton SmallImageSource="../Images/save.png" Label="Method" Command="{Binding AddItemToNodeCommand}" CommandParameter="Method" />
+                    <RibbonButton SmallImageSource="../Images/save.png" Label="Attribute" Command="{Binding AddItemToNodeCommand}" CommandParameter="Attribute" IsEnabled="{Binding IsFocused}"/>
+                    <RibbonButton SmallImageSource="../Images/save.png" Label="Method" Command="{Binding AddItemToNodeCommand}" CommandParameter="Method" IsEnabled="{Binding IsFocused}" />
 
                 </RibbonGroup>
             </RibbonTab>

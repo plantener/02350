@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using UMLDesigner.Model;
 using UMLDesigner.View;
 
 namespace UMLDesigner.Command
@@ -12,9 +13,11 @@ namespace UMLDesigner.Command
     class AddItemToNodeCommand : IUndoRedoCommand
     {
         private object _parameter;
+        private Node _focusedClass;
 
-        public AddItemToNodeCommand(object parameter)
+        public AddItemToNodeCommand(Node focusedClass, object parameter)
         {
+            _focusedClass = focusedClass;
             _parameter = parameter;
         }
 
