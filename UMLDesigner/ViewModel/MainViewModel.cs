@@ -21,8 +21,11 @@ namespace UMLDesigner.ViewModel
 
         private int relativeMousePositionX = -1;
         private int relativeMousePositionY = -1;
+        private bool isFocused = false;
+        public bool IsFocused { get { return isFocused; } set { isFocused = value; RaisePropertyChanged(() => IsFocused); } }
+        private Node focusedClass = null;
+        public Node FocusedClass { get { return focusedClass; } private set { focusedClass = value; if (focusedClass == null) { IsFocused = false; } else { IsFocused = true; };} }
         private Point _oldMousePos;
-
         private Point moveNodePoint;
         public ObservableCollection<Node> Classes { get; set; }
 
@@ -36,6 +39,8 @@ namespace UMLDesigner.ViewModel
         public ICommand MouseMoveNodeCommand { get; private set; }
         public ICommand MouseUpNodeCommand { get; private set; }
         public ICommand KeyDownCommand { get; private set; }
+        public ICommand AddItemToNodeCommand { get; private set; }
+        public ICommand MouseDownCanvasCommand { get; private set; }
 
 
         public MainViewModel()
@@ -45,8 +50,8 @@ namespace UMLDesigner.ViewModel
             Classes = new ObservableCollection<Node>()
             { 
                 new Node() { ClassName = "TestClass", X = 30, Y = 40,  Methods = {"Vi","tester","mere"}, Properties={"properties"}},
-                new Node() { ClassName = "TestClass", X = 140, Y = 230, Methods = {"Endnu", "En", "test"},Properties= {"properties", "her"}},
-                new Node() { ClassName = "NewClass", Attributes = {new Attribute {Name = "Testattribut", Modifier = true, Type = "int"}} , Methods = { "MethodTest", "MethodTest2"}, Properties = {"PropertiesTest", "ProperTiesTest2"}}
+                new Node() { ClassName = "TestClass", X = 140, Y = 230, Methods = {"Endnu", "En", "test"},Properties= {"properties", "her"},},
+                new Node() { ClassName = "NewClass", Attributes = { new Attribute { Name = "Testattribut", Modifier = true, Type = "int" } }, Methods = { "MethodTest", "MethodTest2" }, Properties = { "PropertiesTest", "ProperTiesTest2" } }
             };
 
             // Kommandoerne som UI kan kaldes bindes til de metoder der skal kaldes. Her vidersendes metode kaldne til UndoRedoControlleren.
@@ -59,7 +64,14 @@ namespace UMLDesigner.ViewModel
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
             MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
             KeyDownCommand = new RelayCommand<KeyEventArgs>(KeyDownNode);
+            AddItemToNodeCommand = new AddItemToNodeCommand<object>();
+            MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
      
+        }
+
+        private void MouseDownCanvas(MouseEventArgs obj)
+        {
+            throw new System.NotImplementedException();
         }
 
         public void AddNode()
@@ -74,16 +86,19 @@ namespace UMLDesigner.ViewModel
             if (e.Key == Key.Return)
             {
                 Keyboard.ClearFocus();
+                FocusedClass = null;
             }
         }
+
+
 
         // Captures the mouse, to move nodes
         public void MouseDownNode(MouseButtonEventArgs e)
         {
             _oldMousePos = e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target));
            e.MouseDevice.Target.CaptureMouse();
-          
-           
+            FrameworkElement movingClass = (FrameworkElement)e.MouseDevice.Target;
+            FocusedClass = (Node) movingClass.DataContext;
         }
 
         //Used to move nodes around
@@ -106,13 +121,11 @@ namespace UMLDesigner.ViewModel
                 {
                     relativeMousePositionX = (int)Mouse.GetPosition(movingClass).X;
                     relativeMousePositionY = (int)Mouse.GetPosition(movingClass).Y;
-
                 }
 
 
                 // Fra ellipsen skaffes punktet som den er bundet til.
                 Node movingNode = (Node)movingClass.DataContext;
-
                 
                 // Canvaset findes her udfra ellipsen.
                 Canvas canvas = FindParent<Canvas>(movingClass);
@@ -122,9 +135,10 @@ namespace UMLDesigner.ViewModel
                 // derfor gemmes her positionen før det første ryk så den sammen med den sidste position kan benyttes til at flytte punktet med en kommando.
                 if (moveNodePoint == default(Point)) moveNodePoint = mousePosition;
                 // Punktets position ændres og beskeden bliver så sendt til UI med INotifyPropertyChanged mønsteret.
+
+                    movingNode.X = (int)mousePosition.X - relativeMousePositionX;
+                    movingNode.Y = (int)mousePosition.Y - relativeMousePositionY;
                 
-                movingNode.X = (int)mousePosition.X - relativeMousePositionX;
-                movingNode.Y = (int)mousePosition.Y - relativeMousePositionY;
             }
         }
 
