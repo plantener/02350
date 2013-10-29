@@ -34,8 +34,8 @@
             
             <!--Styling af Class-boksen-->
 
-            <Border DockPanel.Dock="Top" Background="#2E8DEF" SnapsToDevicePixels="True">
-                <Border.Resources>
+            <Grid DockPanel.Dock="Top" Background="#2E8DEF" SnapsToDevicePixels="True">
+                <Grid.Resources>
                     <Style TargetType="{x:Type TextBox}">
                         <Setter Property="Foreground" Value="White" />
                         <Setter Property="Background" Value="#2E8DEF" />
@@ -46,9 +46,9 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </Border.Resources>
-                <TextBox x:Name="className" Text="{Binding ClassName}" HorizontalAlignment="Center" BorderThickness="0" Margin="5,0,5,0"></TextBox>
-            </Border>
+                </Grid.Resources>
+                <TextBox x:Name="className" Text="{Binding ClassName}" TextAlignment="Center" BorderThickness="0" Margin="30,0,30,0"></TextBox>
+            </Grid>
 
             <!--Note the " : " is acutally being written to the GUI-->
             <!--IsHitTestVisible set to false, so the itemscontrols cannot be clicked -->
@@ -69,14 +69,30 @@
                         </DrawingBrush.Drawing>
                     </DrawingBrush>
                 </ItemsControl.BorderBrush>
-
+                
                 <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock><Run Text="{Binding Path=Modifier, Converter={StaticResource CPrivatePublic}}"/><Run Text="{Binding Name}"/> : <Run Text="{Binding Type}"/></TextBlock>
                         </DataTemplate>
-                    </ItemsControl.ItemTemplate>
+                </ItemsControl.ItemTemplate>
+
+                <ItemsControl.Style>
+                    <Style TargetType="ItemsControl">
+                        <Style.Triggers>
+                            <Trigger Property="HasItems" Value="false"   >
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ItemsControl.Style>
+
             </ItemsControl>
-   
+
             <ItemsControl Name="propertiesList" ItemsSource="{Binding Properties}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
             </ItemsControl>
             

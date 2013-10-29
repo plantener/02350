@@ -22,7 +22,7 @@ namespace UMLDesigner.ViewModel
         private int relativeMousePositionX = -1;
         private int relativeMousePositionY = -1;
         private Point _oldMousePos;
-
+       
         private Point moveNodePoint;
         public ObservableCollection<Node> Classes { get; set; }
 
@@ -82,13 +82,13 @@ namespace UMLDesigner.ViewModel
         {
            _oldMousePos = e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target));
            e.MouseDevice.Target.CaptureMouse();
-          
+
            
         }
-
         //Used to move nodes around
         public void MouseMoveNode(MouseEventArgs e)
         {
+
             //Is the mouse captured?
             if (Mouse.Captured != null)
             {
