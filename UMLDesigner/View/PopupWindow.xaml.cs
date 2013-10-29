@@ -20,10 +20,10 @@ namespace UMLDesigner.View
     public partial class PopupWindow : Window
     {
 
-        public String visibility;
-        public String selectedType;
-        public String Test { get; set; }
-        public String getSelectedItem { get { return cmbTypes.Text; } }
+        public bool visibility;
+        public String GetSelectedItem { get { return cmbTypes.Text; } }
+        public String GetName { get { return textBoxName.Text; } }
+
         public PopupWindow()
         {
             InitializeComponent();
@@ -40,7 +40,14 @@ namespace UMLDesigner.View
             var radioButton = sender as RadioButton;
             if (radioButton == null)
                 return;
-            visibility = radioButton.Content.ToString();
+            if (radioButton.Content.ToString() == "Public")
+            {
+                visibility = true;
+            }
+            else
+            {
+                visibility = false;
+            }
         }
 
         
