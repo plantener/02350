@@ -38,9 +38,16 @@
                 <Border.Resources>  
                     <Style TargetType="{x:Type TextBox}">
                         <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Background" Value="#2E8DEF" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsFocused, ElementName=className}" Value="true">
+                                <Setter Property="Background" Value="White" />
+                                <Setter Property="Foreground" Value="Black" />
+                            </DataTrigger>
+                        </Style.Triggers>
                     </Style>
                 </Border.Resources>
-                <TextBox Text="{Binding ClassName}" HorizontalAlignment="Center" BorderThickness="0" Background="#2E8DEF" Margin="5,0,5,2" SelectionOpacity="-4"></TextBox>
+                <TextBox x:Name="className" Text="{Binding ClassName}" HorizontalAlignment="Center" BorderThickness="0" Margin="5,0,5,2" SelectionOpacity="-4"></TextBox>
             </Border>
 
             <!--Note the " : " is acutally being written to the GUI-->

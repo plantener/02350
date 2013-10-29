@@ -14,7 +14,7 @@ namespace UMLDesigner.Command
     {
 
         private ObservableCollection<Node> classes;
-        private Node _class;
+        private Node _class = null;
 
 
         public AddClassCommand(ObservableCollection<Node> _classes)
@@ -24,7 +24,14 @@ namespace UMLDesigner.Command
 
         public void Execute()
         {
-            classes.Add(_class = new Node() { ClassName = "AddedClass", X = 100, Y = 100 });
+            if (_class == null)
+            {
+                classes.Add(_class = new Node() { ClassName = "AddedClass", X = 100, Y = 100 });
+            }
+            else
+            {
+                classes.Add(_class);
+            }
         }
 
         public void UnExecute()

@@ -80,7 +80,7 @@ namespace UMLDesigner.ViewModel
         // Captures the mouse, to move nodes
         public void MouseDownNode(MouseButtonEventArgs e)
         {
-            _oldMousePos = e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target));
+           _oldMousePos = e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target));
            e.MouseDevice.Target.CaptureMouse();
           
            
