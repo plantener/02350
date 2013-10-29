@@ -57,7 +57,7 @@
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Generalization" />
                 </RibbonGroup>
                 <RibbonGroup x:Name="AddItemGroup" Header="Add..">
-                    <RibbonButton SmallImageSource="../Images/save.png" Label="Attribute" Command="{Binding AddItemToNodeCommand}" CommandParameter="Attribute" IsEnabled="{Binding Main.Classes/IsFocused}"/>
+                    <RibbonButton SmallImageSource="../Images/save.png" Label="Attribute" Command="{Binding AddItemToNodeCommand}" CommandParameter="Attribute" IsEnabled="{Binding Main.IsFocused}"/>
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Method" Command="{Binding AddItemToNodeCommand}" CommandParameter="Method" />
 
                 </RibbonGroup>

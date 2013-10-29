@@ -17,6 +17,10 @@ namespace UMLDesigner.ViewModel
     {
         private int relativeMousePositionX = -1;
         private int relativeMousePositionY = -1;
+        private bool isFocused = false;
+        public bool IsFocused { get { return isFocused; } set { isFocused = value; RaisePropertyChanged(() => IsFocused); } }
+        private Node focusedClass = null;
+        public Node FocusedClass { get { return focusedClass; } private set { focusedClass = value; if (focusedClass == null) { IsFocused = false; } else { IsFocused = true; };} }
 
         private Point moveNodePoint;
         public ObservableCollection<Node> Classes { get; set; }
@@ -28,7 +32,7 @@ namespace UMLDesigner.ViewModel
         public ICommand MouseUpNodeCommand { get; private set; }
         public ICommand KeyDownCommand { get; private set; }
         public ICommand AddItemToNodeCommand { get; private set; }
-        public ICommand CanvasMouseDownCommand { get; private set; }
+        public ICommand MouseDownCanvasCommand { get; private set; }
 
 
         public MainViewModel()
@@ -48,25 +52,9 @@ namespace UMLDesigner.ViewModel
             MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
             KeyDownCommand = new RelayCommand<KeyEventArgs>(KeyDownNode);
             AddItemToNodeCommand = new AddItemToNodeCommand<object>();
-            CanvasMouseDownCommand = new RelayCommand<MouseEventArgs>(CanvasMouseDown);
+            MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
      
         }
-
-        private void CanvasMouseDown(MouseEventArgs e)
-        {
-            e.MouseDevice.Target.CaptureMouse();
-            if (e.MouseDevice.Target is Node)
-            {
-            }
-            else
-            {
-                foreach (Node node in Classes)
-                {
-                    node.IsFocused = false;
-                }
-            }
-        }
-
 
         //Captures a keyboard press if on a node
         public void KeyDownNode(KeyEventArgs e)
@@ -75,24 +63,18 @@ namespace UMLDesigner.ViewModel
             if (e.Key == Key.Return)
             {
                 Keyboard.ClearFocus();
+                FocusedClass = null;
             }
         }
+
+
 
         // Captures the mouse, to move nodes
         public void MouseDownNode(MouseButtonEventArgs e)
         {
             e.MouseDevice.Target.CaptureMouse();
             FrameworkElement movingClass = (FrameworkElement)e.MouseDevice.Target;
-                Node nodeClass = (Node)movingClass.DataContext;
-                foreach (Node node in Classes)
-                {
-                    node.IsFocused = false;
-                }
-                nodeClass.IsFocused = true;
-                foreach (Node node in Classes)
-                {
-                    System.Console.WriteLine(node.IsFocused);
-                }
+            FocusedClass = (Node) movingClass.DataContext;
         }
 
         //Used to move nodes around
