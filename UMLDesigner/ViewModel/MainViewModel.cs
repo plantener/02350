@@ -138,6 +138,12 @@ namespace UMLDesigner.ViewModel
                 
                 movingNode.X = (int)mousePosition.X - relativeMousePositionX;
                 movingNode.Y = (int)mousePosition.Y - relativeMousePositionY;
+
+                for (int i = 0; i < Edges.Count; i++)
+                {
+                    if (movingNode == Edges[i].Start || movingNode == Edges[i].End)
+                        Edges[i].Path = "";
+                }
             }
         }
 
@@ -162,7 +168,7 @@ namespace UMLDesigner.ViewModel
                        
             // Punktet flyttes med kommando. Den flyttes egentlig bare det sidste stykke i en række af mange men da de originale punkt gemmes er der ikke noget problem med undo/redo.
 
-            undoRedoController.AddAndExecute(new MoveNodeCommand(movingNode, (int)mousePosition.X - relativeMousePositionX, (int)mousePosition.Y - relativeMousePositionY, (int)moveNodePoint.X - relativeMousePositionX, (int)moveNodePoint.Y - relativeMousePositionY));
+            undoRedoController.AddAndExecute(new MoveNodeCommand(movingNode, (int)mousePosition.X - relativeMousePositionX, (int)mousePosition.Y - relativeMousePositionY, (int)moveNodePoint.X - relativeMousePositionX, (int)moveNodePoint.Y - relativeMousePositionY, Edges));
             // Nulstil værdier.
             moveNodePoint = new Point();
             //Reset the relative offsets for the moved node

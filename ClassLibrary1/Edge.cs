@@ -33,7 +33,6 @@ namespace UMLDesigner.Model
             set 
             {
                 end = value;
-                newPath(Start, End);
                 RaisePropertyChanged(() => End);
                 RaisePropertyChanged(() => Path);
             }
@@ -45,7 +44,8 @@ namespace UMLDesigner.Model
             get { return path; }
             set
             {
-                path = value; RaisePropertyChanged(() => Path);
+                path = value;
+                newPath(Start, End); RaisePropertyChanged(() => Path);
             }
         }
 
@@ -68,8 +68,8 @@ namespace UMLDesigner.Model
             {
                 PathX.Clear();
                 PathY.Clear();
-                Console.WriteLine(Start.X + Start.Width / 2);
-                Console.WriteLine(Start.X);
+               // Console.WriteLine(Start.X + Start.Width / 2);
+               // Console.WriteLine(Start.X);
                 PathX.Add(Start.X + Start.Width / 2);
                 PathY.Add(Start.Y + Start.Height / 2);
 
@@ -85,10 +85,11 @@ namespace UMLDesigner.Model
 
         private void setPath()
         {
-            Path = "M";
-            for (int i = 0; i <= PathX.Count - 1; i++)
+            path = "M";
+            for (int i = 0; i < PathX.Count; i++)
             {
-                Path += " " + PathX[i] + "," + PathY[i];
+                path += " " + PathX[i] + "," + PathY[i];
+                Console.WriteLine(Path);
             }
             Console.WriteLine(Path);
         }
