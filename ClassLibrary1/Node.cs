@@ -59,7 +59,7 @@ namespace UMLDesigner.Model
             Methods = new ObservableCollection<String>();
 
             X = Y = 0;
-           // Width = Height = 100;
+           Width = Height = 100;
         }  
     }
 
