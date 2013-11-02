@@ -14,6 +14,11 @@
                 <View:ClassUserControl/>
             </Canvas>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type Model:Edge}">
+            <Canvas>
+                <View:EdgeUserControl/>
+            </Canvas>
+        </DataTemplate>
     </Window.Resources>
 
     <DockPanel>
@@ -24,8 +29,9 @@
             </StatusBarItem>
         </StatusBar>
         <Grid>
-         <!--   <View:ClassUserControl /> -->
+            <!--   <View:ClassUserControl /> -->
             <ItemsControl ItemsSource="{Binding Classes}"/>
+            <ItemsControl ItemsSource="{Binding Edges}"/>
         </Grid>
     </DockPanel>
     <i:Interaction.Triggers>
