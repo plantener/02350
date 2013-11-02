@@ -78,7 +78,14 @@ namespace UMLDesigner.ViewModel
 
         private void MouseDownCanvas(MouseEventArgs obj)
         {
-            throw new System.NotImplementedException();
+            FrameworkElement clickedObj = (FrameworkElement)obj.MouseDevice.Target;
+            if (clickedObj.DataContext is Node)
+            {
+            }
+            else
+            {
+                FocusedClass = null;
+            }
         }
 
         public void AddNode()
@@ -105,8 +112,6 @@ namespace UMLDesigner.ViewModel
 
             _oldMousePos = e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target));
            e.MouseDevice.Target.CaptureMouse();
-           FrameworkElement movingClass = (FrameworkElement)e.MouseDevice.Target;
-           FocusedClass = (Node)movingClass.DataContext;
         }
 
         //Used to move nodes around
@@ -160,6 +165,8 @@ namespace UMLDesigner.ViewModel
             //Used to move node
             // noden skaffes.
             FrameworkElement movingClass =(FrameworkElement) e.MouseDevice.Target;
+            //Noden sættes i fokus
+            FocusedClass = (Node)movingClass.DataContext;
             
 
             // Ellipsens node skaffes.

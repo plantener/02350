@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:View="clr-namespace:UMLDesigner.View"
         xmlns:Model="clr-namespace:UMLDesigner.Model;assembly=UMLDesigner.Model"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
         Title="MainWindow" Height="400" Width="525">
     <Window.Resources>
@@ -26,4 +28,9 @@
             <ItemsControl ItemsSource="{Binding Classes}"/>
         </Grid>
     </DockPanel>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="MouseUp">
+            <cmd:EventToCommand Command="{Binding MouseDownCanvasCommand}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 </Window>
