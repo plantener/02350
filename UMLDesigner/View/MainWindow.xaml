@@ -4,7 +4,7 @@
         xmlns:View="clr-namespace:UMLDesigner.View"
         xmlns:Model="clr-namespace:UMLDesigner.Model;assembly=UMLDesigner.Model"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
-        Title="UML Designer" Height="400" Width="525">
+        Title="UML Designer" Height="400" Width="525" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp">
     <Window.Resources>
         <!-- Dette DataTemplate fortæller vinduet hvordan Node klassen skal vises grafisk. Denne grafiske beskrivelse er samlet i NodeUserControl. -->
         <DataTemplate DataType="{x:Type Model:Node}">
