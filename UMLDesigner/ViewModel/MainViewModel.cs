@@ -74,16 +74,16 @@ namespace UMLDesigner.ViewModel
             KeyDownCommand = new RelayCommand<KeyEventArgs>(KeyDownNode);
 
          //   AddItemToNodeCommand = new RelayCommand(AddItemToNode);
-          AddItemToNodeCommand = new RelayCommand<object>(param => AddItemToNode(FocusedClass,param));
+          AddItemToNodeCommand = new RelayCommand<object>(param => AddItemToNode(FocusedClass,Classes,param));
           MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
 
             Debug.WriteLine("Højde" + Classes[0].Height);
         }
 
        
-        public void AddItemToNode(Node FocusedClass, object parameter)
+        public void AddItemToNode(Node FocusedClass, ObservableCollection<Node> Classes, object parameter)
         {
-            undoRedoController.AddAndExecute( new AddItemToNodeCommand(FocusedClass,parameter));
+            undoRedoController.AddAndExecute( new AddItemToNodeCommand(FocusedClass, Classes, parameter));
         }
 
         private void MouseDownCanvas(MouseEventArgs obj)
