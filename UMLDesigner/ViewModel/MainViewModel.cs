@@ -26,7 +26,7 @@ namespace UMLDesigner.ViewModel
         private Node focusedClass = null;
         public Node FocusedClass { get { return focusedClass; } private set { focusedClass = value; if (focusedClass == null) { IsFocused = false; } else { IsFocused = true; };} }
         private bool canPaste = false;
-        public bool CanPaste{ get { return canPaste; } set { canPaste = value; RaisePropertyChanged(() => canPaste); }}
+        public bool CanPaste{ get { return canPaste; } set { canPaste = value; RaisePropertyChanged(() => CanPaste); }}
         private Node copyClass = null;
         public Node CopyClass { get { return copyClass; } private set { copyClass = value; if (copyClass == null) { CanPaste = false; } else { CanPaste = true; };} }
         private Point _oldMousePos;
@@ -91,9 +91,14 @@ namespace UMLDesigner.ViewModel
 
         private void Copy()
         {
-            copyClass = new Node();
+            CopyClass = new Node();
+            CopyClass.ClassName = FocusedClass.ClassName;
             CopyClass.X = 0;
             CopyClass.Y = 0;
+            foreach (Attribute attribute in FocusedClass.Attributes)
+            {
+                CopyClass.Attributes.Add(attribute);
+            }
             foreach (Attribute method in FocusedClass.Methods)
             {
                 CopyClass.Methods.Add(method);
