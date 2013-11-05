@@ -49,6 +49,7 @@ namespace UMLDesigner.ViewModel
         public ICommand MouseDownCanvasCommand { get; private set; }
         public ICommand CopyCommand { get; private set; }
         public ICommand PasteCommand { get; private set; }
+        public ICommand DeleteCommand { get; private set; }
 
 
         public MainViewModel()
@@ -84,8 +85,15 @@ namespace UMLDesigner.ViewModel
             MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
             CopyCommand = new RelayCommand(Copy);
             PasteCommand = new RelayCommand(Paste);
+            DeleteCommand = new RelayCommand(delete);
 
             Debug.WriteLine("Højde" + Classes[0].Height);
+        }
+
+        private void delete()
+        {
+            Classes.Remove(FocusedClass);
+            //We need an edge detection on an object
         }
 
 
@@ -112,6 +120,7 @@ namespace UMLDesigner.ViewModel
         private void Paste()
         {
             Classes.Add(CopyClass);
+            FocusedClass = CopyClass;
         }
 
         public void AddItemToNode(Node FocusedClass, object parameter)
@@ -124,10 +133,12 @@ namespace UMLDesigner.ViewModel
             FrameworkElement clickedObj = (FrameworkElement)obj.MouseDevice.Target;
             if (clickedObj.DataContext is Node)
             {
+                System.Console.WriteLine("JEg er node");
             }
             else
             {
                 FocusedClass = null;
+                System.Console.WriteLine("Jeg er ikke node");
             }
         }
 

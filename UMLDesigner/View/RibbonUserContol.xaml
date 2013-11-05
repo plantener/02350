@@ -41,7 +41,7 @@
                     <RibbonButton LargeImageSource="..\Images\paste.png" Label="Paste" Command="{Binding PasteCommand}" KeyTip="V" IsEnabled="{Binding CanPaste}"/>
                     <RibbonButton LargeImageSource="..\Images\copy.png" Label="Copy" Command="{Binding CopyCommand}" KeyTip="C" IsEnabled="{Binding IsFocused}" />
                     <RibbonButton SmallImageSource="..\Images\cut.png" Label="Cut" KeyTip="X" />
-                    <RibbonButton SmallImageSource="..\Images\save.png" Label="Delete" KeyTip="D" />
+                    <RibbonButton SmallImageSource="..\Images\save.png" Label="Delete" KeyTip="D" Command="{Binding DeleteCommand}" IsEnabled="{Binding IsFocused}" />
                 </RibbonGroup>
             </RibbonTab>
             <!-- Ribbon Tab #2: -->
