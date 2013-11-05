@@ -25,6 +25,10 @@ namespace UMLDesigner.ViewModel
         public bool IsFocused { get { return isFocused; } set { isFocused = value; RaisePropertyChanged(() => IsFocused); } }
         private Node focusedClass = null;
         public Node FocusedClass { get { return focusedClass; } private set { focusedClass = value; if (focusedClass == null) { IsFocused = false; } else { IsFocused = true; };} }
+        private bool canPaste = false;
+        public bool CanPaste{ get { return canPaste; } set { canPaste = value; RaisePropertyChanged(() => canPaste); }}
+        private Node copyClass = null;
+        public Node CopyClass { get { return copyClass; } private set { copyClass = value; if (copyClass == null) { CanPaste = false; } else { CanPaste = true; };} }
         private Point _oldMousePos;
         private Point moveNodePoint;
         public ObservableCollection<Node> Classes { get; set; }
@@ -43,6 +47,8 @@ namespace UMLDesigner.ViewModel
         public ICommand KeyDownCommand { get; private set; }
         public ICommand AddItemToNodeCommand { get; private set; }
         public ICommand MouseDownCanvasCommand { get; private set; }
+        public ICommand CopyCommand { get; private set; }
+        public ICommand PasteCommand { get; private set; }
 
 
         public MainViewModel()
@@ -74,13 +80,35 @@ namespace UMLDesigner.ViewModel
             KeyDownCommand = new RelayCommand<KeyEventArgs>(KeyDownNode);
 
          //   AddItemToNodeCommand = new RelayCommand(AddItemToNode);
-          AddItemToNodeCommand = new RelayCommand<object>(param => AddItemToNode(FocusedClass,param));
-          MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
+            AddItemToNodeCommand = new RelayCommand<object>(param => AddItemToNode(FocusedClass,param));
+            MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
+            CopyCommand = new RelayCommand(Copy);
+            PasteCommand = new RelayCommand(Paste);
 
             Debug.WriteLine("Højde" + Classes[0].Height);
         }
 
-       
+
+        private void Copy()
+        {
+            copyClass = new Node();
+            CopyClass.X = 0;
+            CopyClass.Y = 0;
+            foreach (Attribute method in FocusedClass.Methods)
+            {
+                CopyClass.Methods.Add(method);
+            }
+            foreach (string property in FocusedClass.Properties)
+            {
+                CopyClass.Properties.Add(property);
+            }
+        }
+
+        private void Paste()
+        {
+            Classes.Add(CopyClass);
+        }
+
         public void AddItemToNode(Node FocusedClass, object parameter)
         {
             undoRedoController.AddAndExecute( new AddItemToNodeCommand(FocusedClass,parameter));
@@ -237,5 +265,6 @@ namespace UMLDesigner.ViewModel
             }
             return item.DataContext as Node;
         }
+
     }
 }
