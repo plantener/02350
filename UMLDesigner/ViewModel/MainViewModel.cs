@@ -177,17 +177,17 @@ namespace UMLDesigner.ViewModel
 
         public void MouseUpNode(MouseEventArgs e)
         {
-            if (_oldMousePos == e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target)))
-            {
-                e.MouseDevice.Target.ReleaseMouseCapture(); 
-                return;
-            }
             //Used to move node
             // noden skaffes.
             FrameworkElement movingClass =(FrameworkElement) e.MouseDevice.Target;
             //Noden sættes i fokus
             FocusedClass = (Node)movingClass.DataContext;
-            
+
+            if (_oldMousePos == e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target)))
+            {
+                e.MouseDevice.Target.ReleaseMouseCapture();
+                return;
+            }           
 
             // Ellipsens node skaffes.
             Node movingNode = (Node) movingClass.DataContext;

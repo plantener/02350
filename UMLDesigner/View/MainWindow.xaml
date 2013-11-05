@@ -16,6 +16,12 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type Model:Edge}">
             <Canvas>
+                <!-- Event trigger detects mouseclick on canvas -->
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseUp">
+                        <cmd:EventToCommand Command="{Binding MouseDownCanvasCommand}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <View:EdgeUserControl/>
             </Canvas>
         </DataTemplate>
@@ -34,9 +40,4 @@
             <ItemsControl ItemsSource="{Binding Edges}"/>
         </Grid>
     </DockPanel>
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="MouseUp">
-            <cmd:EventToCommand Command="{Binding MouseDownCanvasCommand}" PassEventArgsToCommand="True"/>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
 </Window>
