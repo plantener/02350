@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:View="clr-namespace:UMLDesigner.View"
+        xmlns:VM="clr-namespace:UMLDesigner.ViewModel"
         xmlns:Model="clr-namespace:UMLDesigner.Model;assembly=UMLDesigner.Model"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
@@ -14,7 +15,7 @@
                 <View:ClassUserControl/>
             </Canvas>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type Model:Edge}">
+        <DataTemplate DataType="{x:Type VM:EdgeViewModel}">
             <Canvas>
                 <!-- Event trigger detects mouseclick on canvas -->
                 <i:Interaction.Triggers>

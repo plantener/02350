@@ -5,6 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100">
-    <Path Stroke="#2E8DEF" StrokeThickness="1" Data="{Binding Path}" />
-    <!--<Line Stroke="#2E8DEF" X1="{Binding Start.X}" Y1="{Binding Start.Y}" X2="{Binding End.X}" Y2="{Binding End.Y}" StrokeThickness="1"/>-->
+    <Grid>
+        <Path Stroke="#2E8DEF" StrokeThickness="1" Data="{Binding Path}" />
+        <Polyline Points="0,100 5,85 10,100" Fill="White" Stroke="#2E8DEF" StrokeThickness="1" Canvas.Left="75" Canvas.Top="50" />
+    </Grid>
 </UserControl>

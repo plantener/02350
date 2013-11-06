@@ -28,7 +28,10 @@ namespace UMLDesigner.ViewModel
         private Point _oldMousePos;
         private Point moveNodePoint;
         public ObservableCollection<Node> Classes { get; set; }
-        public ObservableCollection<Edge> Edges { get; set; }
+        public ObservableCollection<EdgeViewModel> Edges { get; set; }
+
+        private bool isAddingEdge = false;
+        private Node startEdge;
 
         // Kommandoer som UI bindes til.
         public ICommand UndoCommand { get; private set; }
@@ -56,9 +59,8 @@ namespace UMLDesigner.ViewModel
                 new Node() { ClassName = "NewClass", Attributes = { new Attribute { Name = "Testattribut", Modifier = true, Type = "int" } }, Properties = { "PropertiesTest", "ProperTiesTest2" } }
             };
 
-            Edges = new ObservableCollection<Edge>()
-            { 
-                new Edge(Classes[0], Classes[1]) {  }
+            Edges = new ObservableCollection<EdgeViewModel>()
+            {
             };
 
             // Kommandoerne som UI kan kaldes bindes til de metoder der skal kaldes. Her vidersendes metode kaldne til UndoRedoControlleren.
@@ -105,7 +107,7 @@ namespace UMLDesigner.ViewModel
 
         public void AddEdge()
         {
-            
+            isAddingEdge = true;
         }
 
         //Captures a keyboard press if on a node
@@ -124,9 +126,11 @@ namespace UMLDesigner.ViewModel
         // Captures the mouse, to move nodes
         public void MouseDownNode(MouseButtonEventArgs e)
         {
-
-            _oldMousePos = e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target));
-           e.MouseDevice.Target.CaptureMouse();
+            if (!isAddingEdge)
+            {
+                _oldMousePos = e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target));
+                e.MouseDevice.Target.CaptureMouse();
+            }
         }
 
         //Used to move nodes around
@@ -183,29 +187,43 @@ namespace UMLDesigner.ViewModel
             //Noden sættes i fokus
             FocusedClass = (Node)movingClass.DataContext;
 
-            if (_oldMousePos == e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target)))
+            if (isAddingEdge)
             {
+                if (startEdge == null)
+                    startEdge = FocusedClass;
+                else if (startEdge != FocusedClass)
+                {
+                    undoRedoController.AddAndExecute(new AddEdgeCommand(Edges, startEdge, FocusedClass));
+                    isAddingEdge = false;
+                    startEdge = null;
+                }
+            }
+            else
+            {
+                if (_oldMousePos == e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target)))
+                {
+                    e.MouseDevice.Target.ReleaseMouseCapture();
+                    return;
+                }
+
+                // Ellipsens node skaffes.
+                Node movingNode = (Node)movingClass.DataContext;
+                // Canvaset skaffes.
+                Canvas canvas = FindParent<Canvas>(movingClass);
+                // Musens position på canvas skaffes.
+                Point mousePosition = Mouse.GetPosition(canvas);
+
+                // Punktet flyttes med kommando. Den flyttes egentlig bare det sidste stykke i en række af mange men da de originale punkt gemmes er der ikke noget problem med undo/redo.
+
+                undoRedoController.AddAndExecute(new MoveNodeCommand(movingNode, (int)mousePosition.X - relativeMousePositionX, (int)mousePosition.Y - relativeMousePositionY, (int)moveNodePoint.X - relativeMousePositionX, (int)moveNodePoint.Y - relativeMousePositionY, Edges));
+                // Nulstil værdier.
+                moveNodePoint = new Point();
+                //Reset the relative offsets for the moved node
+                relativeMousePositionX = -1;
+                relativeMousePositionY = -1;
+                // Musen frigøres.
                 e.MouseDevice.Target.ReleaseMouseCapture();
-                return;
-            }           
-
-            // Ellipsens node skaffes.
-            Node movingNode = (Node) movingClass.DataContext;
-            // Canvaset skaffes.
-            Canvas canvas = FindParent<Canvas>(movingClass);
-            // Musens position på canvas skaffes.
-            Point mousePosition = Mouse.GetPosition(canvas);
-                       
-            // Punktet flyttes med kommando. Den flyttes egentlig bare det sidste stykke i en række af mange men da de originale punkt gemmes er der ikke noget problem med undo/redo.
-
-            undoRedoController.AddAndExecute(new MoveNodeCommand(movingNode, (int)mousePosition.X - relativeMousePositionX, (int)mousePosition.Y - relativeMousePositionY, (int)moveNodePoint.X - relativeMousePositionX, (int)moveNodePoint.Y - relativeMousePositionY, Edges));
-            // Nulstil værdier.
-            moveNodePoint = new Point();
-            //Reset the relative offsets for the moved node
-            relativeMousePositionX = -1;
-            relativeMousePositionY = -1;
-            // Musen frigøres.
-            e.MouseDevice.Target.ReleaseMouseCapture(); 
+            }
         }
 
         public static T FindParent<T>(DependencyObject child) where T : DependencyObject
