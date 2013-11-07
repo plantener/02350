@@ -52,9 +52,11 @@
                 </RibbonGroup>
                 <RibbonGroup x:Name="ArrowGroup" Header="Arrows">
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Aggregation" />
-                    <RibbonButton SmallImageSource="../Images/save.png" Label="Association" Command="{Binding AddEdgeCommand}"/>
+                    <RibbonButton SmallImageSource="../Images/save.png" Label="Association" Command="{Binding AddASSCommand}"/>
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Composition" />
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Generalization" />
+                    <RibbonButton SmallImageSource="../Images/save.png" Label="Dependency" />
+                    <RibbonButton SmallImageSource="../Images/save.png" Label="Normal" />
                 </RibbonGroup>
                 <RibbonGroup x:Name="AddItemGroup" Header="Add..">
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Attribute" Command="{Binding AddItemToNodeCommand}" CommandParameter="Attribute" IsEnabled="{Binding IsFocused}"/>

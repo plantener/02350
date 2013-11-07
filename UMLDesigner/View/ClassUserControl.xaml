@@ -8,7 +8,9 @@
              xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
              xmlns:Util="clr-namespace:UMLDesigner.Utilities"
              Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300" 
+             Util:SizeObserver.Observe="true" Util:SizeObserver.ObservedHeight="{Binding Height, Mode=OneWayToSource}"
+             Util:SizeObserver.ObservedWidth="{Binding Width, Mode=OneWayToSource}">
 
     <Border BorderBrush="#2E8DEF" BorderThickness="2" CornerRadius="1" Cursor="Hand" >
         <DockPanel MinHeight="50" Background="White">

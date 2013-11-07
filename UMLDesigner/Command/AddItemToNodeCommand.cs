@@ -7,16 +7,17 @@ using System.Windows;
 using System.Windows.Input;
 using UMLDesigner.Model;
 using UMLDesigner.View;
+using UMLDesigner.ViewModel;
 
 namespace UMLDesigner.Command
 {
     class AddItemToNodeCommand : IUndoRedoCommand
     {
         private object _parameter;
-        private Node _focusedClass;
+        private NodeViewModel _focusedClass;
         private UMLDesigner.Model.Attribute itemToAdd;
 
-        public AddItemToNodeCommand(Node focusedClass, object parameter)
+        public AddItemToNodeCommand(NodeViewModel focusedClass, object parameter)
         {
             _focusedClass = focusedClass;
             _parameter = parameter;

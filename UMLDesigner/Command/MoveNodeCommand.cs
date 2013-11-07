@@ -13,10 +13,10 @@ namespace UMLDesigner.Command
     class MoveNodeCommand : IUndoRedoCommand
     {
         private ObservableCollection<EdgeViewModel> edges;
-        private Node node;
+        private NodeViewModel node;
         private int newX, newY, oldX, oldY;
 
-        public MoveNodeCommand(Node _node, int _newX, int _newY, int _oldX, int _oldY, ObservableCollection<EdgeViewModel> _edges)
+        public MoveNodeCommand(NodeViewModel _node, int _newX, int _newY, int _oldX, int _oldY, ObservableCollection<EdgeViewModel> _edges)
         {
             this.node = _node;
             this.newX = _newX;
@@ -32,9 +32,9 @@ namespace UMLDesigner.Command
             node.Y = newY;
             for (int i = 0; i < edges.Count; i++)
             {
-                if (node == edges[i].Start || node == edges[i].End)
+                if (node == edges[i].NVMEndA || node == edges[i].NVMEndB)
                 {
-                    edges[i].Path = "";
+                    edges[i].newPath();
                 }
             }
         }
@@ -45,9 +45,9 @@ namespace UMLDesigner.Command
             node.Y = oldY;
             for (int i = 0; i < edges.Count; i++)
             {
-                if (node == edges[i].Start || node == edges[i].End)
+                if (node == edges[i].NVMEndA || node == edges[i].NVMEndB)
                 {
-                    edges[i].Path = "";
+                    edges[i].newPath();
                 }
             }
         }

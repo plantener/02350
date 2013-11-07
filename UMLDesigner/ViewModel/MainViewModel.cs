@@ -23,15 +23,16 @@ namespace UMLDesigner.ViewModel
         private int relativeMousePositionY = -1;
         private bool isFocused = false;
         public bool IsFocused { get { return isFocused; } set { isFocused = value; RaisePropertyChanged(() => IsFocused); } }
-        private Node focusedClass = null;
-        public Node FocusedClass { get { return focusedClass; } private set { focusedClass = value; if (focusedClass == null) { IsFocused = false; } else { IsFocused = true; };} }
+        private NodeViewModel focusedClass = null;
+        public NodeViewModel FocusedClass { get { return focusedClass; } private set { focusedClass = value; if (focusedClass == null) { IsFocused = false; } else { IsFocused = true; };} }
         private Point _oldMousePos;
         private Point moveNodePoint;
-        public ObservableCollection<Node> Classes { get; set; }
+        public ObservableCollection<NodeViewModel> Classes { get; set; }
         public ObservableCollection<EdgeViewModel> Edges { get; set; }
 
         private bool isAddingEdge = false;
-        private Node startEdge;
+        private NodeViewModel startEdge;
+        private string type;
 
         // Kommandoer som UI bindes til.
         public ICommand UndoCommand { get; private set; }
@@ -39,7 +40,12 @@ namespace UMLDesigner.ViewModel
 
         // Kommandoer som UI bindes til.
         public ICommand AddClassCommand { get; private set; }
-        public ICommand AddEdgeCommand { get; private set; }
+        public ICommand AddAGGCommand { get; private set; }
+        public ICommand AddASSCommand { get; private set; }
+        public ICommand AddCOMCommand { get; private set; }
+        public ICommand AddDEPCommand { get; private set; }
+        public ICommand AddGENCommand { get; private set; }
+        public ICommand AddNORCommand { get; private set; }
         public ICommand MouseDownNodeCommand { get; private set; }
         public ICommand MouseMoveNodeCommand { get; private set; }
         public ICommand MouseUpNodeCommand { get; private set; }
@@ -52,11 +58,11 @@ namespace UMLDesigner.ViewModel
         {
             // Her fyldes listen af classes med to classes. Her benyttes et alternativ til konstruktorer med syntaksen 'new Type(){ Attribut = Værdi }'
             // Det der sker er at der først laves et nyt object og så sættes objektets attributer til de givne værdier.
-            Classes = new ObservableCollection<Node>()
+            Classes = new ObservableCollection<NodeViewModel>()
             { 
-                new Node() { ClassName = "TestClass", X = 30, Y = 40,  Methods = { new Attribute { Name = "metode", Modifier = true, Type = "int" } }, Properties={"properties"}},
-                new Node() { ClassName = "TestClass", X = 140, Y = 230, Properties= {"properties", "her"},},
-                new Node() { ClassName = "NewClass", Attributes = { new Attribute { Name = "Testattribut", Modifier = true, Type = "int" } }, Properties = { "PropertiesTest", "ProperTiesTest2" } }
+                new NodeViewModel() { ClassName = "TestClass", X = 30, Y = 40,  Methods = { new Attribute { Name = "metode", Modifier = true, Type = "int" } }, Properties={"properties"}},
+                new NodeViewModel() { ClassName = "TestClass", X = 140, Y = 230, Properties= {"properties", "her"},},
+                new NodeViewModel() { ClassName = "NewClass", Attributes = { new Attribute { Name = "Testattribut", Modifier = true, Type = "int" } }, Properties = { "PropertiesTest", "ProperTiesTest2" } }
             };
 
             Edges = new ObservableCollection<EdgeViewModel>()
@@ -69,7 +75,12 @@ namespace UMLDesigner.ViewModel
 
             // Kommandoerne som UI kan kaldes bindes til de metoder der skal kaldes.
             AddClassCommand = new RelayCommand(AddNode);
-            AddEdgeCommand = new RelayCommand(AddEdge);
+            AddAGGCommand = new RelayCommand(AddAGG);
+            AddASSCommand = new RelayCommand(AddASS);
+            AddCOMCommand = new RelayCommand(AddCOM);
+            AddDEPCommand = new RelayCommand(AddDEP);
+            AddGENCommand = new RelayCommand(AddGEN);
+            AddGENCommand = new RelayCommand(AddNOR);
             MouseDownNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseDownNode);
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
             MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
@@ -79,11 +90,10 @@ namespace UMLDesigner.ViewModel
           AddItemToNodeCommand = new RelayCommand<object>(param => AddItemToNode(FocusedClass,param));
           MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
 
-            Debug.WriteLine("Højde" + Classes[0].Height);
         }
 
-       
-        public void AddItemToNode(Node FocusedClass, object parameter)
+
+        public void AddItemToNode(NodeViewModel FocusedClass, object parameter)
         {
             undoRedoController.AddAndExecute( new AddItemToNodeCommand(FocusedClass,parameter));
         }
@@ -91,7 +101,7 @@ namespace UMLDesigner.ViewModel
         private void MouseDownCanvas(MouseEventArgs obj)
         {
             FrameworkElement clickedObj = (FrameworkElement)obj.MouseDevice.Target;
-            if (clickedObj.DataContext is Node)
+            if (clickedObj.DataContext is NodeViewModel)
             {
             }
             else
@@ -108,6 +118,42 @@ namespace UMLDesigner.ViewModel
         public void AddEdge()
         {
             isAddingEdge = true;
+        }
+
+        public void AddAGG()
+        {
+            type = "AGG";
+            AddEdge();
+        }
+
+        public void AddASS()
+        {
+            type = "ASS";
+            AddEdge();
+        }
+
+        public void AddCOM()
+        {
+            type = "COM";
+            AddEdge();
+        }
+
+        public void AddDEP()
+        {
+            type = "DEP";
+            AddEdge();
+        }
+
+        public void AddGEN()
+        {
+            type = "GEN";
+            AddEdge();
+        }
+
+        public void AddNOR()
+        {
+            type = "NOR";
+            AddEdge();
         }
 
         //Captures a keyboard press if on a node
@@ -157,7 +203,7 @@ namespace UMLDesigner.ViewModel
 
 
                 // Fra ellipsen skaffes punktet som den er bundet til.
-                Node movingNode = (Node)movingClass.DataContext;
+                NodeViewModel movingNode = (NodeViewModel)movingClass.DataContext;
                 
                 // Canvaset findes her udfra ellipsen.
                 Canvas canvas = FindParent<Canvas>(movingClass);
@@ -173,8 +219,8 @@ namespace UMLDesigner.ViewModel
 
                 for (int i = 0; i < Edges.Count; i++)
                 {
-                    if (movingNode == Edges[i].Start || movingNode == Edges[i].End)
-                        Edges[i].Path = "";
+                    if (movingNode == Edges[i].NVMEndA || movingNode == Edges[i].NVMEndB)
+                        Edges[i].newPath();
                 }
             }
         }
@@ -185,7 +231,7 @@ namespace UMLDesigner.ViewModel
             // noden skaffes.
             FrameworkElement movingClass =(FrameworkElement) e.MouseDevice.Target;
             //Noden sættes i fokus
-            FocusedClass = (Node)movingClass.DataContext;
+            FocusedClass = (NodeViewModel)movingClass.DataContext;
 
             if (isAddingEdge)
             {
@@ -193,9 +239,10 @@ namespace UMLDesigner.ViewModel
                     startEdge = FocusedClass;
                 else if (startEdge != FocusedClass)
                 {
-                    undoRedoController.AddAndExecute(new AddEdgeCommand(Edges, startEdge, FocusedClass));
+                    undoRedoController.AddAndExecute(new AddEdgeCommand(Edges, FocusedClass.newEdge(startEdge, type)));
                     isAddingEdge = false;
                     startEdge = null;
+                    type = "";
                 }
             }
             else
@@ -207,7 +254,7 @@ namespace UMLDesigner.ViewModel
                 }
 
                 // Ellipsens node skaffes.
-                Node movingNode = (Node)movingClass.DataContext;
+                NodeViewModel movingNode = (NodeViewModel)movingClass.DataContext;
                 // Canvaset skaffes.
                 Canvas canvas = FindParent<Canvas>(movingClass);
                 // Musens position på canvas skaffes.
@@ -245,7 +292,7 @@ namespace UMLDesigner.ViewModel
                 return FindParent<T>(parentObject);
             }
         }
-        //Currently not used
+        /*//Currently not used
         private Node GetNodeUnderMouse()
         {
             var item = Mouse.DirectlyOver as DockPanel;
@@ -253,7 +300,7 @@ namespace UMLDesigner.ViewModel
             {
                 return null;
             }
-            return item.DataContext as Node;
-        }
+            return item.DataContext as NodeViewModel;
+        }*/
     }
 }

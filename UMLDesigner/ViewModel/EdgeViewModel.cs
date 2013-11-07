@@ -14,35 +14,83 @@ namespace UMLDesigner.ViewModel
     {
         private Edge edge;
 
-        public Node Start { get { return edge.Start; } set { edge.Start = value; newPath(); RaisePropertyChanged(() => Start); RaisePropertyChanged(() => Path); } }
-        public Node End { get { return edge.End; } set { edge.End = value; newPath(); RaisePropertyChanged(() => End); RaisePropertyChanged(() => Path); } }
+        private NodeViewModel nVMEndA;
+        public NodeViewModel NVMEndA { get { return nVMEndA; }
+            set { nVMEndA = value; RaisePropertyChanged(() => NVMEndA); RaisePropertyChanged(() => EndA); } }
+
+        private NodeViewModel nVMEndB;
+        public NodeViewModel NVMEndB { get { return nVMEndB; }
+            set { nVMEndB = value; RaisePropertyChanged(() => NVMEndB); RaisePropertyChanged(() => EndB); } }
+
+        public Node EndA { get { return edge.EndA; } 
+            set { edge.EndA = value; RaisePropertyChanged(() => EndA); RaisePropertyChanged(() => Path); } }
+
+        public Node EndB { get { return edge.EndB; } 
+            set { edge.EndB = value; RaisePropertyChanged(() => EndB); RaisePropertyChanged(() => Path); } }
+
+        private EdgeType Type { get { return edge.Type; } set { edge.Type = value; RaisePropertyChanged(() => Type); } }
+
+        private string colorFill;
+        private string dashed;
 
         private String path;
         public String Path { get { return path; } set { path = value; RaisePropertyChanged(() => Path); } }
 
+        private String arrow;
+        public String Arrow { get { setArrow(); return arrow; } set { arrow = value; RaisePropertyChanged(() => Arrow); } }
+
         private PointCollection pathObjects = new PointCollection();
 
-        public EdgeViewModel(Node start, Node end)
+        private PointCollection normArrow = new PointCollection();
+        private PointCollection genArrow = new PointCollection();
+        private PointCollection rombArrow = new PointCollection();
+        private PointCollection thisArrow;
+
+        public EdgeViewModel(NodeViewModel nVMEndA, NodeViewModel nVMEndB, Node endA, Node endB, string type)
         {
             edge = new Edge();
-            edge.Start = start;
-            edge.End = end;
-            Console.WriteLine(End.Y);
+            EndA = endA;
+            EndB = endB;
+            this.nVMEndA = nVMEndA;
+            this.nVMEndB = nVMEndB;
+            Type = edgeTypeConverter(type);
+            initArrow();
             newPath();
+            setArrow();
         }
 
-        private void newPath()
+        public void newPath()
         {
             if (pathObjects != null)
             {
                 pathObjects.Clear();
 
-                pathObjects.Add(new Point(Start.X + Start.Width / 2, Start.Y + Start.Height / 2));
-                pathObjects.Add(new Point(Start.X + Start.Width / 2, End.Y + End.Height / 2));
-                pathObjects.Add(new Point(End.X + End.Width / 2, End.Y + End.Height / 2));
+                pathObjects.Add(new Point(NVMEndA.X, NVMEndA.Y));
+                pathObjects.Add(new Point(NVMEndA.X, NVMEndB.Y));
+                pathObjects.Add(new Point(NVMEndB.X, NVMEndB.Y));
 
                 setPath();
             }
+        }
+
+        private void initArrow()
+        {
+            //Normal arrow
+            normArrow.Add(new Point(-5, 10));
+            normArrow.Add(new Point(0, 0));
+            normArrow.Add(new Point(5, 10));
+            //Generalization
+            genArrow.Add(new Point(-5, 10));
+            genArrow.Add(new Point(0, 0));
+            genArrow.Add(new Point(5, 10));
+            genArrow.Add(new Point(-5, 10));
+            //Rhombus
+            genArrow.Add(new Point(-5, 10));
+            genArrow.Add(new Point(0, 0));
+            genArrow.Add(new Point(5, 10));
+            genArrow.Add(new Point(0, 20));
+            genArrow.Add(new Point(-5, 10));
+
         }
 
         private void setPath()
@@ -51,9 +99,61 @@ namespace UMLDesigner.ViewModel
             for (int i = 0; i < pathObjects.Count; i++)
             {
                 path += " " + pathObjects.ElementAt(i).X + "," + pathObjects.ElementAt(i).Y;
-                Console.WriteLine(Path);
             }
-            Console.WriteLine(Path);
+            setArrow();
+        }
+
+        private void setArrow()
+        {
+            arrow = "";
+            if (!Type.Equals(EdgeType.NOR))
+            {
+                for (int i = 0; i < pathObjects.Count; i++)
+                {
+                    arrow += " " + (EndB.X + thisArrow.ElementAt(i).X) +
+                        "," + (EndB.Y + thisArrow.ElementAt(i).Y);
+                    Console.WriteLine(arrow);
+                }
+                Console.WriteLine(arrow);
+            }
+        }
+
+        private EdgeType edgeTypeConverter(string type)
+        {
+            switch (type)
+            {
+                case "AGG":
+                    thisArrow = rombArrow;
+                    return EdgeType.AGG;
+                case "ASS":
+                    thisArrow = normArrow;
+                    return EdgeType.ASS;
+                case "COM":
+                    thisArrow = rombArrow;
+                    return EdgeType.COM;
+                case "DEP":
+                    thisArrow = normArrow;
+                    return EdgeType.DEP;
+                case "GEN":
+                    thisArrow = genArrow;
+                    return EdgeType.GEN;
+                case "NOR":
+                    return EdgeType.NOR;
+                default:
+                    thisArrow = normArrow;
+                    return EdgeType.ASS;
+            }
+        }
+
+        private void setAnchor()
+        {
+            if (NVMEndA.X+NVMEndA.Width <= NVMEndB.X)
+            {
+
+            } else if (NVMEndA.X >= NVMEndB.X + NVMEndB.Width)
+            {
+
+            }
         }
     }
 }

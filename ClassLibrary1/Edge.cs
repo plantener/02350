@@ -11,18 +11,13 @@ namespace UMLDesigner.Model
 {
     public class Edge : ViewModelBase
     {
-        private Node start;
-        public Node Start
-        {
-            get { return start; }
-            set { start = value; }
-        }
+        private Node endA;
+        public Node EndA { get { return endA; } set { endA = value; } }
 
-        private Node end;
-        public Node End
-        {
-            get { return end; }
-            set { end = value; }
-        }
+        private Node endB;
+        public Node EndB { get { return endB; } set { endB = value; } }
+
+        private EdgeType type;
+        public EdgeType Type { get { return type; } set { type = value; } }
     }
 }
