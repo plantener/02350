@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,34 +20,29 @@ namespace UMLDesigner.View
     /// </summary>
     public partial class PopupWindow : Window
     {
-
-        public bool visibility;
-        public String GetSelectedItem { get { return cmbTypes.Text; } }
-        public String GetName { get { return textBoxName.Text; } }
-
+     
         public PopupWindow()
         {
             InitializeComponent();
-
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
+            
         }
 
-        private void RadioButtonChecked(object sender, RoutedEventArgs e)
+        //Used to make "single click selection" on the datagrid. Else you have to click twice
+        private void DataGridCell_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var radioButton = sender as RadioButton;
-            if (radioButton == null)
-                return;
-            if (radioButton.Content.ToString() == "Public")
+            DataGridCell cell = sender as DataGridCell;
+            if (!cell.IsEditing)
             {
-                visibility = true;
-            }
-            else
-            {
-                visibility = false;
+                // enables editing on single click
+                if (!cell.IsFocused)
+                    cell.Focus();
+                if (!cell.IsSelected)
+                    cell.IsSelected = true;
             }
         }
 
