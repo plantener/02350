@@ -6,16 +6,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using UMLDesigner.Model;
+using UMLDesigner.ViewModel;
 
 namespace UMLDesigner.Command
 {
     class MoveNodeCommand : IUndoRedoCommand
     {
-        private ObservableCollection<Edge> edges;
+        private ObservableCollection<EdgeViewModel> edges;
         private Node node;
         private int newX, newY, oldX, oldY;
 
-        public MoveNodeCommand(Node _node, int _newX, int _newY, int _oldX, int _oldY, ObservableCollection<Edge> _edges)
+        public MoveNodeCommand(Node _node, int _newX, int _newY, int _oldX, int _oldY, ObservableCollection<EdgeViewModel> _edges)
         {
             this.node = _node;
             this.newX = _newX;
