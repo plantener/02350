@@ -46,6 +46,8 @@ namespace UMLDesigner.ViewModel
         public ICommand KeyDownCommand { get; private set; }
         public ICommand AddItemToNodeCommand { get; private set; }
         public ICommand MouseDownCanvasCommand { get; private set; }
+        public ICommand CollapseExpandCommand { get; set ; }
+        public string NodesAreCollapsed { get; set; }
 
 
         public MainViewModel()
@@ -79,7 +81,22 @@ namespace UMLDesigner.ViewModel
           AddItemToNodeCommand = new RelayCommand<object>(param => AddItemToNode(FocusedClass,Classes,param));
           MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
 
+          CollapseExpandCommand = new RelayCommand(CollapseViewChanged);
+
             Debug.WriteLine("Højde" + Classes[0].Height);
+        }
+
+        private void CollapseViewChanged()
+        {
+            if (NodesAreCollapsed == "Collapsed")
+            {
+                NodesAreCollapsed = "Visible";
+            }
+            else
+            {
+                NodesAreCollapsed = "Collapsed";
+            }
+            RaisePropertyChanged(() => NodesAreCollapsed);
         }
 
        
