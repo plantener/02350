@@ -46,6 +46,10 @@ namespace UMLDesigner.ViewModel
         public ICommand KeyDownCommand { get; private set; }
         public ICommand AddItemToNodeCommand { get; private set; }
         public ICommand MouseDownCanvasCommand { get; private set; }
+        //Used to collapse nodes from GUI
+        public ICommand CollapseExpandCommand { get; set ; }
+        //GUI binds to see if nodes should be collapsed
+        public string NodesAreCollapsed { get; set; }
 
 
         public MainViewModel()
@@ -79,7 +83,23 @@ namespace UMLDesigner.ViewModel
           AddItemToNodeCommand = new RelayCommand<object>(param => AddItemToNode(FocusedClass,Classes,param));
           MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
 
+          CollapseExpandCommand = new RelayCommand(CollapseViewChanged);
+
             Debug.WriteLine("Højde" + Classes[0].Height);
+        }
+
+        //Switch status on collapsed/expanded. Could probably be done prettier
+        private void CollapseViewChanged()
+        {
+            if (NodesAreCollapsed == "Collapsed")
+            {
+                NodesAreCollapsed = "Visible";
+            }
+            else
+            {
+                NodesAreCollapsed = "Collapsed";
+            }
+            RaisePropertyChanged(() => NodesAreCollapsed);
         }
 
        
