@@ -73,7 +73,7 @@
                 </RibbonGroup>
                 <RibbonGroup x:Name="ShowHideGroup" Header="Show or Hide">
                     <RibbonCheckBox Label="Grid"/>
-                    <RibbonButton Label="Expand/Contract all classes"/>
+                    <RibbonButton Label="Expand/Contract" Command="{Binding CollapseExpandCommand}"/>
                 </RibbonGroup>
             </RibbonTab>
         </Ribbon>
