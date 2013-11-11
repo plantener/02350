@@ -28,7 +28,9 @@ namespace UMLDesigner.Model
         public String ClassName
         {
             get { return className; }
-            set { className = value; }
+            set {
+                className = value;
+                RaisePropertyChanged(() => ClassName); }
         }
 
         public ObservableCollection<Attribute> Attributes { get; set; }
