@@ -24,7 +24,7 @@
                 </RibbonQuickAccessToolBar>
             </Ribbon.QuickAccessToolBar>
             <!-- Application Menu, located at the left-hand side (down arrow) -->
-            <Ribbon.ApplicationMenu> 
+            <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu KeyTip="F">
                     <RibbonApplicationMenuItem Header="New File" />
                     <RibbonApplicationMenuItem Header="Open" />
@@ -52,9 +52,14 @@
                 </RibbonGroup>
                 <RibbonGroup x:Name="ArrowGroup" Header="Arrows">
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Aggregation" />
-                    <RibbonButton SmallImageSource="../Images/save.png" Label="Association" />
+                    <RibbonButton SmallImageSource="../Images/save.png" Label="Association" Command="{Binding AddEdgeCommand}"/>
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Composition" />
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Generalization" />
+                </RibbonGroup>
+                <RibbonGroup x:Name="AddItemGroup" Header="Add..">
+                    <RibbonButton SmallImageSource="../Images/save.png" Label="Attribute" Command="{Binding AddItemToNodeCommand}" CommandParameter="Attribute" IsEnabled="{Binding IsFocused}"/>
+                    <RibbonButton SmallImageSource="../Images/save.png" Label="Method" Command="{Binding AddItemToNodeCommand}" CommandParameter="Method" IsEnabled="{Binding IsFocused}" />
+
                 </RibbonGroup>
             </RibbonTab>
             <!-- Ribbon Tab #3: -->
@@ -66,7 +71,7 @@
                 </RibbonGroup>
                 <RibbonGroup x:Name="ShowHideGroup" Header="Show or Hide">
                     <RibbonCheckBox Label="Grid"/>
-                    <RibbonButton Label="Expand/Contract all classes"/>
+                    <RibbonButton Label="Expand/Contract" Command="{Binding CollapseExpandCommand}"/>
                 </RibbonGroup>
             </RibbonTab>
         </Ribbon>

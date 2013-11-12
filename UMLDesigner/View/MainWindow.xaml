@@ -2,7 +2,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:View="clr-namespace:UMLDesigner.View"
+        xmlns:VM="clr-namespace:UMLDesigner.ViewModel"
         xmlns:Model="clr-namespace:UMLDesigner.Model;assembly=UMLDesigner.Model"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
         Title="UML Designer" Height="400" Width="525" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp">
     <Window.Resources>
@@ -10,6 +13,17 @@
         <DataTemplate DataType="{x:Type Model:Node}">
             <Canvas>
                 <View:ClassUserControl/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type VM:EdgeViewModel}">
+            <Canvas>
+                <!-- Event trigger detects mouseclick on canvas -->
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseUp">
+                        <cmd:EventToCommand Command="{Binding MouseDownCanvasCommand}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <View:EdgeUserControl/>
             </Canvas>
         </DataTemplate>
     </Window.Resources>
@@ -22,8 +36,9 @@
             </StatusBarItem>
         </StatusBar>
         <Grid>
-         <!--   <View:ClassUserControl /> -->
+            <!--   <View:ClassUserControl /> -->
             <ItemsControl ItemsSource="{Binding Classes}"/>
+            <ItemsControl ItemsSource="{Binding Edges}"/>
         </Grid>
     </DockPanel>
 </Window>

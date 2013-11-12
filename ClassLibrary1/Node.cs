@@ -42,13 +42,14 @@ namespace UMLDesigner.Model
         public String ClassName
         {
             get { return className; }
-            set { className = value; }
+            set {
+                className = value;
+                RaisePropertyChanged(() => ClassName); }
         }
-
 
         public ObservableCollection<Attribute> Attributes { get; set; }
         public ObservableCollection<String> Properties { get; set; }
-        public ObservableCollection<String> Methods { get; set; }
+        public ObservableCollection<Attribute> Methods { get; set; }
 
 
 
@@ -57,10 +58,10 @@ namespace UMLDesigner.Model
         {
             Attributes = new ObservableCollection<Attribute>();
             Properties = new ObservableCollection<String>();
-            Methods = new ObservableCollection<String>();
+            Methods = new ObservableCollection<Attribute>();
 
             X = Y = 0;
-           // Width = Height = 100;
+           Width = Height = 100;
         }  
     }
 
