@@ -23,34 +23,5 @@ namespace UMLDesigner {
       public MainWindow() {
          InitializeComponent();
       }
-
-      private bool _pressed = false;
-      private void Window_KeyDown(object sender, KeyEventArgs e) {
-         if (Keyboard.Modifiers == ModifierKeys.Control && _pressed == false) {
-            if (Keyboard.IsKeyDown(Key.Z)) {
-               UndoRedoController.GetInstance().Undo();
-               _pressed = true;
-            }
-            if (Keyboard.IsKeyDown(Key.Y)) {
-               UndoRedoController.GetInstance().Redo();
-               _pressed = true;
-            }
-
-
-         }
-
-         e.Handled = true;
-      }
-
-      private void Window_KeyUp(object sender, KeyEventArgs e) {
-         if (_pressed == true) {
-            System.Diagnostics.Debug.WriteLine("unpressed");
-            _pressed = false;
-         }
-
-      }
-
-
-
    }
 }
