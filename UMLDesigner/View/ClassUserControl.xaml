@@ -9,62 +9,103 @@
              xmlns:Util="clr-namespace:UMLDesigner.Utilities"
              Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}"
              d:DesignHeight="300" d:DesignWidth="300">
-   
-
-    <Border BorderBrush="#2E8DEF" BorderThickness="2" CornerRadius="1" Cursor="Hand" >
-        <DockPanel MinHeight="20" Background="White">
-            <DockPanel.Resources>
-                <!--Bool to value generic converter, used in some usercontrols-->
-                <Util:BoolToStringConverter x:Key="CPrivatePublic" FalseValue="-" TrueValue="+"/>
-            </DockPanel.Resources>
-            <!--Her bliver de tre events MouseDown, MouseMove og MouseUp bundet til de tilsvarende kommandoer på MainViewModel.-->
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseDown">
-                    <cmd:EventToCommand Command="{Binding DataContext.MouseDownNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="MouseMove">
-                    <cmd:EventToCommand Command="{Binding DataContext.MouseMoveNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="MouseUp">
-                    <cmd:EventToCommand Command="{Binding DataContext.MouseUpNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="KeyDown">
-                    <cmd:EventToCommand Command="{Binding DataContext.KeyDownCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            
-            <!--Styling af Class-boksen-->
-
-            <Border DockPanel.Dock="Top" Background="#2E8DEF">
-                <Border.Resources>  
-                    <Style TargetType="{x:Type TextBox}">
-                        <Setter Property="Foreground" Value="White" />
-                    </Style>
-                </Border.Resources>
-                <TextBox Text="{Binding ClassName, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Center" BorderThickness="0" Background="#2E8DEF" Margin="5,0,5,0"></TextBox>
-            </Border>
-
-            <!--Note the " : " is acutally being written to the GUI-->
-            <!--IsHitTestVisible set to false, so the itemscontrols cannot be clicked -->
-            <ItemsControl Visibility="{Binding DataContext.NodesAreCollapsed, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"  Name="attributeList" ItemsSource="{Binding Attributes}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
-               
-                    <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock><Run Text="{Binding Path=Modifier, Converter={StaticResource CPrivatePublic}}"/><Run Text="{Binding Name}"/> : <Run Text="{Binding Type}"/></TextBlock>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                
-            </ItemsControl>
 
 
-            <ItemsControl Visibility="{Binding DataContext.NodesAreCollapsed, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Name="methodsList" ItemsSource="{Binding Methods}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock><Run Text="{Binding Path=Modifier, Converter={StaticResource CPrivatePublic}}"/><Run Text="{Binding Name}"/>() : <Run Text="{Binding Type}"/></TextBlock>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl> 
+   <Border BorderBrush="#2E8DEF" BorderThickness="2" CornerRadius="0" Cursor="Hand" SnapsToDevicePixels="True" >
+      <DockPanel MinHeight="10" Background="White">
 
-        </DockPanel>
-    </Border>
+         <DockPanel.Resources>
+            <!--Bool to value generic converter, used in some usercontrols-->
+            <Util:BoolToStringConverter x:Key="CPrivatePublic" FalseValue="-" TrueValue="+"/>
+         </DockPanel.Resources>
+         <!--Her bliver de tre events MouseDown, MouseMove og MouseUp bundet til de tilsvarende kommandoer på MainViewModel.-->
+         <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseDown">
+               <cmd:EventToCommand Command="{Binding DataContext.MouseDownNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="MouseMove">
+               <cmd:EventToCommand Command="{Binding DataContext.MouseMoveNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="MouseUp">
+               <cmd:EventToCommand Command="{Binding DataContext.MouseUpNodeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="KeyDown">
+               <cmd:EventToCommand Command="{Binding DataContext.KeyDownCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
+            </i:EventTrigger>
+         </i:Interaction.Triggers>
+
+         <!--Styling af Class-boksen-->
+
+         <Grid DockPanel.Dock="Top" Background="#2E8DEF" SnapsToDevicePixels="True">
+            <Grid.Resources>
+               <Style TargetType="{x:Type TextBox}">
+                  <Setter Property="Foreground" Value="White" />
+                  <Setter Property="Background" Value="#2E8DEF" />
+                  <Style.Triggers>
+                     <DataTrigger Binding="{Binding IsFocused, ElementName=className}" Value="true">
+                        <Setter Property="Background" Value="White" />
+                        <Setter Property="Foreground" Value="Black" />
+                     </DataTrigger>
+                  </Style.Triggers>
+               </Style>
+
+            </Grid.Resources>
+            <TextBox x:Name="className" Text="{Binding ClassName, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" BorderThickness="0" Margin="30,0,30,0"></TextBox>
+         </Grid>
+
+         <!--Note the " : " is acutally being written to the GUI-->
+         <!--IsHitTestVisible set to false, so the itemscontrols cannot be clicked -->
+         <ItemsControl Visibility="{Binding DataContext.NodesAreCollapsed, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Name="attributeList" ItemsSource="{Binding Attributes}" BorderThickness="0,0,0,1" DockPanel.Dock="Top" IsHitTestVisible="False">
+            <ItemsControl.BorderBrush>
+               <DrawingBrush Viewport="0,0,4,4" ViewportUnits="Absolute" TileMode="Tile">
+                  <DrawingBrush.Drawing>
+                     <DrawingGroup>
+                        <GeometryDrawing Brush="#2E8DEF">
+                           <GeometryDrawing.Geometry>
+                              <GeometryGroup>
+                                 <RectangleGeometry Rect="0,0,50,50" />
+                                 <RectangleGeometry Rect="50,50,50,50" />
+                              </GeometryGroup>
+                           </GeometryDrawing.Geometry>
+                        </GeometryDrawing>
+                     </DrawingGroup>
+                  </DrawingBrush.Drawing>
+               </DrawingBrush>
+            </ItemsControl.BorderBrush>
+
+            <ItemsControl.ItemTemplate>
+               <DataTemplate>
+                  <TextBlock><Run Text="{Binding Path=Modifier, Converter={StaticResource CPrivatePublic}}"/><Run Text="{Binding Name}"/> : <Run Text="{Binding Type}"/></TextBlock>
+               </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+            <ItemsControl.Style>
+               <Style TargetType="ItemsControl">
+                  <Style.Triggers>
+                     <Trigger Property="HasItems" Value="false"   >
+                        <Setter Property="Template">
+                           <Setter.Value>
+                              <ControlTemplate>
+                              </ControlTemplate>
+                           </Setter.Value>
+                        </Setter>
+                     </Trigger>
+                  </Style.Triggers>
+               </Style>
+            </ItemsControl.Style>
+
+         </ItemsControl>
+
+         <ItemsControl Visibility="{Binding DataContext.NodesAreCollapsed, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Name="methodsList" ItemsSource="{Binding Methods}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
+
+
+            <ItemsControl.ItemTemplate>
+               <DataTemplate>
+                  <TextBlock><Run Text="{Binding Path=Modifier, Converter={StaticResource CPrivatePublic}}"/><Run Text="{Binding Name}"/>() : <Run Text="{Binding Type}"/></TextBlock>
+               </DataTemplate>
+            </ItemsControl.ItemTemplate>
+         </ItemsControl>
+
+      </DockPanel>
+   </Border>
 </UserControl>

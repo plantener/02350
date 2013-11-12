@@ -7,9 +7,13 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
-        Title="MainWindow" Height="400" Width="525">
-    <Window.Resources>
-        <!-- Dette DataTemplate fortæller vinduet hvordan Node klassen skal vises grafisk. Denne grafiske beskrivelse er samlet i NodeUserControl. -->
+        Title="UML Designer" Height="400" Width="525">
+
+
+
+   <Window.Resources>
+
+         <!-- Dette DataTemplate fortæller vinduet hvordan Node klassen skal vises grafisk. Denne grafiske beskrivelse er samlet i NodeUserControl. -->
         <DataTemplate DataType="{x:Type Model:Node}">
             <Canvas>
                 <View:ClassUserControl/>
@@ -27,9 +31,14 @@
             </Canvas>
         </DataTemplate>
     </Window.Resources>
-
+   <Window.InputBindings>
+      <KeyBinding Command="{Binding KeyDownUndoCommand}" CommandParameter="undo" Gesture="CTRL+Z"/>
+      <KeyBinding Command="{Binding KeyDownUndoCommand}" CommandParameter="redo" Gesture="CTRL+Y" />
+   </Window.InputBindings>
+   
     <DockPanel>
-        <View:RibbonUserContol DockPanel.Dock="Top"/>
+      
+        <View:RibbonUserContol DockPanel.Dock="Top" Focusable="True" x:Name="QContol"/>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock>Her er en statusbar, den skal nok også laves som userControl</TextBlock>
