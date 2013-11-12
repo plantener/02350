@@ -7,17 +7,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using UMLDesigner.Model;
+using UMLDesigner.ViewModel;
 
 namespace UMLDesigner.Command
 {
     class AddClassCommand : IUndoRedoCommand
     {
 
-        private ObservableCollection<Node> classes;
-        private Node _class = null;
+        private ObservableCollection<NodeViewModel> classes;
+        private NodeViewModel _class = null;
 
 
-        public AddClassCommand(ObservableCollection<Node> _classes)
+        public AddClassCommand(ObservableCollection<NodeViewModel> _classes)
         {
             classes = _classes;
         }
@@ -26,7 +27,7 @@ namespace UMLDesigner.Command
         {
             if (_class == null)
             {
-                classes.Add(_class = new Node() { ClassName = "AddedClass", X = 100, Y = 100 });
+                classes.Add(_class = new NodeViewModel() { ClassName = "AddedClass", X = 100, Y = 100 });
             }
             else
             {

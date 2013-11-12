@@ -6,7 +6,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100">
     <Grid>
-        <Path Stroke="#2E8DEF" StrokeThickness="1" Data="{Binding Path}" />
-        <Polyline Points="0,100 5,85 10,100" Fill="White" Stroke="#2E8DEF" StrokeThickness="1" Canvas.Left="75" Canvas.Top="50" />
+        <!--<Line Stroke="#2E8DEF" StrokeThickness="1" X1="{Binding NVMEndA.CanvasCenterX}" Y1="{Binding NVMEndA.CanvasCenterY}" X2="{Binding NVMEndB.CanvasCenterX}" Y2="{Binding NVMEndB.CanvasCenterY}" StrokeDashArray="{Binding Dashed}"/>-->
+        <Path Stroke="#2E8DEF" StrokeThickness="1" Data="{Binding Path}" StrokeDashArray="{Binding Dashed}"/>
+        <Polyline Points="{Binding Arrow}" Fill="{Binding ColorFill}" Stroke="#2E8DEF" StrokeThickness="1"/>
     </Grid>
 </UserControl>

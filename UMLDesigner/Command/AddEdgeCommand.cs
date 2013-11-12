@@ -15,10 +15,10 @@ namespace UMLDesigner.Command
         private ObservableCollection<EdgeViewModel> edges;
         private EdgeViewModel _edge;
 
-        public AddEdgeCommand(ObservableCollection<EdgeViewModel> _edges, Node _start, Node _end)
+        public AddEdgeCommand(ObservableCollection<EdgeViewModel> _edges, EdgeViewModel newEdge)
         {
             edges = _edges;
-            _edge = new EdgeViewModel(_start, _end) { };
+            _edge = newEdge;
         }
 
         public void Execute()

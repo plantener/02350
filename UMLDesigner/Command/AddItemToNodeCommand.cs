@@ -11,19 +11,20 @@ using System.Windows.Data;
 using System.Windows.Input;
 using UMLDesigner.Model;
 using UMLDesigner.View;
+using UMLDesigner.ViewModel;
 
 namespace UMLDesigner.Command
 {
     class AddItemToNodeCommand : IUndoRedoCommand
     {
         private object _parameter;
-        private Node _focusedClass;
-        private ObservableCollection<Node> _classes;
+        private NodeViewModel _focusedClass;
+        private ObservableCollection<NodeViewModel> _classes;
         public ObservableCollection<NewItems> itemsList { get; set; }
         public ObservableCollection<String> AvailableTypes;
         public List<UMLDesigner.Model.Attribute> itemsToAdd;
 
-        public AddItemToNodeCommand(Node focusedClass,ObservableCollection<Node> Classes, object parameter)
+        public AddItemToNodeCommand(NodeViewModel focusedClass,ObservableCollection<NodeViewModel> Classes, object parameter)
         {
             _focusedClass = focusedClass;
             _parameter = parameter;
@@ -57,7 +58,7 @@ namespace UMLDesigner.Command
 
 
           //Add Classnames as available types
-          foreach (Node node in _classes)
+          foreach (NodeViewModel node in _classes)
           {
              AvailableTypes.Add(node.ClassName);
           }
