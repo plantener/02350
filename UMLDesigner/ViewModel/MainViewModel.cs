@@ -25,6 +25,10 @@ namespace UMLDesigner.ViewModel
         public bool IsFocused { get { return isFocused; } set { isFocused = value; RaisePropertyChanged(() => IsFocused); } }
         private Node focusedClass = null;
         public Node FocusedClass { get { return focusedClass; } private set { focusedClass = value; if (focusedClass == null) { IsFocused = false; } else { IsFocused = true; };} }
+        private bool canPaste = false;
+        public bool CanPaste{ get { return canPaste; } set { canPaste = value; RaisePropertyChanged(() => CanPaste); }}
+        private Node copyClass = null;
+        public Node CopyClass { get { return copyClass; } private set { copyClass = value; if (copyClass == null) { CanPaste = false; } else { CanPaste = true; };} }
         private Point _oldMousePos;
         private Point moveNodePoint;
         public ObservableCollection<Node> Classes { get; set; }
@@ -50,6 +54,10 @@ namespace UMLDesigner.ViewModel
         public ICommand CollapseExpandCommand { get; set ; }
         //GUI binds to see if nodes should be collapsed
         public string NodesAreCollapsed { get; set; }
+        public ICommand CopyCommand { get; private set; }
+        public ICommand PasteCommand { get; private set; }
+        public ICommand DeleteCommand { get; private set; }
+
 
 
         public MainViewModel()
@@ -80,8 +88,11 @@ namespace UMLDesigner.ViewModel
             KeyDownCommand = new RelayCommand<KeyEventArgs>(KeyDownNode);
 
          //   AddItemToNodeCommand = new RelayCommand(AddItemToNode);
-          AddItemToNodeCommand = new RelayCommand<object>(param => AddItemToNode(FocusedClass,Classes,param));
-          MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
+            AddItemToNodeCommand = new RelayCommand<object>(param => AddItemToNode(FocusedClass,param));
+            MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
+            CopyCommand = new RelayCommand(Copy);
+            PasteCommand = new RelayCommand(Paste);
+            DeleteCommand = new RelayCommand(delete);
 
           CollapseExpandCommand = new RelayCommand(CollapseViewChanged);
 
@@ -102,8 +113,40 @@ namespace UMLDesigner.ViewModel
             RaisePropertyChanged(() => NodesAreCollapsed);
         }
 
-       
-        public void AddItemToNode(Node FocusedClass, ObservableCollection<Node> Classes, object parameter)
+        private void delete()
+        {
+            Classes.Remove(FocusedClass);
+            //We need an edge detection on an object
+        }
+
+
+        private void Copy()
+        {
+            CopyClass = new Node();
+            CopyClass.ClassName = FocusedClass.ClassName;
+            CopyClass.X = 0;
+            CopyClass.Y = 0;
+            foreach (Attribute attribute in FocusedClass.Attributes)
+            {
+                CopyClass.Attributes.Add(attribute);
+            }
+            foreach (Attribute method in FocusedClass.Methods)
+            {
+                CopyClass.Methods.Add(method);
+            }
+            foreach (string property in FocusedClass.Properties)
+            {
+                CopyClass.Properties.Add(property);
+            }
+        }
+
+        private void Paste()
+        {
+            Classes.Add(CopyClass);
+            FocusedClass = CopyClass;
+        }
+
+        public void AddItemToNode(Node FocusedClass, object parameter)
         {
             undoRedoController.AddAndExecute( new AddItemToNodeCommand(FocusedClass, Classes, parameter));
         }
@@ -111,13 +154,13 @@ namespace UMLDesigner.ViewModel
         private void MouseDownCanvas(MouseEventArgs obj)
         {
             FrameworkElement clickedObj = (FrameworkElement)obj.MouseDevice.Target;
-            if (clickedObj.DataContext is Node)
-            {
-            }
-            else
+
+            if (obj.Source is MainWindow)
             {
                 FocusedClass = null;
+                System.Console.WriteLine("Jeg er ikke node");
             }
+
         }
 
         public void AddNode()
@@ -275,5 +318,6 @@ namespace UMLDesigner.ViewModel
             }
             return item.DataContext as Node;
         }
+
     }
 }
