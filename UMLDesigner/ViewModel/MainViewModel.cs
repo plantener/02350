@@ -50,13 +50,13 @@ namespace UMLDesigner.ViewModel
         public ICommand KeyDownCommand { get; private set; }
         public ICommand AddItemToNodeCommand { get; private set; }
         public ICommand MouseDownCanvasCommand { get; private set; }
+        public ICommand CopyCommand { get; private set; }
+        public ICommand PasteCommand { get; private set; }
+        public ICommand DeleteCommand { get; private set; }
         //Used to collapse nodes from GUI
         public ICommand CollapseExpandCommand { get; set ; }
         //GUI binds to see if nodes should be collapsed
         public string NodesAreCollapsed { get; set; }
-        public ICommand CopyCommand { get; private set; }
-        public ICommand PasteCommand { get; private set; }
-        public ICommand DeleteCommand { get; private set; }
 
 
 
@@ -88,7 +88,9 @@ namespace UMLDesigner.ViewModel
             KeyDownCommand = new RelayCommand<KeyEventArgs>(KeyDownNode);
 
          //   AddItemToNodeCommand = new RelayCommand(AddItemToNode);
-            AddItemToNodeCommand = new RelayCommand<object>(param => AddItemToNode(FocusedClass,param));
+
+            AddItemToNodeCommand = new RelayCommand<object>(param => AddItemToNode(FocusedClass, param));
+
             MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
             CopyCommand = new RelayCommand(Copy);
             PasteCommand = new RelayCommand(Paste);
@@ -97,20 +99,6 @@ namespace UMLDesigner.ViewModel
           CollapseExpandCommand = new RelayCommand(CollapseViewChanged);
 
             Debug.WriteLine("Højde" + Classes[0].Height);
-        }
-
-        //Switch status on collapsed/expanded. Could probably be done prettier
-        private void CollapseViewChanged()
-        {
-            if (NodesAreCollapsed == "Collapsed")
-            {
-                NodesAreCollapsed = "Visible";
-            }
-            else
-            {
-                NodesAreCollapsed = "Collapsed";
-            }
-            RaisePropertyChanged(() => NodesAreCollapsed);
         }
 
         private void delete()
@@ -146,6 +134,21 @@ namespace UMLDesigner.ViewModel
             FocusedClass = CopyClass;
         }
 
+        //Switch status on collapsed/expanded. Could probably be done prettier
+        private void CollapseViewChanged()
+        {
+            if (NodesAreCollapsed == "Collapsed")
+            {
+                NodesAreCollapsed = "Visible";
+            }
+            else
+            {
+                NodesAreCollapsed = "Collapsed";
+            }
+            RaisePropertyChanged(() => NodesAreCollapsed);
+        }
+
+       
         public void AddItemToNode(Node FocusedClass, object parameter)
         {
             undoRedoController.AddAndExecute( new AddItemToNodeCommand(FocusedClass, Classes, parameter));
@@ -158,7 +161,6 @@ namespace UMLDesigner.ViewModel
             if (obj.Source is MainWindow)
             {
                 FocusedClass = null;
-                System.Console.WriteLine("Jeg er ikke node");
             }
 
         }
