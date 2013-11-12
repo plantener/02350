@@ -84,7 +84,7 @@ namespace UMLDesigner.ViewModel
             AddCOMCommand = new RelayCommand(AddCOM);
             AddDEPCommand = new RelayCommand(AddDEP);
             AddGENCommand = new RelayCommand(AddGEN);
-            AddGENCommand = new RelayCommand(AddNOR);
+            AddNORCommand = new RelayCommand(AddNOR);
             MouseDownNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseDownNode);
             MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
             MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
