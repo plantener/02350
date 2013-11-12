@@ -5,20 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UMLDesigner.Model;
+using UMLDesigner.ViewModel;
 
 namespace UMLDesigner.Command
 {
     class AddEdgeCommand : IUndoRedoCommand
     {
 
-        private ObservableCollection<Edge> edges;
-        private Edge _edge;
+        private ObservableCollection<EdgeViewModel> edges;
+        private EdgeViewModel _edge;
 
-        public AddEdgeCommand(ObservableCollection<Edge> _edges, Node _start, Node _end)
+        public AddEdgeCommand(ObservableCollection<EdgeViewModel> _edges, Node _start, Node _end)
         {
             edges = _edges;
-            _edge = new Edge(_start, _end) {};
-        }   
+            _edge = new EdgeViewModel(_start, _end) { };
+        }
 
         public void Execute()
         {

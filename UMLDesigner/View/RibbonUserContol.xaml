@@ -52,7 +52,7 @@
                 </RibbonGroup>
                 <RibbonGroup x:Name="ArrowGroup" Header="Arrows">
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Aggregation" />
-                    <RibbonButton SmallImageSource="../Images/save.png" Label="Association" />
+                    <RibbonButton SmallImageSource="../Images/save.png" Label="Association" Command="{Binding AddEdgeCommand}"/>
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Composition" />
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Generalization" />
                 </RibbonGroup>
@@ -71,7 +71,7 @@
                 </RibbonGroup>
                 <RibbonGroup x:Name="ShowHideGroup" Header="Show or Hide">
                     <RibbonCheckBox Label="Grid"/>
-                    <RibbonButton Label="Expand/Contract all classes"/>
+                    <RibbonButton Label="Expand/Contract" Command="{Binding CollapseExpandCommand}"/>
                 </RibbonGroup>
             </RibbonTab>
         </Ribbon>

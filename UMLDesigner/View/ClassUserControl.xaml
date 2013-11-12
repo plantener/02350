@@ -6,12 +6,13 @@
              mc:Ignorable="d" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
-              xmlns:Util="clr-namespace:UMLDesigner.Utilities"
+             xmlns:Util="clr-namespace:UMLDesigner.Utilities"
              Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}"
              d:DesignHeight="300" d:DesignWidth="300">
+   
 
     <Border BorderBrush="#2E8DEF" BorderThickness="2" CornerRadius="1" Cursor="Hand" >
-        <DockPanel MinHeight="50" Background="White">
+        <DockPanel MinHeight="20" Background="White">
             <DockPanel.Resources>
                 <!--Bool to value generic converter, used in some usercontrols-->
                 <Util:BoolToStringConverter x:Key="CPrivatePublic" FalseValue="-" TrueValue="+"/>
@@ -40,23 +41,23 @@
                         <Setter Property="Foreground" Value="White" />
                     </Style>
                 </Border.Resources>
-                <TextBox Text="{Binding ClassName}" HorizontalAlignment="Center" BorderThickness="0" Background="#2E8DEF" Margin="5,0,5,0"></TextBox>
+                <TextBox Text="{Binding ClassName, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Center" BorderThickness="0" Background="#2E8DEF" Margin="5,0,5,0"></TextBox>
             </Border>
 
             <!--Note the " : " is acutally being written to the GUI-->
             <!--IsHitTestVisible set to false, so the itemscontrols cannot be clicked -->
-            <ItemsControl  Name="attributeList" ItemsSource="{Binding Attributes}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
-                <ItemsControl.ItemTemplate>
+            <ItemsControl Visibility="{Binding DataContext.NodesAreCollapsed, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"  Name="attributeList" ItemsSource="{Binding Attributes}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
+               
+                    <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock><Run Text="{Binding Path=Modifier, Converter={StaticResource CPrivatePublic}}"/><Run Text="{Binding Name}"/> : <Run Text="{Binding Type}"/></TextBlock>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
+                
             </ItemsControl>
-   
-            <ItemsControl Name="propertiesList" ItemsSource="{Binding Properties}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
-            </ItemsControl>
-            
-            <ItemsControl Name="methodsList" ItemsSource="{Binding Methods}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
+
+
+            <ItemsControl Visibility="{Binding DataContext.NodesAreCollapsed, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Name="methodsList" ItemsSource="{Binding Methods}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock><Run Text="{Binding Path=Modifier, Converter={StaticResource CPrivatePublic}}"/><Run Text="{Binding Name}"/>() : <Run Text="{Binding Type}"/></TextBlock>
