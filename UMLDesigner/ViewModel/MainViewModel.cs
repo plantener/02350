@@ -112,6 +112,10 @@ namespace UMLDesigner.ViewModel {
             NodesAreCollapsed = "Collapsed";
          }
          RaisePropertyChanged(() => NodesAreCollapsed);
+         for (int i = 0; i < Edges.Count; i++)
+         {
+             Edges[i].newPath();
+         }
       }
 
 

@@ -6,8 +6,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100">
     <Grid>
-        <!--<Line Stroke="#2E8DEF" StrokeThickness="1" X1="{Binding NVMEndA.CanvasCenterX}" Y1="{Binding NVMEndA.CanvasCenterY}" X2="{Binding NVMEndB.CanvasCenterX}" Y2="{Binding NVMEndB.CanvasCenterY}" StrokeDashArray="{Binding Dashed}"/>-->
+        <!--<TextBox Width="25" Height="15" Canvas.Top="100" Canvas.Left="100" Text="1..*" FontSize="12" BorderThickness="0" Background="Green"/>-->
         <Path Stroke="#2E8DEF" StrokeThickness="1" Data="{Binding Path}" StrokeDashArray="{Binding Dashed}"/>
+        
         <Polyline Points="{Binding Arrow}" Fill="{Binding ColorFill}" Stroke="#2E8DEF" StrokeThickness="1"/>
     </Grid>
 </UserControl>

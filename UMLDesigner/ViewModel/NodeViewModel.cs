@@ -78,35 +78,94 @@ namespace UMLDesigner.ViewModel
 
         public PointCollection getAnchor(NodeViewModel end, EdgeViewModel edge)
         {
-            //int d = 4;
+            int d = 3;
             PointCollection temp = new PointCollection();
-            if (X > end.X + end.Width && Y > end.Y + end.Height)
+                //break
+            if (X + Width / d > end.X + end.Width && Y + Height / d > end.Y + end.Height)
             {
                 temp.Add(North);
                 temp.Add(new Point(North.X, end.East.Y));
                 temp.Add(end.East);
                 edge.setAnchor("east");
             }
-            else if (X < end.X + end.Width && Y > end.Y + end.Height)
+            else if (X + Width - Width / d < end.X && Y + Height / d > end.Y + end.Height)
             {
                 temp.Add(East);
                 temp.Add(new Point(end.South.X, East.Y));
                 temp.Add(end.South);
                 edge.setAnchor("south");
             }
-            else if (X < end.X + end.Width && Y + Height < end.Y)
+            else if (X + Width - Width / d < end.X && Y + Height - Height / d < end.Y)
             {
                 temp.Add(South);
                 temp.Add(new Point(South.X, end.West.Y));
                 temp.Add(end.West);
                 edge.setAnchor("west");
             }
-            else if (X > end.X + end.Width && Y + Height < end.Y)
+            else if (X + Width / d > end.X + end.Width && Y + Height - Height / d < end.Y)
             {
                 temp.Add(West);
                 temp.Add(new Point(end.North.X, West.Y));
                 temp.Add(end.North);
                 edge.setAnchor("north");
+            }
+                //Straight above and below
+            else if (end.X + end.Width >= X + Width / d && end.X < X && Y > end.Y + end.Height)
+            {
+                double dTemp = (end.X + end.Width - X) / 2;
+                temp.Add(new Point(end.X + end.Width - dTemp, Y));
+                temp.Add(new Point(end.X + end.Width - dTemp, end.Y + end.Height));
+                edge.setAnchor("south");
+            }
+            else if (end.X <= X + Width - Width / d && end.X > X && Y > end.Y + end.Height)
+            {
+                double dTemp = (X + Width - end.X) / 2;
+                temp.Add(new Point(end.X + dTemp, Y));
+                temp.Add(new Point(end.X + dTemp, end.Y + end.Height));
+                edge.setAnchor("south");
+            }
+            else if (end.X + end.Width >= X + Width / d && end.X < X && Y + Height < end.Y)
+            {
+                double dTemp = (end.X + end.Width - X) / 2;
+                temp.Add(new Point(end.X + end.Width - dTemp, Y + Height));
+                temp.Add(new Point(end.X + end.Width - dTemp, end.Y));
+                edge.setAnchor("north");
+            }
+            else if (end.X <= X + Width - Width / d && end.X > X && Y + Height < end.Y)
+            {
+                double dTemp = (X + Width - end.X) / 2;
+                temp.Add(new Point(end.X + dTemp, Y + Height));
+                temp.Add(new Point(end.X + dTemp, end.Y));
+                edge.setAnchor("north");
+            }
+            //straight left and right
+            else if (X > end.X + end.Width && Y + Height / d <= end.Y + end.Height && Y > end.Y)
+            {
+                double dTemp = (end.Y + end.Height - Y) / 2;
+                temp.Add(new Point(X, Y + dTemp));
+                temp.Add(new Point(end.X + end.Width, Y + dTemp));
+                edge.setAnchor("east");
+            }
+            else if (X + Width < end.X && Y + Height / d <= end.Y + end.Height && Y > end.Y)
+            {
+                double dTemp = (end.Y + end.Height - Y) / 2;
+                temp.Add(new Point(X + Width, Y + dTemp));
+                temp.Add(new Point(end.X, Y + dTemp));
+                edge.setAnchor("west");
+            }
+            else if (X > end.X + end.Width && Y + Height - Height / d >= end.Y && Y < end.Y)
+            {
+                double dTemp = (end.Y + end.Height - Y) / 2;
+                temp.Add(new Point(X, Y + dTemp));
+                temp.Add(new Point(end.X + end.Width, Y + dTemp));
+                edge.setAnchor("east");
+            }
+            else if (X + Width < end.X && Y + Height - Height / d >= end.Y && Y < end.Y)
+            {
+                double dTemp = (end.Y + end.Height - Y) / 2;
+                temp.Add(new Point(X + Width, Y + dTemp));
+                temp.Add(new Point(end.X, Y + dTemp));
+                edge.setAnchor("west");
             }
             return temp;
         }

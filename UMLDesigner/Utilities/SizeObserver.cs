@@ -8,25 +8,6 @@ using System.Windows;
 namespace UMLDesigner.Utilities
 {
     /*
-     * Cause for using this solution:   We don't bind height and width from NodeUserControl to NodeViewModel.
-     *                                  This allows the usercontrol to resize itself depending on the content
-     *                                  inside the control. Now the problems lies in the that we use the height
-     *                                  and width of the nodeusercontrol to determine where the arrows should
-     *                                  anchor too. In other words; where they start and end on node to node.
-     *                                  Because of this we still need the height and width of the usercontrol
-     *                                  but we still want the node to dynamically resize depending on its 
-     *                                  content. 
-     *                                  What we can do is bind the usercontrols ActualWidth and ActualHeight
-     *                                  to the viewmodel. But this is not feasible because dependency properties
-     *                                  cannot be databound to viewmodels. In other words those are real-only
-     *                                  properties and those cannot be bound as OneWayToSource.
-     *                                  
-     *                                  The solution below fixes this issue by adding a implemenation
-     *                                  to the SizeChanged event of the FrameworkElement.
-     *                                  What it does is to set ObservedWidth and ObservedHeight to ActualWidth
-     *                                  and ActualHeight. So it is possible to bind ObservedWidth and 
-     *                                  ObservedHeight OneWayToSource to a viewmodel because those are not 
-     *                                  read-only.
      * Source: http://stackoverflow.com/questions/1083224/pushing-read-only-gui-properties-back-into-viewmodel
      */
     public class SizeObserver
