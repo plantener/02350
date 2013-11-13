@@ -116,7 +116,7 @@ namespace UMLDesigner.ViewModel {
 
       private void delete()
       {
-          Classes.Remove(FocusedClass);
+          //deletes the edge connected to the delited class
           foreach (EdgeViewModel edge in Edges)
           {
               if (FocusedClass == edge.NVMEndA || FocusedClass == edge.NVMEndB)
@@ -124,7 +124,7 @@ namespace UMLDesigner.ViewModel {
                   Edges.Remove(edge);
               }
           }
-          //We need an edge detection on an object
+          Classes.Remove(FocusedClass);
       }
 
 
