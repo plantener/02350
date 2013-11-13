@@ -25,12 +25,34 @@ namespace UMLDesigner.ViewModel
             set { nVMEndB = value; RaisePropertyChanged(() => NVMEndB); RaisePropertyChanged(() => EndB); RaisePropertyChanged(() => Path); }
         }
 
-        public Node EndA { get { return edge.EndA; }
+        public Node EndA
+        {
+            get { return edge.EndA; }
             set { edge.EndA = value; RaisePropertyChanged(() => EndA); RaisePropertyChanged(() => NVMEndA); RaisePropertyChanged(() => Path); }
         }
 
-        public Node EndB { get { return edge.EndB; }
+        public Node EndB
+        {
+            get { return edge.EndB; }
             set { edge.EndB = value; RaisePropertyChanged(() => EndB); RaisePropertyChanged(() => NVMEndB); RaisePropertyChanged(() => Path); }
+        }
+
+        public string MultA
+        {
+            get { return edge.MultA; }
+            set { edge.MultA = value; RaisePropertyChanged(() => MultA); }
+        }
+
+        public string MultB
+        {
+            get { return edge.MultB; }
+            set { edge.MultB = value; RaisePropertyChanged(() => MultB); }
+        }
+
+        public string Name
+        {
+            get { return edge.Name; }
+            set { edge.Name = value; RaisePropertyChanged(() => Name); }
         }
 
         private EdgeType Type { get { return edge.Type; } set { edge.Type = value; RaisePropertyChanged(() => Type); } }
