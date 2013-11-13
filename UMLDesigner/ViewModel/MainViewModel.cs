@@ -23,6 +23,10 @@ namespace UMLDesigner.ViewModel {
       public bool IsFocused { get { return isFocused; } set { isFocused = value; RaisePropertyChanged(() => IsFocused); } }
       private NodeViewModel focusedClass = null;
       public NodeViewModel FocusedClass { get { return focusedClass; } private set { focusedClass = value; if (focusedClass == null) { IsFocused = false; } else { IsFocused = true; };} }
+      private bool canPaste = false;
+      public bool CanPaste { get { return canPaste; } set { canPaste = value; RaisePropertyChanged(() => CanPaste); } }
+      private NodeViewModel copyClass = null;
+      public NodeViewModel CopyClass { get { return copyClass; } private set { copyClass = value; if (copyClass == null) { CanPaste = false; } else { CanPaste = true; };} }
       private Point _oldMousePos;
       private bool _pressed = false;
       FrameworkElement movingClass;
@@ -55,6 +59,9 @@ namespace UMLDesigner.ViewModel {
       public ICommand KeyUpCommand { get; private set; }
       public ICommand AddItemToNodeCommand { get; private set; }
       public ICommand MouseDownCanvasCommand { get; private set; }
+      public ICommand CopyCommand { get; private set; }
+      public ICommand PasteCommand { get; private set; }
+      public ICommand DeleteCommand { get; private set; }
       //Used to collapse nodes from GUI
       public ICommand CollapseExpandCommand { get; set; }
       //GUI binds to see if nodes should be collapsed
@@ -96,6 +103,9 @@ namespace UMLDesigner.ViewModel {
          //   AddItemToNodeCommand = new RelayCommand(AddItemToNode);
          AddItemToNodeCommand = new RelayCommand<object>(param => AddItemToNode(FocusedClass, Classes, param));
          MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
+         CopyCommand = new RelayCommand(Copy);
+         PasteCommand = new RelayCommand(Paste);
+         DeleteCommand = new RelayCommand(delete);
 
          CollapseExpandCommand = new RelayCommand(CollapseViewChanged);
 
@@ -103,6 +113,40 @@ namespace UMLDesigner.ViewModel {
 
          //Application.Current.MainWindow.InputBindings.Add(new KeyBinding(UndoCommand, new KeyGesture(Key.A, ModifierKeys.Control)));
       }
+
+      private void delete()
+      {
+          Classes.Remove(FocusedClass);
+          //We need an edge detection on an object
+      }
+
+
+      private void Copy()
+      {
+          CopyClass = new NodeViewModel();
+          CopyClass.ClassName = FocusedClass.ClassName;
+          CopyClass.X = 0;
+          CopyClass.Y = 0;
+          foreach (Attribute attribute in FocusedClass.Attributes)
+          {
+              CopyClass.Attributes.Add(attribute);
+          }
+          foreach (Attribute method in FocusedClass.Methods)
+          {
+              CopyClass.Methods.Add(method);
+          }
+          foreach (string property in FocusedClass.Properties)
+          {
+              CopyClass.Properties.Add(property);
+          }
+      }
+
+      private void Paste()
+      {
+          Classes.Add(CopyClass);
+          FocusedClass = CopyClass;
+      }
+
 
       //Switch status on collapsed/expanded. Could probably be done prettier
       private void CollapseViewChanged() {
@@ -123,12 +167,15 @@ namespace UMLDesigner.ViewModel {
          undoRedoController.AddAndExecute(new AddItemToNodeCommand(FocusedClass, Classes, parameter));
       }
 
-      private void MouseDownCanvas(MouseEventArgs obj) {
-         FrameworkElement clickedObj = (FrameworkElement)obj.MouseDevice.Target;
-         if (clickedObj.DataContext is Node) {
-         } else {
-            FocusedClass = null;
-         }
+      private void MouseDownCanvas(MouseEventArgs obj)
+      {
+          FrameworkElement clickedObj = (FrameworkElement)obj.MouseDevice.Target;
+
+          if (obj.Source is MainWindow)
+          {
+              FocusedClass = null;
+          }
+
       }
 
       public void AddNode() {
