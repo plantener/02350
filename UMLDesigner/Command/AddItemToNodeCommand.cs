@@ -24,7 +24,6 @@ namespace UMLDesigner.Command
         public ObservableCollection<String> AvailableTypes;
         public List<UMLDesigner.Model.Attribute> itemsToAdd;
         public PopupWindow PopupWindow = null;
-        private int _redo;
 
         public AddItemToNodeCommand(NodeViewModel focusedClass,ObservableCollection<NodeViewModel> classes, object parameter)
         {
