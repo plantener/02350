@@ -20,7 +20,7 @@ namespace UMLDesigner.Utilities
             // Save current canvas transform
             Transform transform = surface.LayoutTransform;
             // reset current transform (in case it is scaled or rotated)
-            //surface.LayoutTransform = null;
+            surface.LayoutTransform = null;
 
             // Get the size of canvas
             Size size = new Size(res.X+50, res.Y+50);
@@ -38,6 +38,8 @@ namespace UMLDesigner.Utilities
                 96d,
                 PixelFormats.Pbgra32);
             renderBitmap.Render(surface);
+            // Restore previously saved layout
+            surface.LayoutTransform = transform;
 
             // Create a file stream for saving image
             using (FileStream outStream = new FileStream(path, FileMode.Create))
@@ -49,9 +51,6 @@ namespace UMLDesigner.Utilities
                 // save the data to the stream
                 encoder.Save(outStream);
             }
-
-            // Restore previously saved layout
-            //surface.LayoutTransform = transform;
         }
     }
 }
