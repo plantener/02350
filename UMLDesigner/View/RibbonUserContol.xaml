@@ -29,7 +29,7 @@
                     <RibbonApplicationMenuItem Header="New File" />
                     <RibbonApplicationMenuItem Header="Open" />
                     <RibbonApplicationMenuItem Header="Save" ImageSource="..\Images\save.png" />
-                    <RibbonApplicationMenuItem Header="Print" />
+                    <RibbonApplicationMenuItem Header="Export" ImageSource="..\Images\save.png" Command="{Binding ExportCommand}" />
                     <RibbonApplicationMenuItem Header="Options" ImageSource="..\Images\options.png" />
                     <RibbonApplicationMenuItem Header="Exit" ImageSource="..\Images\quit.png" />
                 </RibbonApplicationMenu>

@@ -73,6 +73,7 @@
     <Compile Include="Command\MoveNodeCommand.cs" />
     <Compile Include="Utilities\BoolToValueConverter.cs" />
     <Compile Include="Command\AddItemToNodeCommand.cs" />
+    <Compile Include="Utilities\ExportToImage.cs" />
     <Compile Include="Utilities\SizeObserver.cs" />
     <Compile Include="ViewModel\EdgeViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

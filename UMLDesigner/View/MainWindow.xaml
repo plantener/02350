@@ -40,10 +40,10 @@
                 <TextBlock>Her er en statusbar, den skal nok også laves som userControl</TextBlock>
             </StatusBarItem>
         </StatusBar>
-        <Grid>
+        <Canvas>
             <!--   <View:ClassUserControl /> -->
             <ItemsControl ItemsSource="{Binding Classes}"/>
             <ItemsControl ItemsSource="{Binding Edges}"/>
-        </Grid>
+        </Canvas>
     </DockPanel>
 </Window>

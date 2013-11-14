@@ -1,5 +1,6 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
@@ -8,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using UMLDesigner.Command;
 using UMLDesigner.Model;
+using UMLDesigner.Utilities;
 
 namespace UMLDesigner.ViewModel {
 
@@ -57,9 +59,12 @@ namespace UMLDesigner.ViewModel {
       public ICommand MouseDownCanvasCommand { get; private set; }
       //Used to collapse nodes from GUI
       public ICommand CollapseExpandCommand { get; set; }
+       //Export canvas to image
+      public ICommand ExportCommand { get; private set; }
       //GUI binds to see if nodes should be collapsed
       public string NodesAreCollapsed { get; set; }
 
+      private Canvas canvas;
 
       public MainViewModel() {
          // Her fyldes listen af classes med to classes. Her benyttes et alternativ til konstruktorer med syntaksen 'new Type(){ Attribut = Værdi }'
@@ -99,6 +104,8 @@ namespace UMLDesigner.ViewModel {
 
          CollapseExpandCommand = new RelayCommand(CollapseViewChanged);
 
+         ExportCommand = new RelayCommand(ExportImage);
+
          Debug.WriteLine("Højde" + Classes[0].Height);
 
          //Application.Current.MainWindow.InputBindings.Add(new KeyBinding(UndoCommand, new KeyGesture(Key.A, ModifierKeys.Control)));
@@ -118,6 +125,23 @@ namespace UMLDesigner.ViewModel {
          }
       }
 
+      public void ExportImage()
+      {
+          Canvas mainCanvas = FindParent<Canvas>(canvas);
+          SaveFileDialog dialog = new SaveFileDialog()
+          {
+              Title = "Export to image",
+              FileName = "Untitled",
+              Filter = " PNG (*.png)|*.png| JPEG (*.jpeg)|*.jpeg"
+          };
+
+
+          if (dialog.ShowDialog() != true)
+              return;
+
+          string path = dialog.FileName;
+          ExportToImage.ExportToPng(path, mainCanvas, getResolution());
+      }
 
       public void AddItemToNode(NodeViewModel FocusedClass, ObservableCollection<NodeViewModel> Classes, object parameter) {
          undoRedoController.AddAndExecute(new AddItemToNodeCommand(FocusedClass, Classes, parameter));
@@ -219,7 +243,8 @@ namespace UMLDesigner.ViewModel {
         {
             if (!isAddingEdge)
             {
-                _oldMousePos = e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target));
+                canvas = FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target);
+                _oldMousePos = e.GetPosition(canvas);
                 e.MouseDevice.Target.CaptureMouse();
             }
         }
@@ -251,7 +276,7 @@ namespace UMLDesigner.ViewModel {
                 NodeViewModel movingNode = (NodeViewModel)movingClass.DataContext;
                 
                 // Canvaset findes her udfra ellipsen.
-                Canvas canvas = FindParent<Canvas>(movingClass);
+                canvas = FindParent<Canvas>(movingClass);
                 // Musens position i forhold til canvas skaffes her.
                 Point mousePosition = Mouse.GetPosition(canvas);
                 // Når man flytter noget med musen vil denne metode blive kaldt mange gange for hvert lille ryk, 
@@ -296,7 +321,7 @@ namespace UMLDesigner.ViewModel {
             // Ellipsens node skaffes.
             NodeViewModel movingNode = (NodeViewModel)movingClass.DataContext;
             // Canvaset skaffes.
-            Canvas canvas = FindParent<Canvas>(movingClass);
+            canvas = FindParent<Canvas>(movingClass);
             // Musens position på canvas skaffes.
             Point mousePosition = Mouse.GetPosition(canvas);
 
@@ -345,6 +370,23 @@ namespace UMLDesigner.ViewModel {
             return null;
          }
          return item.DataContext as NodeViewModel;
+      }
+
+      private Point getResolution()
+      {
+          double xMax = 0, yMax = 0;
+          foreach (NodeViewModel nodeVM in Classes)
+          {
+              if (nodeVM.X+nodeVM.Width > xMax)
+              {
+                  xMax = nodeVM.X + nodeVM.Width;
+              }
+              if (nodeVM.Y + nodeVM.Height > yMax)
+              {
+                  yMax = nodeVM.Y + nodeVM.Height;
+              }
+          }
+          return new Point(xMax, yMax);
       }
    }
 }
