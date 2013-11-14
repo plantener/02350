@@ -42,6 +42,10 @@
         </StatusBar>
         <Grid>
             <!--   <View:ClassUserControl /> -->
+            <!--Adornerdecorator is made to make sure the adorner is in the background, and not the foreground-->
+            <AdornerDecorator>
+                <View:GridWithRulerxaml></View:GridWithRulerxaml>
+            </AdornerDecorator>
             <ItemsControl ItemsSource="{Binding Classes}"/>
             <ItemsControl ItemsSource="{Binding Edges}"/>
         </Grid>
