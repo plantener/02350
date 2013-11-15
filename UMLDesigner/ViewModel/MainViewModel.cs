@@ -8,6 +8,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using UMLDesigner.Command;
 using UMLDesigner.Model;
+using System.Text;
+using System.Xml;
 
 namespace UMLDesigner.ViewModel {
 
@@ -62,6 +64,7 @@ namespace UMLDesigner.ViewModel {
       public ICommand CopyCommand { get; private set; }
       public ICommand PasteCommand { get; private set; }
       public ICommand DeleteCommand { get; private set; }
+      public ICommand SaveCommand { get; private set; }
       //Used to collapse nodes from GUI
       public ICommand CollapseExpandCommand { get; set; }
       //GUI binds to see if nodes should be collapsed
@@ -106,6 +109,7 @@ namespace UMLDesigner.ViewModel {
          CopyCommand = new RelayCommand(Copy);
          PasteCommand = new RelayCommand(Paste);
          DeleteCommand = new RelayCommand(delete);
+         SaveCommand = new RelayCommand(save);
 
          CollapseExpandCommand = new RelayCommand(CollapseViewChanged);
 
@@ -113,6 +117,95 @@ namespace UMLDesigner.ViewModel {
 
          //Application.Current.MainWindow.InputBindings.Add(new KeyBinding(UndoCommand, new KeyGesture(Key.A, ModifierKeys.Control)));
       }
+
+
+      private void save()
+      {
+          XmlTextWriter xwriter = new XmlTextWriter("C:\\Users\\Carsten\\Desktop\\test.xml", Encoding.UTF8);
+          xwriter.Formatting = Formatting.Indented;
+          // saves the observerabel collection classes
+          xwriter.WriteStartElement("classes");
+              foreach ( NodeViewModel node in Classes ){
+                  xwriter.WriteStartElement("class"); //<class>
+                  xwriter.WriteStartElement("classname");
+                  xwriter.WriteString(node.ClassName);
+                  xwriter.WriteEndElement();
+                  xwriter.WriteStartElement("x");
+                  xwriter.WriteString(node.X.ToString());
+                  xwriter.WriteEndElement();
+                  xwriter.WriteStartElement("y");
+                  xwriter.WriteString(node.Y.ToString());
+                  xwriter.WriteEndElement();
+                  // check for attributes if no attributes no attributeclause added
+                  if (node.Attributes.Count > 0)
+                  {
+                      xwriter.WriteStartElement("attributes"); //<attributes>
+                      foreach (Attribute att in node.Attributes)
+                      {
+                          xwriter.WriteStartElement("attribute");
+                          xwriter.WriteStartElement("attributeModifier");
+                          xwriter.WriteString(att.Modifier.ToString());
+                          xwriter.WriteEndElement();
+                          xwriter.WriteStartElement("attributeName");
+                          xwriter.WriteString(att.Name);
+                          xwriter.WriteEndElement();
+                          xwriter.WriteStartElement("attributeType");
+                          xwriter.WriteString(att.Type);
+                          xwriter.WriteEndElement();
+                          xwriter.WriteEndElement();
+
+                      }
+                      xwriter.WriteEndElement(); // <attributes>
+                  }
+                  // methods
+                  if (node.Methods.Count > 0)
+                  {
+                      xwriter.WriteStartElement("methods");
+                      foreach (Attribute method in node.Methods)
+                      {
+                          xwriter.WriteStartElement("method");
+                          xwriter.WriteStartElement("methodModifier");
+                          xwriter.WriteString(method.Modifier.ToString());
+                          xwriter.WriteEndElement();
+                          xwriter.WriteStartElement("methodName");
+                          xwriter.WriteString(method.Name);
+                          xwriter.WriteEndElement();
+                          xwriter.WriteStartElement("methodYype");
+                          xwriter.WriteString(method.Type);
+                          xwriter.WriteEndElement();
+                          xwriter.WriteEndElement();
+                      }
+
+                      xwriter.WriteEndElement();
+                  }
+                  // property
+                  if (node.Properties.Count > 0)
+                  {
+                      xwriter.WriteStartElement("properties");
+                      foreach (string property in node.Properties)
+                      {
+                          xwriter.WriteStartElement("property");
+                          xwriter.WriteString(property);
+                          xwriter.WriteEndElement();
+                      }
+
+                      xwriter.WriteEndElement();
+                  }
+
+                  xwriter.WriteEndElement(); //</class>
+              }
+          xwriter.WriteEndElement();
+          // saves the observerable collection edges 
+          xwriter.WriteStartElement("edges");
+          foreach (EdgeViewModel edge in Edges)
+          {
+              xwriter.WriteStartElement("edge");
+              xwriter.WriteEndElement();
+          }
+          xwriter.WriteEndElement();
+          xwriter.Close();
+      }
+
 
       private void delete()
       {
@@ -180,7 +273,7 @@ namespace UMLDesigner.ViewModel {
           if (obj.Source is MainWindow)
           {
               FocusedClass = null;
-              DependencyObject scope = FocusManager.GetFocusScope(movingClass);
+              DependencyObject scope = FocusManager.GetFocusScope(clickedObj);
               FocusManager.SetFocusedElement(scope, clickedObj as IInputElement);
               Keyboard.ClearFocus();
               Application.Current.MainWindow.Focus();
