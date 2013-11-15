@@ -17,12 +17,6 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type VM:EdgeViewModel}">
             <Canvas>
-                <!-- Event trigger detects mouseclick on canvas -->
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="MouseUp">
-                        <cmd:EventToCommand Command="{Binding MouseDownCanvasCommand}" PassEventArgsToCommand="True"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
                 <View:EdgeUserControl/>
             </Canvas>
         </DataTemplate>
@@ -33,7 +27,6 @@
    </Window.InputBindings>
    
     <DockPanel>
-      
         <View:RibbonUserContol DockPanel.Dock="Top" Focusable="True" x:Name="QContol"/>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
@@ -46,4 +39,10 @@
             <ItemsControl ItemsSource="{Binding Edges}"/>
         </Grid>
     </DockPanel>
+    <!-- Event trigger detects mouseclick on canvas -->
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="MouseUp">
+            <cmd:EventToCommand Command="{Binding MouseDownCanvasCommand}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 </Window>
