@@ -39,7 +39,6 @@ namespace UMLDesigner.Utilities
                 PixelFormats.Pbgra32);
             renderBitmap.Render(surface);
             // Restore previously saved layout
-            surface.LayoutTransform = transform;
 
             // Create a file stream for saving image
             using (FileStream outStream = new FileStream(path, FileMode.Create))
@@ -51,6 +50,7 @@ namespace UMLDesigner.Utilities
                 // save the data to the stream
                 encoder.Save(outStream);
             }
+            surface.LayoutTransform = transform;
         }
     }
 }

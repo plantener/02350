@@ -132,7 +132,7 @@ namespace UMLDesigner.ViewModel
 
         public void newPath()
         {
-            pathObjects = getAnchor();
+            pathObjects = getAnchor3();
             rotateArrow();
             setPath();
             setArrow();
@@ -279,128 +279,92 @@ namespace UMLDesigner.ViewModel
             this.newAnchor = anchor;
         }
 
-        public PointCollection getAnchor()
+        private PointCollection getAnchor3()
         {
-            int d = 3, a = 5, h = 20, l = 25, tW = 75;
+            int lengthHalf;
             PointCollection temp = new PointCollection();
-            //break
-            if (NVMEndA.X + NVMEndA.Width / d > NVMEndB.X + NVMEndB.Width && NVMEndA.Y + NVMEndA.Height / d > NVMEndB.Y + NVMEndB.Height)
+            int a = 5, h = 20, l = 25;
+            if (NVMEndA.West.X - 30 <= NVMEndB.East.X && NVMEndA.West.X + 30 >= NVMEndB.East.X && (NVMEndA.North.Y >= NVMEndB.South.Y || NVMEndA.South.Y <= NVMEndB.North.Y))
             {
-                temp.Add(NVMEndA.North);
+                if (NVMEndA.North.Y >= NVMEndB.South.Y)
+                {
+                    temp.Add(NVMEndA.North);
+                    XMultA = new Point(NVMEndA.North.X - l - a, NVMEndA.North.Y - h - a);
+                }
+                else
+                {
+                    temp.Add(NVMEndA.South);
+                    XMultA = new Point(NVMEndA.South.X + a, NVMEndA.South.Y + a);
+                }
                 temp.Add(new Point(NVMEndA.North.X, NVMEndB.East.Y));
                 temp.Add(NVMEndB.East);
-                XMultA = new Point(NVMEndA.North.X + a, NVMEndA.North.Y - h - a);
-                XMultB = new Point(NVMEndB.East.X + a, NVMEndB.East.Y + a);
-                PosName = new Point(NVMEndA.North.X - tW, NVMEndB.East.Y - h - a);
                 setAnchor("east");
+                XMultB = new Point(NVMEndB.East.X + a, NVMEndB.East.Y - h - a);
+
             }
-            else if (NVMEndA.X + NVMEndA.Width - NVMEndA.Width / d < NVMEndB.X && NVMEndA.Y + NVMEndA.Height / d > NVMEndB.Y + NVMEndB.Height)
+            else if (NVMEndB.West.X - 30 <= NVMEndA.East.X && NVMEndB.West.X + 30 >= NVMEndA.East.X && (NVMEndA.North.Y > NVMEndB.South.Y || NVMEndA.South.Y < NVMEndB.North.Y))
             {
                 temp.Add(NVMEndA.East);
-                temp.Add(new Point(NVMEndB.South.X, NVMEndA.East.Y));
-                temp.Add(NVMEndB.South);
-                XMultA = new Point(NVMEndA.East.X + a, NVMEndA.East.Y + a);
-                XMultB = new Point(NVMEndB.South.X - l - a, NVMEndB.South.Y + a);
-                //PosName = new Point(NVMEndB.South.X - tW - a, NVMEndA.East.Y - h - a);
-                setAnchor("south");
+                if (NVMEndA.North.Y >= NVMEndB.South.Y)
+                {
+                    temp.Add(new Point(NVMEndB.South.X, NVMEndA.East.Y));
+                    temp.Add(NVMEndB.South);
+                    setAnchor("south");
+                    XMultB = new Point(NVMEndB.South.X + a, NVMEndB.South.Y + a);
+                }
+                else
+                {
+                    temp.Add(new Point(NVMEndB.North.X, NVMEndA.East.Y));
+                    temp.Add(NVMEndB.North);
+                    setAnchor("north");
+                    XMultB = new Point(NVMEndB.North.X - l - a, NVMEndB.North.Y - h - a);
+                }
+                XMultA = new Point(NVMEndA.East.X + a, NVMEndA.East.Y - h - a);
+
             }
-            else if (NVMEndA.X + NVMEndA.Width - NVMEndA.Width / d < NVMEndB.X && NVMEndA.Y + NVMEndA.Height - NVMEndA.Height / d < NVMEndB.Y)
+            else if (NVMEndA.West.X >= NVMEndB.East.X)
             {
-                temp.Add(NVMEndA.South);
-                temp.Add(new Point(NVMEndA.South.X, NVMEndB.West.Y));
-                temp.Add(NVMEndB.West);
-                XMultA = new Point(NVMEndA.South.X - l - a, NVMEndA.South.Y + a);
-                XMultB = new Point(NVMEndB.West.X - l - a, NVMEndB.West.Y - h - a);
-                //PosName = new Point(NVMEndA.South.X, NVMEndB.West.Y+a);
-                setAnchor("west");
-            }
-            else if (NVMEndA.X + NVMEndA.Width / d > NVMEndB.X + NVMEndB.Width && NVMEndA.Y + NVMEndA.Height - NVMEndA.Height / d < NVMEndB.Y)
-            {
+                lengthHalf = (int)((NVMEndA.West.X - NVMEndB.East.X) / 2);
                 temp.Add(NVMEndA.West);
-                temp.Add(new Point(NVMEndB.North.X, NVMEndA.West.Y));
+                temp.Add(new Point(NVMEndB.East.X + lengthHalf, NVMEndA.West.Y));
+                temp.Add(new Point(NVMEndB.East.X + lengthHalf, NVMEndB.East.Y));
+                temp.Add(NVMEndB.East);
+                setAnchor("east");
+                XMultA = new Point(NVMEndA.West.X - l - a, NVMEndA.West.Y + a);
+                XMultB = new Point(NVMEndB.East.X + a, NVMEndB.East.Y - h - a);
+            }
+            else if (NVMEndA.East.X <= NVMEndB.West.X)
+            {
+                lengthHalf = (int)((NVMEndB.West.X - NVMEndA.East.X) / 2);
+                temp.Add(NVMEndA.East);
+                temp.Add(new Point(NVMEndA.East.X + lengthHalf, NVMEndA.East.Y));
+                temp.Add(new Point(NVMEndA.East.X + lengthHalf, NVMEndB.West.Y));
+                temp.Add(NVMEndB.West);
+                setAnchor("west");
+                XMultA = new Point(NVMEndA.East.X + a, NVMEndA.East.Y - h - a);
+                XMultB = new Point(NVMEndB.West.X - l - a, NVMEndB.West.Y + a);
+            }
+            else if (NVMEndA.North.Y >= NVMEndB.South.Y)
+            {
+                lengthHalf = (int)((NVMEndA.North.Y - NVMEndB.South.Y) / 2);
+                temp.Add(NVMEndA.North);
+                temp.Add(new Point(NVMEndA.North.X, NVMEndB.South.Y + lengthHalf));
+                temp.Add(new Point(NVMEndB.South.X, NVMEndB.South.Y + lengthHalf));
+                temp.Add(NVMEndB.South);
+                setAnchor("south");
+                XMultA = new Point(NVMEndA.North.X - l - a, NVMEndA.North.Y - h - a);
+                XMultB = new Point(NVMEndB.South.X + a, NVMEndB.South.Y + a);
+            }
+            else if (NVMEndA.South.Y <= NVMEndB.North.Y)
+            {
+                lengthHalf = (int)((NVMEndB.North.Y - NVMEndA.South.Y) / 2);
+                temp.Add(NVMEndA.South);
+                temp.Add(new Point(NVMEndA.South.X, NVMEndA.South.Y + lengthHalf));
+                temp.Add(new Point(NVMEndB.North.X, NVMEndA.South.Y + lengthHalf));
                 temp.Add(NVMEndB.North);
-                XMultA = new Point(NVMEndA.West.X - l - a, NVMEndA.West.Y - h - a);
-                XMultB = new Point(NVMEndB.North.X + a, NVMEndB.North.Y - h - a);
-                //PosName = new Point(NVMEndB.North.X, NVMEndA.West.Y-h-a);
                 setAnchor("north");
-            }
-            //Straight above and below
-            else if (NVMEndB.X + NVMEndB.Width >= NVMEndA.X + NVMEndA.Width / d && NVMEndB.X < NVMEndA.X && NVMEndA.Y > NVMEndB.Y + NVMEndB.Height)
-            {
-                double dTemp = (NVMEndB.X + NVMEndB.Width - NVMEndA.X) / 2;
-                temp.Add(new Point(NVMEndB.X + NVMEndB.Width - dTemp, NVMEndA.Y));
-                temp.Add(new Point(NVMEndB.X + NVMEndB.Width - dTemp, NVMEndB.Y + NVMEndB.Height));
-                XMultA = new Point(NVMEndB.X + NVMEndB.Width - dTemp + a, NVMEndA.Y - h - a);
-                XMultB = new Point(NVMEndB.X + NVMEndB.Width - dTemp - l - a, NVMEndB.Y + NVMEndB.Height + a);
-                //PosName = new Point(NVMEndB.X + NVMEndB.Width - dTemp - tW - a, NVMEndB.South.Y + (NVMEndA.North.Y - NVMEndB.South.Y) / 2 - h / 2);
-                setAnchor("south");
-            }
-            else if (NVMEndB.X <= NVMEndA.X + NVMEndA.Width - NVMEndA.Width / d && NVMEndB.X > NVMEndA.X && NVMEndA.Y > NVMEndB.Y + NVMEndB.Height)
-            {
-                double dTemp = (NVMEndA.X + NVMEndA.Width - NVMEndB.X) / 2;
-                temp.Add(new Point(NVMEndB.X + dTemp, NVMEndA.Y));
-                temp.Add(new Point(NVMEndB.X + dTemp, NVMEndB.Y + NVMEndB.Height));
-                XMultA = new Point(NVMEndB.X + dTemp + a, NVMEndA.Y - h - a);
-                XMultB = new Point(NVMEndB.X + dTemp - l - a, NVMEndB.Y + NVMEndB.Height + a);
-                //PosName = new Point(NVMEndB.X + dTemp - tW - a, NVMEndB.South.Y + (NVMEndA.North.Y - NVMEndB.South.Y) / 2 - h / 2);
-                setAnchor("south");
-            }
-            else if (NVMEndB.X + NVMEndB.Width >= NVMEndA.X + NVMEndA.Width / d && NVMEndB.X < NVMEndA.X && NVMEndA.Y + NVMEndA.Height < NVMEndB.Y)
-            {
-                double dTemp = (NVMEndB.X + NVMEndB.Width - NVMEndA.X) / 2;
-                temp.Add(new Point(NVMEndB.X + NVMEndB.Width - dTemp, NVMEndA.Y + NVMEndA.Height));
-                temp.Add(new Point(NVMEndB.X + NVMEndB.Width - dTemp, NVMEndB.Y));
-                XMultA = new Point(NVMEndB.X + NVMEndB.Width - dTemp - l - a, NVMEndA.Y + NVMEndA.Height + a);
-                XMultB = new Point(NVMEndB.X + NVMEndB.Width - dTemp + a, NVMEndB.Y - h - a);
-                //PosName = new Point(NVMEndB.X + NVMEndB.Width - dTemp - tW - a, NVMEndA.South.Y + (NVMEndB.North.Y - NVMEndA.South.Y) / 2 - h / 2);
-                setAnchor("north");
-            }
-            else if (NVMEndB.X <= NVMEndA.X + NVMEndA.Width - NVMEndA.Width / d && NVMEndB.X > NVMEndA.X && NVMEndA.Y + NVMEndA.Height < NVMEndB.Y)
-            {
-                double dTemp = (NVMEndA.X + NVMEndA.Width - NVMEndB.X) / 2;
-                temp.Add(new Point(NVMEndB.X + dTemp, NVMEndA.Y + NVMEndA.Height));
-                temp.Add(new Point(NVMEndB.X + dTemp, NVMEndB.Y));
-                XMultA = new Point(NVMEndB.X + dTemp - l - a, NVMEndA.Y + NVMEndA.Height + a);
-                XMultB = new Point(NVMEndB.X + dTemp + a, NVMEndB.Y - h - a);
-                //PosName = new Point(NVMEndB.X + dTemp - tW - a, NVMEndA.South.Y + (NVMEndB.North.Y - NVMEndA.South.Y) / 2 - h / 2);
-                setAnchor("north");
-            }
-            //straight left and right
-            else if (NVMEndA.X > NVMEndB.X + NVMEndB.Width && NVMEndA.Y + NVMEndA.Height / d <= NVMEndB.Y + NVMEndB.Height && NVMEndA.Y > NVMEndB.Y)
-            {
-                double dTemp = (NVMEndB.Y + NVMEndB.Height - NVMEndA.Y) / 2;
-                temp.Add(new Point(NVMEndA.X, NVMEndA.Y + dTemp));
-                temp.Add(new Point(NVMEndB.X + NVMEndB.Width, NVMEndA.Y + dTemp));
-                XMultA = new Point(NVMEndA.X - l - a, NVMEndA.Y + dTemp - h - a);
-                XMultB = new Point(NVMEndB.X + NVMEndB.Width + a, NVMEndA.Y + dTemp + a);
-                setAnchor("east");
-            }
-            else if (NVMEndA.X + NVMEndA.Width < NVMEndB.X && NVMEndA.Y + NVMEndA.Height / d <= NVMEndB.Y + NVMEndB.Height && NVMEndA.Y > NVMEndB.Y)
-            {
-                double dTemp = (NVMEndB.Y + NVMEndB.Height - NVMEndA.Y) / 2;
-                temp.Add(new Point(NVMEndA.X + NVMEndA.Width, NVMEndA.Y + dTemp));
-                temp.Add(new Point(NVMEndB.X, NVMEndA.Y + dTemp));
-                XMultA = new Point(NVMEndA.X + NVMEndA.Width + a, NVMEndA.Y + dTemp + a);
-                XMultB = new Point(NVMEndB.X - l - a, NVMEndA.Y + dTemp - h - a);
-                setAnchor("west");
-            }
-            else if (NVMEndA.X > NVMEndB.X + NVMEndB.Width && NVMEndA.Y + NVMEndA.Height - NVMEndA.Height / d >= NVMEndB.Y && NVMEndA.Y < NVMEndB.Y)
-            {
-                double dTemp = (NVMEndB.Y + NVMEndB.Height - NVMEndA.Y) / 2;
-                temp.Add(new Point(NVMEndA.X, NVMEndA.Y + dTemp));
-                temp.Add(new Point(NVMEndB.X + NVMEndB.Width, NVMEndA.Y + dTemp));
-                XMultA = new Point(NVMEndA.X - l - a, NVMEndA.Y + dTemp - h - a);
-                XMultB = new Point(NVMEndB.X + NVMEndB.Width + a, NVMEndA.Y + dTemp + a);
-                setAnchor("east");
-            }
-            else if (NVMEndA.X + NVMEndA.Width < NVMEndB.X && NVMEndA.Y + NVMEndA.Height - NVMEndA.Height / d >= NVMEndB.Y && NVMEndA.Y < NVMEndB.Y)
-            {
-                double dTemp = (NVMEndB.Y + NVMEndB.Height - NVMEndA.Y) / 2;
-                temp.Add(new Point(NVMEndA.X + NVMEndA.Width, NVMEndA.Y + dTemp));
-                temp.Add(new Point(NVMEndB.X, NVMEndA.Y + dTemp));
-                XMultA = new Point(NVMEndA.X + NVMEndA.Width + a, NVMEndA.Y + dTemp + a);
-                XMultB = new Point(NVMEndB.X - l - a, NVMEndA.Y + dTemp - h - a);
-                setAnchor("west");
+                XMultA = new Point(NVMEndA.South.X + a, NVMEndA.South.Y + a);
+                XMultB = new Point(NVMEndB.North.X - l - a, NVMEndB.North.Y - h - a);
             }
             return temp;
         }

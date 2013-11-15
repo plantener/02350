@@ -7,7 +7,7 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
-        Title="MainWindow" Height="400" Width="525" Background="LightGray">
+        Title="MainWindow" Height="400" Width="525" WindowState="Maximized" Background="LightGray">
     <Window.Resources>
         <!-- Dette DataTemplate fortæller vinduet hvordan Node klassen skal vises grafisk. Denne grafiske beskrivelse er samlet i NodeUserControl. -->
         <DataTemplate DataType="{x:Type VM:NodeViewModel}">
@@ -40,12 +40,15 @@
                 <TextBlock>Her er en statusbar, den skal nok også laves som userControl</TextBlock>
             </StatusBarItem>
         </StatusBar>
-        <Border BorderBrush="Black" BorderThickness="1">
-        <Canvas Height="600" Width="1400" Background="White" SnapsToDevicePixels="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Border Margin="5, 5, 5, 5">
+        <Canvas ClipToBounds="True" Background="White">
             <!--   <View:ClassUserControl /> -->
             <ItemsControl ItemsSource="{Binding Classes}"/>
             <ItemsControl ItemsSource="{Binding Edges}"/>
         </Canvas>
+            <Border.Effect>
+                <DropShadowEffect Opacity="0.5" BlurRadius="5"/>
+            </Border.Effect>
         </Border>
     </DockPanel>
 </Window>

@@ -23,12 +23,13 @@ namespace UMLDesigner.Command
         public ObservableCollection<NewItems> itemsList { get; set; }
         public ObservableCollection<String> AvailableTypes;
         public List<UMLDesigner.Model.Attribute> itemsToAdd;
+        public PopupWindow PopupWindow = null;
 
-        public AddItemToNodeCommand(NodeViewModel focusedClass,ObservableCollection<NodeViewModel> Classes, object parameter)
+        public AddItemToNodeCommand(NodeViewModel focusedClass,ObservableCollection<NodeViewModel> classes, object parameter)
         {
             _focusedClass = focusedClass;
             _parameter = parameter;
-            _classes = Classes;
+            _classes = classes;
             itemsList = new ObservableCollection<NewItems>();
             AvailableTypes = new ObservableCollection<String>();
             itemsToAdd = new List<Model.Attribute>();
@@ -37,75 +38,83 @@ namespace UMLDesigner.Command
 
         public void Execute()
         {
+            //Used to detect if its a redo that has been done, if it is a redo, we dont want to create the popup window
+            if (PopupWindow == null)
+            {
+            
+            PopupWindow = new PopupWindow();
 
-          PopupWindow PopupWindow =  new PopupWindow();
-          PopupWindow.dgList.ItemsSource = itemsList;
+            PopupWindow.dgList.ItemsSource = itemsList;
 
             //this works!
-          PopupWindow.TestType.ItemsSource = AvailableTypes;
+            PopupWindow.TestType.ItemsSource = AvailableTypes;
 
 
-          //Make sure you can choose type void if adding method
-          if ((String)_parameter == "Method")
-          {
-             AvailableTypes.Add("void");
-          }
+            //Make sure you can choose type void if adding method
+            if ((String) _parameter == "Method")
+            {
+                AvailableTypes.Add("void");
+            }
 
-          AvailableTypes.Add("Int");
-          AvailableTypes.Add("String");
-          AvailableTypes.Add("Float");
-          AvailableTypes.Add("Double");
-
-
-          //Add Classnames as available types
-          foreach (NodeViewModel node in _classes)
-          {
-             AvailableTypes.Add(node.ClassName);
-          }
+            AvailableTypes.Add("Int");
+            AvailableTypes.Add("String");
+            AvailableTypes.Add("Float");
+            AvailableTypes.Add("Double");
 
 
-          PopupWindow.ShowDialog();
+            //Add Classnames as available types
+            foreach (NodeViewModel node in _classes)
+            {
+                AvailableTypes.Add(node.ClassName);
+            }
+            //Used if a redo is made
+           
+                PopupWindow.ShowDialog();
 
-         
 
-          if (PopupWindow.DialogResult.HasValue && PopupWindow.DialogResult.Value)
-          {
-            
-              foreach (NewItems n in itemsList)
-              {
-                  //Dont add empty selections
-                  if (n.ClassName == null)
-                  {
-                      continue;
-                  }
-                  //Convert the inputted data into attribute type, that we can do undo on aswell.
-                  itemsToAdd.Add(new UMLDesigner.Model.Attribute { Name = n.ClassName, Modifier = n.Visibility, Type = n.Type });
 
-                 
-              }
-              foreach (UMLDesigner.Model.Attribute a in itemsToAdd)
-              {
-                  //Cast object to String, since we know the commandparameter is String, this is possible
-                  if ((String)_parameter == "Attribute")
-                  {
-                      _focusedClass.Attributes.Add(a);
-                  }
-                  //Cast object to String, since we know the commandparameter is String, this is possible
-                  else if ((String)_parameter == "Method")
-                  {
-                      _focusedClass.Methods.Add(a);
+                if (PopupWindow.DialogResult.HasValue && PopupWindow.DialogResult.Value)
+                {
 
-                  }
-              }
-              }
+                    foreach (NewItems n in itemsList)
+                    {
+                        //Dont add empty selections
+                        if (n.ClassName == null)
+                        {
+                            continue;
+                        }
+                        //Convert the inputted data into attribute type, that we can do undo on aswell.
+                        itemsToAdd.Add(new UMLDesigner.Model.Attribute
+                        {
+                            Name = n.ClassName,
+                            Modifier = n.Visibility,
+                            Type = n.Type
+                        });
+                    }
 
-          else
-              //Cancel was pressed
-          {
-              return;
-          }
+                }
+                else
+                    //Cancel was pressed
+                {
+                    return;
+                }
+            }
+            foreach (UMLDesigner.Model.Attribute a in itemsToAdd)
+                    {
+                        //Cast object to String, since we know the commandparameter is String, this is possible
+                        if ((String) _parameter == "Attribute")
+                        {
+                            _focusedClass.Attributes.Add(a);
+                        }
+                            //Cast object to String, since we know the commandparameter is String, this is possible
+                        else if ((String) _parameter == "Method")
+                        {
+                            _focusedClass.Methods.Add(a);
+
+                        }
+                    }
+
         }
-
 
         public void UnExecute()
         {
