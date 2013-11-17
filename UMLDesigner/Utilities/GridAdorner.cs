@@ -4,10 +4,11 @@ using System.Windows.Media;
 
 namespace UMLDesigner.Utilities
 {
-    public class RulerAdorner : Adorner
+    public class GridAdorner : Adorner
     {
+        private const int LINEFACTOR = 20;
         private FrameworkElement element;
-        public RulerAdorner(UIElement el)
+        public GridAdorner(UIElement el)
             : base(el)
         {
             element = el as FrameworkElement;
@@ -20,16 +21,16 @@ namespace UMLDesigner.Utilities
             double height = element.ActualHeight;
             double width = element.ActualWidth;
 
-            double linesHorizontal = height / 50;
-            double linesVertical = width / 50;
+            double linesHorizontal = height / LINEFACTOR;
+            double linesVertical = width / LINEFACTOR;
 
-            var pen = new Pen(Brushes.LightGray, 1) { StartLineCap = PenLineCap.Triangle, EndLineCap = PenLineCap.Triangle };
+            var pen = new Pen(Brushes.Blue, 0.1) { StartLineCap = PenLineCap.Triangle, EndLineCap = PenLineCap.Triangle };
 
             int offset = 0;
 
             for (int i = 0; i <= linesVertical; ++i)
             {
-                offset = offset + 50;
+                offset = offset + LINEFACTOR;
                 drawingContext.DrawLine(pen, new Point(offset, 0), new Point(offset, height));
             }
 
@@ -37,7 +38,7 @@ namespace UMLDesigner.Utilities
 
             for (int i = 0; i <= linesHorizontal; ++i)
             {
-                offset = offset + 50;
+                offset = offset + LINEFACTOR;
                 drawingContext.DrawLine(pen, new Point(0, offset), new Point(width, offset));
             }
         }

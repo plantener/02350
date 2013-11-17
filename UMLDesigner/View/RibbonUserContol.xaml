@@ -72,7 +72,7 @@
                     <RibbonButton LargeImageSource="../Images/save.png" Label="100%" />
                 </RibbonGroup>
                 <RibbonGroup x:Name="ShowHideGroup" Header="Show or Hide">
-                    <RibbonCheckBox Label="Grid"/>
+                    <RibbonCheckBox Label="Grid" IsChecked="{Binding GridVisibility}"/>
                     <RibbonButton Label="Expand/Contract" Command="{Binding CollapseExpandCommand}"/>
                 </RibbonGroup>
             </RibbonTab>

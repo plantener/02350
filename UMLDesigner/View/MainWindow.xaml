@@ -6,6 +6,7 @@
         xmlns:Model="clr-namespace:UMLDesigner.Model;assembly=UMLDesigner.Model"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
+        xmlns:util="clr-namespace:UMLDesigner.Utilities"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
         Title="MainWindow" Height="400" Width="525" WindowState="Maximized">
     <Window.Resources>
@@ -33,7 +34,9 @@
    </Window.InputBindings>
    
     <DockPanel>
-      
+        <DockPanel.Resources>
+        <util:BoolToStringConverter x:Key="CGridVisibility" FalseValue="Collapsed" TrueValue="Visible" />
+        </DockPanel.Resources>
         <View:RibbonUserContol DockPanel.Dock="Top" Focusable="True" x:Name="QContol"/>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
@@ -41,10 +44,10 @@
             </StatusBarItem>
         </StatusBar>
         <Grid>
-            <!--   <View:ClassUserControl /> -->
             <!--Adornerdecorator is made to make sure the adorner is in the background, and not the foreground-->
-            <AdornerDecorator>
-                <View:GridWithRulerxaml></View:GridWithRulerxaml>
+            <AdornerDecorator >
+                <!-- Smid BoolToValueConverter ind her-->
+                <View:GridWithRulerxaml Visibility="{Binding GridVisibility, Converter={StaticResource CGridVisibility}}"  />
             </AdornerDecorator>
             <ItemsControl ItemsSource="{Binding Classes}"/>
             <ItemsControl ItemsSource="{Binding Edges}"/>

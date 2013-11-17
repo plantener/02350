@@ -40,6 +40,9 @@ namespace UMLDesigner.ViewModel {
       private string type = "";
 
       // Kommandoer som UI bindes til.
+       private bool _gridVisibility;
+      public bool GridVisibility { get { return _gridVisibility; } set { _gridVisibility = value; RaisePropertyChanged(() => GridVisibility); }}
+
       public ICommand UndoCommand { get; private set; }
       public ICommand RedoCommand { get; private set; }
       public ICommand KeyDownUndoCommand { get; private set; }
@@ -113,6 +116,7 @@ namespace UMLDesigner.ViewModel {
 
          //Application.Current.MainWindow.InputBindings.Add(new KeyBinding(UndoCommand, new KeyGesture(Key.A, ModifierKeys.Control)));
       }
+
 
       private void delete()
       {

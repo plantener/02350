@@ -22,7 +22,7 @@ namespace UMLDesigner.View
         void GridWithRulerxaml_Loaded(object sender, RoutedEventArgs e)
         {
             var adornerLayer = AdornerLayer.GetAdornerLayer(this);
-            var rulerAdorner = new RulerAdorner(this);
+            var rulerAdorner = new GridAdorner(this);
             adornerLayer.Add(rulerAdorner);
         }
     }
