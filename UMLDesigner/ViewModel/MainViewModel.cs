@@ -181,9 +181,13 @@ namespace UMLDesigner.ViewModel {
       private void MouseDownCanvas(MouseEventArgs obj)
       {
           FrameworkElement clickedObj = (FrameworkElement)obj.MouseDevice.Target;
-
           if (obj.Source is MainWindow)
           {
+              FocusedClass = null;
+              DependencyObject scope = FocusManager.GetFocusScope(movingClass);
+              FocusManager.SetFocusedElement(scope, clickedObj as IInputElement);
+              Keyboard.ClearFocus();
+              Application.Current.MainWindow.Focus();
               FocusedClass = null;
           }
 

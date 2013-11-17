@@ -7,6 +7,7 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
         xmlns:util="clr-namespace:UMLDesigner.Utilities"
+
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
         Title="MainWindow" Height="400" Width="525" WindowState="Maximized">
     <Window.Resources>
@@ -18,12 +19,6 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type VM:EdgeViewModel}">
             <Canvas>
-                <!-- Event trigger detects mouseclick on canvas -->
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="MouseUp">
-                        <cmd:EventToCommand Command="{Binding MouseDownCanvasCommand}" PassEventArgsToCommand="True"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
                 <View:EdgeUserControl/>
             </Canvas>
         </DataTemplate>
@@ -47,10 +42,16 @@
             <!--Adornerdecorator is made to make sure the adorner is in the background, and not the foreground-->
             <AdornerDecorator >
                 <!-- Smid BoolToValueConverter ind her-->
-                <View:GridWithRulerxaml Visibility="{Binding GridVisibility, Converter={StaticResource CGridVisibility}}"  />
+               <View:GridWithRulerxaml Visibility="{Binding GridVisibility, Converter={StaticResource CGridVisibility}}"  />
             </AdornerDecorator>
             <ItemsControl ItemsSource="{Binding Classes}"/>
             <ItemsControl ItemsSource="{Binding Edges}"/>
         </Grid>
     </DockPanel>
+    <!-- Event trigger detects mouseclick on canvas -->
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="MouseUp">
+            <cmd:EventToCommand Command="{Binding MouseDownCanvasCommand}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 </Window>
