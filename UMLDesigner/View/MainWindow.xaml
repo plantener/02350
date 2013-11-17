@@ -29,9 +29,11 @@
    </Window.InputBindings>
    
     <DockPanel>
+
         <DockPanel.Resources>
         <util:BoolToStringConverter x:Key="CGridVisibility" FalseValue="Collapsed" TrueValue="Visible" />
         </DockPanel.Resources>
+
         <View:RibbonUserContol DockPanel.Dock="Top" Focusable="True" x:Name="QContol"/>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
