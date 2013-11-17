@@ -6,8 +6,9 @@
         xmlns:Model="clr-namespace:UMLDesigner.Model;assembly=UMLDesigner.Model"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
+        xmlns:util="clr-namespace:UMLDesigner.Utilities"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
-        Title="MainWindow" Height="400" Width="525" WindowState="Maximized" Background="LightGray">
+        Title="MainWindow" Height="400" Width="525" WindowState="Maximized">
     <Window.Resources>
         <!-- Dette DataTemplate fortæller vinduet hvordan Node klassen skal vises grafisk. Denne grafiske beskrivelse er samlet i NodeUserControl. -->
         <DataTemplate DataType="{x:Type VM:NodeViewModel}">
@@ -17,12 +18,6 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type VM:EdgeViewModel}">
             <Canvas>
-                <!-- Event trigger detects mouseclick on canvas -->
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="MouseUp">
-                        <cmd:EventToCommand Command="{Binding MouseDownCanvasCommand}" PassEventArgsToCommand="True"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
                 <View:EdgeUserControl/>
             </Canvas>
         </DataTemplate>
@@ -33,22 +28,31 @@
    </Window.InputBindings>
    
     <DockPanel>
-      
+
+        <DockPanel.Resources>
+        <util:BoolToStringConverter x:Key="CGridVisibility" FalseValue="Collapsed" TrueValue="Visible" />
+        </DockPanel.Resources>
+
         <View:RibbonUserContol DockPanel.Dock="Top" Focusable="True" x:Name="QContol"/>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock>Her er en statusbar, den skal nok også laves som userControl</TextBlock>
             </StatusBarItem>
         </StatusBar>
-        <Border Margin="5, 5, 5, 5">
-        <Canvas ClipToBounds="True" Background="White">
-            <!--   <View:ClassUserControl /> -->
+        <Grid>
+            <!--Adornerdecorator is made to make sure the adorner is in the background, and not the foreground-->
+            <AdornerDecorator >
+                <!-- Smid BoolToValueConverter ind her-->
+                <View:GridWithRulerxaml Visibility="{Binding GridVisibility, Converter={StaticResource CGridVisibility}}"  />
+            </AdornerDecorator>
             <ItemsControl ItemsSource="{Binding Classes}"/>
             <ItemsControl ItemsSource="{Binding Edges}"/>
-        </Canvas>
-            <Border.Effect>
-                <DropShadowEffect Opacity="0.5" BlurRadius="5"/>
-            </Border.Effect>
-        </Border>
+        </Grid>
     </DockPanel>
+    <!-- Event trigger detects mouseclick on canvas -->
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="MouseUp">
+            <cmd:EventToCommand Command="{Binding MouseDownCanvasCommand}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 </Window>

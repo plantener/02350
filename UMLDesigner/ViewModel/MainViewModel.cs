@@ -42,6 +42,9 @@ namespace UMLDesigner.ViewModel {
       private string type = "";
 
       // Kommandoer som UI bindes til.
+       private bool _gridVisibility;
+      public bool GridVisibility { get { return _gridVisibility; } set { _gridVisibility = value; RaisePropertyChanged(() => GridVisibility); }}
+
       public ICommand UndoCommand { get; private set; }
       public ICommand RedoCommand { get; private set; }
       public ICommand KeyDownUndoCommand { get; private set; }
@@ -120,6 +123,7 @@ namespace UMLDesigner.ViewModel {
 
          //Application.Current.MainWindow.InputBindings.Add(new KeyBinding(UndoCommand, new KeyGesture(Key.A, ModifierKeys.Control)));
       }
+
 
       private void delete()
       {
@@ -201,9 +205,17 @@ namespace UMLDesigner.ViewModel {
       private void MouseDownCanvas(MouseEventArgs obj)
       {
           FrameworkElement clickedObj = (FrameworkElement)obj.MouseDevice.Target;
-
           if (obj.Source is MainWindow)
           {
+              FocusedClass = null;
+              //hotfix, ikke pænt
+              if (movingClass != null)
+              {
+                  DependencyObject scope = FocusManager.GetFocusScope(movingClass);
+                  FocusManager.SetFocusedElement(scope, clickedObj as IInputElement);
+                  Keyboard.ClearFocus();
+                  Application.Current.MainWindow.Focus();
+              }
               FocusedClass = null;
           }
 

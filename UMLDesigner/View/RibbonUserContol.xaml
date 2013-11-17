@@ -38,8 +38,8 @@
             <RibbonTab Header="Home" KeyTip="H" >
                 <!-- Home  group-->
                 <RibbonGroup x:Name="ClipboardGroup" Header="Clipboard">
-                    <RibbonButton LargeImageSource="..\Images\paste.png" Label="Paste" KeyTip="V"/>
-                    <RibbonButton LargeImageSource="..\Images\copy.png" Label="Copy" KeyTip="C" />
+                    <RibbonButton LargeImageSource="..\Images\paste.png" Label="Paste" KeyTip="V" Command="{Binding PasteCommand}" IsEnabled="{Binding CanPaste}"/>
+                    <RibbonButton LargeImageSource="..\Images\copy.png" Label="Copy" KeyTip="C" Command="{Binding CopyCommand}" IsEnabled="{Binding IsFocused}" />
                     <RibbonButton SmallImageSource="..\Images\cut.png" Label="Cut" KeyTip="X" />
                     <RibbonButton SmallImageSource="..\Images\save.png" Label="Delete" KeyTip="D" />
                 </RibbonGroup>
@@ -72,7 +72,7 @@
                     <RibbonButton LargeImageSource="../Images/save.png" Label="100%" />
                 </RibbonGroup>
                 <RibbonGroup x:Name="ShowHideGroup" Header="Show or Hide">
-                    <RibbonCheckBox Label="Grid"/>
+                    <RibbonCheckBox Label="Grid" IsChecked="{Binding GridVisibility}"/>
                     <RibbonButton Label="Expand/Contract" Command="{Binding CollapseExpandCommand}"/>
                 </RibbonGroup>
             </RibbonTab>
