@@ -184,10 +184,14 @@ namespace UMLDesigner.ViewModel {
           if (obj.Source is MainWindow)
           {
               FocusedClass = null;
-              DependencyObject scope = FocusManager.GetFocusScope(movingClass);
-              FocusManager.SetFocusedElement(scope, clickedObj as IInputElement);
-              Keyboard.ClearFocus();
-              Application.Current.MainWindow.Focus();
+              //hotfix, ikke pænt
+              if (movingClass != null)
+              {
+                  DependencyObject scope = FocusManager.GetFocusScope(movingClass);
+                  FocusManager.SetFocusedElement(scope, clickedObj as IInputElement);
+                  Keyboard.ClearFocus();
+                  Application.Current.MainWindow.Focus();
+              }
               FocusedClass = null;
           }
 
