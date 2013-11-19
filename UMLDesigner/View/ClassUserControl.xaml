@@ -55,7 +55,13 @@
 
          <!--Note the " : " is acutally being written to the GUI-->
          <!--IsHitTestVisible set to false, so the itemscontrols cannot be clicked -->
-         <ItemsControl Visibility="{Binding DataContext.NodesAreCollapsed, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Name="attributeList" ItemsSource="{Binding Attributes}" BorderThickness="0,0,0,1" DockPanel.Dock="Top" IsHitTestVisible="False">
+         <ItemsControl 
+            Visibility= "{Binding DataContext.NodesAreCollapsed, 
+            RelativeSource={RelativeSource FindAncestor, 
+            AncestorType={x:Type Window}}}" Name="attributeList" 
+            ItemsSource="{Binding Attributes}" BorderThickness="0,0,0,1" 
+            DockPanel.Dock="Top" IsHitTestVisible="False">
+            
             <ItemsControl.BorderBrush>
                <DrawingBrush Viewport="0,0,4,4" ViewportUnits="Absolute" TileMode="Tile">
                   <DrawingBrush.Drawing>
@@ -74,15 +80,15 @@
             </ItemsControl.BorderBrush>
 
             <ItemsControl.ItemTemplate>
-               <DataTemplate>
+               <DataTemplate>                  
                   <TextBlock><Run Text="{Binding Path=Modifier, Converter={StaticResource CPrivatePublic}}"/><Run Text="{Binding Name}"/> : <Run Text="{Binding Type}"/></TextBlock>
                </DataTemplate>
             </ItemsControl.ItemTemplate>
 
             <ItemsControl.Style>
                <Style TargetType="ItemsControl">
-                  <Style.Triggers>
-                     <Trigger Property="HasItems" Value="false"   >
+                  <Style.Triggers >
+                     <Trigger Property="HasItems" Value="false">
                         <Setter Property="Template">
                            <Setter.Value>
                               <ControlTemplate>
@@ -93,12 +99,9 @@
                   </Style.Triggers>
                </Style>
             </ItemsControl.Style>
-
          </ItemsControl>
 
          <ItemsControl Visibility="{Binding DataContext.NodesAreCollapsed, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Name="methodsList" ItemsSource="{Binding Methods}" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
-
-
             <ItemsControl.ItemTemplate>
                <DataTemplate>
                   <TextBlock><Run Text="{Binding Path=Modifier, Converter={StaticResource CPrivatePublic}}"/><Run Text="{Binding Name}"/>() : <Run Text="{Binding Type}"/></TextBlock>
