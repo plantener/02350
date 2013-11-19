@@ -45,8 +45,10 @@
                 <!-- Smid BoolToValueConverter ind her-->
                 <View:GridWithRulerxaml Visibility="{Binding GridVisibility, Converter={StaticResource CGridVisibility}}"  />
             </AdornerDecorator>
+            <Canvas>
             <ItemsControl ItemsSource="{Binding Classes}"/>
             <ItemsControl ItemsSource="{Binding Edges}"/>
+            </Canvas>
         </Grid>
     </DockPanel>
     <!-- Event trigger detects mouseclick on canvas -->

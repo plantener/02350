@@ -17,24 +17,12 @@ namespace UMLDesigner.ViewModel
 
         private NodeViewModel nVMEndA;
         public NodeViewModel NVMEndA { get { return nVMEndA; }
-            set { nVMEndA = value; RaisePropertyChanged(() => NVMEndA); RaisePropertyChanged(() => EndA); RaisePropertyChanged(() => Path); }
+            set { nVMEndA = value; RaisePropertyChanged(() => NVMEndA); RaisePropertyChanged(() => Path); }
         }
 
         private NodeViewModel nVMEndB;
         public NodeViewModel NVMEndB { get { return nVMEndB; }
-            set { nVMEndB = value; RaisePropertyChanged(() => NVMEndB); RaisePropertyChanged(() => EndB); RaisePropertyChanged(() => Path); }
-        }
-
-        public Node EndA
-        {
-            get { return edge.EndA; }
-            set { edge.EndA = value; RaisePropertyChanged(() => EndA); RaisePropertyChanged(() => NVMEndA); RaisePropertyChanged(() => Path); }
-        }
-
-        public Node EndB
-        {
-            get { return edge.EndB; }
-            set { edge.EndB = value; RaisePropertyChanged(() => EndB); RaisePropertyChanged(() => NVMEndB); RaisePropertyChanged(() => Path); }
+            set { nVMEndB = value; RaisePropertyChanged(() => NVMEndB); RaisePropertyChanged(() => Path); }
         }
 
         public string MultA
@@ -117,11 +105,9 @@ namespace UMLDesigner.ViewModel
         private PointCollection thisArrow;
         private PointCollection rArrow;
 
-        public EdgeViewModel(NodeViewModel nVMEndA, NodeViewModel nVMEndB, Node endA, Node endB, string type)
+        public EdgeViewModel(NodeViewModel nVMEndA, NodeViewModel nVMEndB, string type)
         {
             edge = new Edge();
-            EndA = endA;
-            EndB = endB;
             NVMEndA = nVMEndA;
             NVMEndB = nVMEndB;
             Type = edgeTypeConverter(type);
@@ -132,7 +118,7 @@ namespace UMLDesigner.ViewModel
 
         public void newPath()
         {
-            pathObjects = getAnchor3();
+            pathObjects = getAnchor();
             rotateArrow();
             setPath();
             setArrow();
@@ -279,7 +265,7 @@ namespace UMLDesigner.ViewModel
             this.newAnchor = anchor;
         }
 
-        private PointCollection getAnchor3()
+        private PointCollection getAnchor()
         {
             int lengthHalf;
             PointCollection temp = new PointCollection();

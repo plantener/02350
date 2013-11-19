@@ -18,18 +18,14 @@ namespace UMLDesigner.ViewModel
         public int X
         {
             get { return node.X; }
-            set { node.X = value; RaisePropertyChanged(() => X); RaisePropertyChanged(() => CanvasCenterX); RaisePropertyChanged(() => North); RaisePropertyChanged(() => South); RaisePropertyChanged(() => West); RaisePropertyChanged(() => East); }
+            set { node.X = value; RaisePropertyChanged(() => X); RaisePropertyChanged(() => North); RaisePropertyChanged(() => South); RaisePropertyChanged(() => West); RaisePropertyChanged(() => East); }
         }
 
         public int Y
         {
             get { return node.Y; }
-            set { node.Y = value; RaisePropertyChanged(() => Y); RaisePropertyChanged(() => CanvasCenterY); RaisePropertyChanged(() => North); RaisePropertyChanged(() => South); RaisePropertyChanged(() => West); RaisePropertyChanged(() => East); }
+            set { node.Y = value; RaisePropertyChanged(() => Y); RaisePropertyChanged(() => North); RaisePropertyChanged(() => South); RaisePropertyChanged(() => West); RaisePropertyChanged(() => East); }
         }
-
-        public double CanvasCenterX { get { return node.X + Width / 2; } }
-        public double CanvasCenterY { get { return node.Y + Height / 2; } }
-
 
         private int width;
         public int Width
@@ -62,18 +58,11 @@ namespace UMLDesigner.ViewModel
         }
 
         public ObservableCollection<UMLDesigner.Model.Attribute> Attributes { get { return node.Attributes; } set { node.Attributes = value; RaisePropertyChanged(() => Attributes); } }
-        public ObservableCollection<string> Properties { get { return node.Properties; } set { node.Properties = value; RaisePropertyChanged(() => Properties); } }
         public ObservableCollection<UMLDesigner.Model.Attribute> Methods { get { return node.Methods; } set { node.Methods = value; RaisePropertyChanged(() => Methods); } }
 
         public NodeViewModel()
         {
             node = new Node();
-        }
-
-        public EdgeViewModel newEdge(NodeViewModel endA, string type)
-        {
-            EdgeViewModel newEdge = new EdgeViewModel(endA, this, endA.node, this.node, type);
-            return newEdge;
         }
     }
 }

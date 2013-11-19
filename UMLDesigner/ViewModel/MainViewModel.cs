@@ -81,9 +81,9 @@ namespace UMLDesigner.ViewModel {
          // Det der sker er at der først laves et nyt object og så sættes objektets attributer til de givne værdier.
          Classes = new ObservableCollection<NodeViewModel>()
             { 
-                new NodeViewModel() { ClassName = "TestClass", X = 30, Y = 40,  Methods = { new Attribute { Name = "metode", Modifier = true, Type = "int" } }, Properties={"properties"}},
-                new NodeViewModel() { ClassName = "TestClass", X = 140, Y = 230, Properties= {"properties", "her"},},
-                new NodeViewModel() { ClassName = "NewClass", Attributes = { new Attribute { Name = "Testattribut", Modifier = true, Type = "int" } }, Properties = { "PropertiesTest", "ProperTiesTest2" } }
+                new NodeViewModel() { ClassName = "TestClass", X = 30, Y = 40,  Methods = { new Attribute { Name = "metode", Modifier = true, Type = "int" } }},
+                new NodeViewModel() { ClassName = "TestClass", X = 140, Y = 230, },
+                new NodeViewModel() { ClassName = "NewClass", Attributes = { new Attribute { Name = "Testattribut", Modifier = true, Type = "int" } } }
             };
 
          Edges = new ObservableCollection<EdgeViewModel>() {
@@ -152,10 +152,6 @@ namespace UMLDesigner.ViewModel {
           foreach (Attribute method in FocusedClass.Methods)
           {
               CopyClass.Methods.Add(method);
-          }
-          foreach (string property in FocusedClass.Properties)
-          {
-              CopyClass.Properties.Add(property);
           }
       }
 
@@ -373,7 +369,7 @@ namespace UMLDesigner.ViewModel {
                startEdge = FocusedClass;
             else if (startEdge != FocusedClass)
             {
-               undoRedoController.AddAndExecute(new AddEdgeCommand(Edges, FocusedClass.newEdge(startEdge, type)));
+               undoRedoController.AddAndExecute(new AddEdgeCommand(Edges, new EdgeViewModel(startEdge, FocusedClass, type)));
                isAddingEdge = false;
                startEdge = null;
                     type = "";
