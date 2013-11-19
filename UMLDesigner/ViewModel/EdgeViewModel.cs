@@ -17,24 +17,12 @@ namespace UMLDesigner.ViewModel
 
         private NodeViewModel nVMEndA;
         public NodeViewModel NVMEndA { get { return nVMEndA; }
-            set { nVMEndA = value; RaisePropertyChanged(() => NVMEndA); RaisePropertyChanged(() => EndA); RaisePropertyChanged(() => Path); }
+            set { nVMEndA = value; RaisePropertyChanged(() => NVMEndA); RaisePropertyChanged(() => Path); }
         }
 
         private NodeViewModel nVMEndB;
         public NodeViewModel NVMEndB { get { return nVMEndB; }
-            set { nVMEndB = value; RaisePropertyChanged(() => NVMEndB); RaisePropertyChanged(() => EndB); RaisePropertyChanged(() => Path); }
-        }
-
-        public Node EndA
-        {
-            get { return edge.EndA; }
-            set { edge.EndA = value; RaisePropertyChanged(() => EndA); RaisePropertyChanged(() => NVMEndA); RaisePropertyChanged(() => Path); }
-        }
-
-        public Node EndB
-        {
-            get { return edge.EndB; }
-            set { edge.EndB = value; RaisePropertyChanged(() => EndB); RaisePropertyChanged(() => NVMEndB); RaisePropertyChanged(() => Path); }
+            set { nVMEndB = value; RaisePropertyChanged(() => NVMEndB); RaisePropertyChanged(() => Path); }
         }
 
         public string MultA
@@ -49,25 +37,61 @@ namespace UMLDesigner.ViewModel
             set { edge.MultB = value; RaisePropertyChanged(() => MultB); }
         }
 
+        private Point xMultA;
+        private Point xMultB;
+
+        public Point XMultA
+        {
+            get { return xMultA; }
+            set { xMultA = value; RaisePropertyChanged(() => XMultA); }
+        }
+
+        public Point XMultB
+        {
+            get { return xMultB; }
+            set { xMultB = value; RaisePropertyChanged(() => XMultB); }
+        }
+
         public string Name
         {
             get { return edge.Name; }
             set { edge.Name = value; RaisePropertyChanged(() => Name); }
         }
+        
+        private Point posName;
+
+        public Point PosName
+        {
+            get { return posName; }
+            set { posName = value; RaisePropertyChanged(() => PosName); }
+        }
+        private bool multAllowed;
+        public bool MultAllowed
+        {
+            get { return multAllowed; }
+            set { multAllowed = value; RaisePropertyChanged(() => MultAllowed); }
+        }
+
+        private int multBorder;
+        public int MultBorder
+        {
+            get { return multBorder; }
+            set { multBorder = value; RaisePropertyChanged(() => MultBorder); }
+        }
 
         private EdgeType Type { get { return edge.Type; } set { edge.Type = value; RaisePropertyChanged(() => Type); } }
 
         private string colorFill;
-        public String ColorFill { get { return colorFill; } set { colorFill = value; RaisePropertyChanged(() => ColorFill); } }
+        public string ColorFill { get { return colorFill; } set { colorFill = value; RaisePropertyChanged(() => ColorFill); } }
 
         private string dashed;
-        public String Dashed { get { return dashed; } set { dashed = value; RaisePropertyChanged(() => Dashed); } }
+        public string Dashed { get { return dashed; } set { dashed = value; RaisePropertyChanged(() => Dashed); } }
 
-        private String path;
-        public String Path { get { return path; } set { path = value; RaisePropertyChanged(() => Path); } }
+        private string path;
+        public string Path { get { return path; } set { path = value; RaisePropertyChanged(() => Path); } }
 
-        private String arrow;
-        public String Arrow { get { return arrow; } set { arrow = value; RaisePropertyChanged(() => Arrow); } }
+        private string arrow;
+        public string Arrow { get { return arrow; } set { arrow = value; RaisePropertyChanged(() => Arrow); } }
 
         private string newAnchor;
         private string oldAnchor = "";
@@ -81,11 +105,9 @@ namespace UMLDesigner.ViewModel
         private PointCollection thisArrow;
         private PointCollection rArrow;
 
-        public EdgeViewModel(NodeViewModel nVMEndA, NodeViewModel nVMEndB, Node endA, Node endB, string type)
+        public EdgeViewModel(NodeViewModel nVMEndA, NodeViewModel nVMEndB, string type)
         {
             edge = new Edge();
-            EndA = endA;
-            EndB = endB;
             NVMEndA = nVMEndA;
             NVMEndB = nVMEndB;
             Type = edgeTypeConverter(type);
@@ -96,10 +118,15 @@ namespace UMLDesigner.ViewModel
 
         public void newPath()
         {
-            pathObjects = NVMEndA.getAnchor(NVMEndB, this);
+            pathObjects = getAnchor();
             rotateArrow();
             setPath();
             setArrow();
+            //if (pathObjects.Count != 0)
+            //{
+            //    XMultA = pathObjects.ElementAt(0);
+            //    XMultB = pathObjects.ElementAt(pathObjects.Count - 1);
+            //}
         }
 
         private void initArrow()
@@ -157,36 +184,50 @@ namespace UMLDesigner.ViewModel
                     thisArrow = rombArrow;
                     dashed = "1 0";
                     colorFill = "White";
+                    multAllowed = true;
+                    multBorder = 1;
                     return EdgeType.AGG;
                 case "ASS":
                     thisArrow = normArrow;
                     dashed = "1 0";
                     colorFill = "Transperant";
+                    multAllowed = true;
+                    multBorder = 1;
                     return EdgeType.ASS;
                 case "COM":
                     thisArrow = rombArrow;
                     dashed = "1 0";
                     colorFill = "#2E8DEF";
+                    multAllowed = true;
+                    multBorder = 1;
                     return EdgeType.COM;
                 case "DEP":
                     thisArrow = normArrow;
                     dashed = "5 5";
                     colorFill = "Transperant";
+                    multAllowed = false;
+                    multBorder = 0;
                     return EdgeType.DEP;
                 case "GEN":
                     thisArrow = genArrow;
                     dashed = "1 0";
                     colorFill = "White";
+                    multAllowed = false;
+                    multBorder = 0;
                     return EdgeType.GEN;
                 case "NOR":
                     thisArrow = new PointCollection();
                     dashed = "1 0";
                     colorFill = "Transperant";
+                    multAllowed = true;
+                    multBorder = 1;
                     return EdgeType.NOR;
                 default:
                     thisArrow = normArrow;
                     dashed = "1 0";
                     colorFill = "Transperant";
+                    multAllowed = true;
+                    multBorder = 1;
                     return EdgeType.ASS;
             }
         }
@@ -222,6 +263,96 @@ namespace UMLDesigner.ViewModel
             else if (anchor == "east")
                 angle = 270;
             this.newAnchor = anchor;
+        }
+
+        private PointCollection getAnchor()
+        {
+            int lengthHalf;
+            PointCollection temp = new PointCollection();
+            int a = 5, h = 20, l = 25;
+            if (NVMEndA.West.X - 30 <= NVMEndB.East.X && NVMEndA.West.X + 30 >= NVMEndB.East.X && (NVMEndA.North.Y >= NVMEndB.South.Y || NVMEndA.South.Y <= NVMEndB.North.Y))
+            {
+                if (NVMEndA.North.Y >= NVMEndB.South.Y)
+                {
+                    temp.Add(NVMEndA.North);
+                    XMultA = new Point(NVMEndA.North.X - l - a, NVMEndA.North.Y - h - a);
+                }
+                else
+                {
+                    temp.Add(NVMEndA.South);
+                    XMultA = new Point(NVMEndA.South.X + a, NVMEndA.South.Y + a);
+                }
+                temp.Add(new Point(NVMEndA.North.X, NVMEndB.East.Y));
+                temp.Add(NVMEndB.East);
+                setAnchor("east");
+                XMultB = new Point(NVMEndB.East.X + a, NVMEndB.East.Y - h - a);
+
+            }
+            else if (NVMEndB.West.X - 30 <= NVMEndA.East.X && NVMEndB.West.X + 30 >= NVMEndA.East.X && (NVMEndA.North.Y > NVMEndB.South.Y || NVMEndA.South.Y < NVMEndB.North.Y))
+            {
+                temp.Add(NVMEndA.East);
+                if (NVMEndA.North.Y >= NVMEndB.South.Y)
+                {
+                    temp.Add(new Point(NVMEndB.South.X, NVMEndA.East.Y));
+                    temp.Add(NVMEndB.South);
+                    setAnchor("south");
+                    XMultB = new Point(NVMEndB.South.X + a, NVMEndB.South.Y + a);
+                }
+                else
+                {
+                    temp.Add(new Point(NVMEndB.North.X, NVMEndA.East.Y));
+                    temp.Add(NVMEndB.North);
+                    setAnchor("north");
+                    XMultB = new Point(NVMEndB.North.X - l - a, NVMEndB.North.Y - h - a);
+                }
+                XMultA = new Point(NVMEndA.East.X + a, NVMEndA.East.Y - h - a);
+
+            }
+            else if (NVMEndA.West.X >= NVMEndB.East.X)
+            {
+                lengthHalf = (int)((NVMEndA.West.X - NVMEndB.East.X) / 2);
+                temp.Add(NVMEndA.West);
+                temp.Add(new Point(NVMEndB.East.X + lengthHalf, NVMEndA.West.Y));
+                temp.Add(new Point(NVMEndB.East.X + lengthHalf, NVMEndB.East.Y));
+                temp.Add(NVMEndB.East);
+                setAnchor("east");
+                XMultA = new Point(NVMEndA.West.X - l - a, NVMEndA.West.Y + a);
+                XMultB = new Point(NVMEndB.East.X + a, NVMEndB.East.Y - h - a);
+            }
+            else if (NVMEndA.East.X <= NVMEndB.West.X)
+            {
+                lengthHalf = (int)((NVMEndB.West.X - NVMEndA.East.X) / 2);
+                temp.Add(NVMEndA.East);
+                temp.Add(new Point(NVMEndA.East.X + lengthHalf, NVMEndA.East.Y));
+                temp.Add(new Point(NVMEndA.East.X + lengthHalf, NVMEndB.West.Y));
+                temp.Add(NVMEndB.West);
+                setAnchor("west");
+                XMultA = new Point(NVMEndA.East.X + a, NVMEndA.East.Y - h - a);
+                XMultB = new Point(NVMEndB.West.X - l - a, NVMEndB.West.Y + a);
+            }
+            else if (NVMEndA.North.Y >= NVMEndB.South.Y)
+            {
+                lengthHalf = (int)((NVMEndA.North.Y - NVMEndB.South.Y) / 2);
+                temp.Add(NVMEndA.North);
+                temp.Add(new Point(NVMEndA.North.X, NVMEndB.South.Y + lengthHalf));
+                temp.Add(new Point(NVMEndB.South.X, NVMEndB.South.Y + lengthHalf));
+                temp.Add(NVMEndB.South);
+                setAnchor("south");
+                XMultA = new Point(NVMEndA.North.X - l - a, NVMEndA.North.Y - h - a);
+                XMultB = new Point(NVMEndB.South.X + a, NVMEndB.South.Y + a);
+            }
+            else if (NVMEndA.South.Y <= NVMEndB.North.Y)
+            {
+                lengthHalf = (int)((NVMEndB.North.Y - NVMEndA.South.Y) / 2);
+                temp.Add(NVMEndA.South);
+                temp.Add(new Point(NVMEndA.South.X, NVMEndA.South.Y + lengthHalf));
+                temp.Add(new Point(NVMEndB.North.X, NVMEndA.South.Y + lengthHalf));
+                temp.Add(NVMEndB.North);
+                setAnchor("north");
+                XMultA = new Point(NVMEndA.South.X + a, NVMEndA.South.Y + a);
+                XMultB = new Point(NVMEndB.North.X - l - a, NVMEndB.North.Y - h - a);
+            }
+            return temp;
         }
     }
 }
