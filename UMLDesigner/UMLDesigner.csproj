@@ -68,6 +68,7 @@
     </ApplicationDefinition>
     <Compile Include="Command\AddClassCommand.cs" />
     <Compile Include="Command\AddEdgeCommand.cs" />
+    <Compile Include="Command\PasteCommand.cs" />
     <Compile Include="Command\IUndoRedoCommand.cs" />
     <Compile Include="Command\UndoRedoController.cs" />
     <Compile Include="Command\MoveNodeCommand.cs" />
