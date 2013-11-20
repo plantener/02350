@@ -127,15 +127,7 @@ namespace UMLDesigner.ViewModel {
 
       private void delete()
       {
-          //deletes the edge connected to the delited class
-          foreach (EdgeViewModel edge in Edges)
-          {
-              if (FocusedClass == edge.NVMEndA || FocusedClass == edge.NVMEndB)
-              {
-                  Edges.Remove(edge);
-              }
-          }
-          Classes.Remove(FocusedClass);
+          undoRedoController.AddAndExecute(new DeleteClassCommand(Classes,FocusedClass, Edges));
       }
 
 
