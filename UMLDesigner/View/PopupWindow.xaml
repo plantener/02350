@@ -13,12 +13,12 @@
         <Button Content="Cancel" IsCancel="True" Margin="0,0,91,10" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
 
         <Label Content="Attributes" HorizontalAlignment="Left" Margin="133,10,0,0" VerticalAlignment="Top"/>
-        <!--Datagrids itemssource is set in code (AddItemToNodeCommand)-->
+        <!--Datagrids itemssource is set in code (EditNodes)-->
         <DataGrid Name="dgList" SelectionUnit="Cell" AutoGenerateColumns="False" Margin="10,36,10,0" VerticalAlignment="Top" Height="170">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Class name" Binding="{Binding ClassName}" Width="0.4*"/>
+                <DataGridTextColumn Header="Class name" Binding="{Binding Name}" Width="0.4*"/>
                 <DataGridComboBoxColumn Header="Type" x:Name="TestType" SelectedItemBinding="{Binding Type}" Width="0.4*"/>
-                <DataGridCheckBoxColumn Header="Public"  Binding="{Binding Visibility}" Width="0.2*" />
+                <DataGridCheckBoxColumn Header="Public"  Binding="{Binding Modifier}" Width="0.2*" />
 
             </DataGrid.Columns>
         </DataGrid>
@@ -27,9 +27,9 @@
         
         <DataGrid Name="methodList" SelectionUnit="Cell" AutoGenerateColumns="False" Margin="10,243,10,0" VerticalAlignment="Top" Height="170">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Class name" Binding="{Binding ClassName}" Width="0.4*"/>
+                <DataGridTextColumn Header="Class name" Binding="{Binding Name}" Width="0.4*"/>
                 <DataGridComboBoxColumn Header="Type" x:Name="methodType" SelectedItemBinding="{Binding Type}" Width="0.4*"/>
-                <DataGridCheckBoxColumn Header="Public"  Binding="{Binding Visibility}" Width="0.2*" />
+                <DataGridCheckBoxColumn Header="Public"  Binding="{Binding Modifier}" Width="0.2*" />
 
             </DataGrid.Columns>
         </DataGrid>

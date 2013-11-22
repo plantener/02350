@@ -62,7 +62,7 @@ namespace UMLDesigner.ViewModel {
       public ICommand MouseUpNodeCommand { get; private set; }
       public ICommand KeyDownCommand { get; private set; }
       public ICommand KeyUpCommand { get; private set; }
-      public ICommand AddItemToNodeCommand { get; private set; }
+      public ICommand EditNodesCommand { get; private set; }
       public ICommand MouseDownCanvasCommand { get; private set; }
       public ICommand CopyCommand { get; private set; }
       public ICommand PasteCommand { get; private set; }
@@ -108,8 +108,8 @@ namespace UMLDesigner.ViewModel {
          KeyUpCommand = new RelayCommand<KeyEventArgs>(UndoRedo_KeyUp);
          KeyDownUndoCommand = new RelayCommand<object>(param => KeyDownUndo(param));
 
-         //   AddItemToNodeCommand = new RelayCommand(AddItemToNode);
-         AddItemToNodeCommand = new RelayCommand<object>(param => AddItemToNode(FocusedClass, Classes, param));
+         //   EditNodesCommand = new RelayCommand(EditNode);
+         EditNodesCommand = new RelayCommand(EditNode);
          MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
          CopyCommand = new RelayCommand(Copy);
          PasteCommand = new RelayCommand(Paste);
@@ -194,8 +194,8 @@ namespace UMLDesigner.ViewModel {
           ExportToImage.ExportToPng(path, mainCanvas, getResolution());
       }
 
-      public void AddItemToNode(NodeViewModel FocusedClass, ObservableCollection<NodeViewModel> Classes, object parameter) {
-         undoRedoController.AddAndExecute(new AddItemToNodeCommand(FocusedClass, Classes, parameter));
+      public void EditNode() {
+          undoRedoController.AddAndExecute(new EditNodeCommand(focusedClass,Classes));
       }
 
       private void MouseDownCanvas(MouseEventArgs obj)

@@ -58,10 +58,8 @@
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Dependency" Command="{Binding AddDEPCommand}"/>
                     <RibbonButton SmallImageSource="../Images/save.png" Label="Normal" Command="{Binding AddNORCommand}"/>
                 </RibbonGroup>
-                <RibbonGroup x:Name="AddItemGroup" Header="Add..">
-                    <RibbonButton SmallImageSource="../Images/save.png" Label="Attribute" Command="{Binding AddItemToNodeCommand}" CommandParameter="Attribute" IsEnabled="{Binding IsFocused}"/>
-                    <RibbonButton SmallImageSource="../Images/save.png" Label="Method" Command="{Binding AddItemToNodeCommand}" CommandParameter="Method" IsEnabled="{Binding IsFocused}" />
-
+                <RibbonGroup x:Name="AddItemGroup" Header="Edit..">
+                    <RibbonButton SmallImageSource="../Images/save.png" Label="Node content" Command="{Binding EditNodesCommand}"  IsEnabled="{Binding IsFocused}"/>
                 </RibbonGroup>
             </RibbonTab>
             <!-- Ribbon Tab #3: -->

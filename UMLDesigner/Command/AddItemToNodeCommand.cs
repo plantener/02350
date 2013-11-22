@@ -32,6 +32,7 @@ namespace UMLDesigner.Command
 
         public PopupWindow PopupWindow = null;
 
+
         public AddItemToNodeCommand(NodeViewModel focusedClass,ObservableCollection<NodeViewModel> classes, object parameter)
         {
             _focusedClass = focusedClass;
@@ -47,82 +48,92 @@ namespace UMLDesigner.Command
             methodsToAdd = new List<Model.Attribute>();
 
 
+
         }
 
         public void Execute()
         {
-          
+           
+       
 
             //Used to detect if its a redo that has been done, if it is a redo, we dont want to create the popup window
             if (PopupWindow == null)
             {
+               
 
                 foreach (var i in _focusedClass.Attributes)
                 {
                     itemsList.Add(
 
-                        new NewItems { ClassName = i.Name, Type = i.Type, Visibility = i.Modifier }
+                        new NewItems {ClassName = i.Name, Type = i.Type, Visibility = i.Modifier}
 
-                );
+                        );
                 }
 
                 foreach (var i in _focusedClass.Methods)
                 {
                     methodList.Add(
-                    
+
                         new NewItems {ClassName = i.Name, Type = i.Type, Visibility = i.Modifier}
-                    
-                );
+
+                        );
                 }
-            
-            PopupWindow = new PopupWindow
-            {
-                dgList = {ItemsSource = itemsList},
-                methodList = {ItemsSource = methodList},
-                TestType = {ItemsSource = AvailableTypes},
-                methodType = {ItemsSource = AvailableTypesForMethod}
-            };
+
+
+                PopupWindow = new PopupWindow
+                {
+                    dgList = {ItemsSource = itemsList},
+                    methodList = {ItemsSource = methodList},
+                    TestType = {ItemsSource = AvailableTypes},
+                    methodType = {ItemsSource = AvailableTypesForMethod}
+                };
 
 
                 //Make sure you can choose type void when adding method
-           
-            AvailableTypesForMethod.Add("void");
-            
 
-            AvailableTypes.Add("Int");
-            AvailableTypes.Add("String");
-            AvailableTypes.Add("Float");
-            AvailableTypes.Add("Double");
-            AvailableTypesForMethod.Add("Int");
-            AvailableTypesForMethod.Add("String");
-            AvailableTypesForMethod.Add("Float");
-            AvailableTypesForMethod.Add("Double");
+                AvailableTypesForMethod.Add("void");
 
 
-            //Add Classnames as available types
-            foreach (NodeViewModel node in _classes)
-            {
-                AvailableTypes.Add(node.ClassName);
-                AvailableTypesForMethod.Add(node.ClassName);
-            }
-            //Used if a redo is made
-           
+                AvailableTypes.Add("Int");
+                AvailableTypes.Add("String");
+                AvailableTypes.Add("Float");
+                AvailableTypes.Add("Double");
+                AvailableTypesForMethod.Add("Int");
+                AvailableTypesForMethod.Add("String");
+                AvailableTypesForMethod.Add("Float");
+                AvailableTypesForMethod.Add("Double");
+
+
+                //Add Classnames as available types
+                foreach (NodeViewModel node in _classes)
+                {
+                    AvailableTypes.Add(node.ClassName);
+                    AvailableTypesForMethod.Add(node.ClassName);
+                }
+                //Used if a redo is made
+
                 PopupWindow.ShowDialog();
 
 
 
                 if (PopupWindow.DialogResult.HasValue && PopupWindow.DialogResult.Value)
                 {
+
                     _focusedClass.Attributes.Clear();
                     _focusedClass.Methods.Clear();
 
+
                     foreach (NewItems n in itemsList)
                     {
+
                         //Dont add empty selections
                         if (string.IsNullOrEmpty(n.ClassName))
                         {
                             continue;
                         }
+
+
+
                         //Convert the inputted data into attribute type, that we can do undo on aswell.
                         attributesToAdd.Add(new UMLDesigner.Model.Attribute
                         {
@@ -154,6 +165,8 @@ namespace UMLDesigner.Command
                     return;
                 }
             }
+           
+
             foreach (UMLDesigner.Model.Attribute a in attributesToAdd)
                     {
                       
@@ -172,32 +185,64 @@ namespace UMLDesigner.Command
             {
 
                 _focusedClass.Attributes.Remove(a);
-                
+
             }
             foreach (UMLDesigner.Model.Attribute a in methodsToAdd)
             {
                 _focusedClass.Methods.Remove(a);
             }
+
+          
+          
         }
 
        
        
     }
     //NewItems is used to compose an element in the xaml. The popup window binds to each of these.
-     public class NewItems
-        {
-         public String ClassName  { get;  set; }
-         public String Type { get; set; }
-         public bool Visibility { get; set; }
+    public class NewItems : IEquatable<NewItems>
+    {
+        public String ClassName { get; set; }
+        public String Type { get; set; }
+        public bool Visibility { get; set; }
 
-         public NewItems()
-         {
-             //Set this in the constructor, such that it is the first choice when choosing type in the popup
-             Type = "Int";
-         }
-        
+        public NewItems()
+        {
+            //Set this in the constructor, such that it is the first choice when choosing type in the popup
+            Type = "Int";
         }
 
+        public override bool Equals(object other)
+        {
+            return Equals(other as NewItems);
+        }
 
-    
+        public bool Equals(NewItems other)
+        {
+            if (object.ReferenceEquals(other, null))
+            {
+                return false;
+            }
+            if (object.ReferenceEquals(other, this))
+            {
+                return true;
+            }
+            return ClassName == other.ClassName;
+        }
+        public override int GetHashCode()
+        {
+            // Note: *not* StringComparer; EqualityComparer<T>
+            // copes with null; StringComparer doesn't.
+            var comparer = EqualityComparer<string>.Default;
+
+            // Unchecked to allow overflow, which is fine
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 31 + comparer.GetHashCode(ClassName);
+                return hash;
+            }
+        }
+
+    }
 }
