@@ -21,10 +21,17 @@ namespace UMLDesigner.ViewModel {
 
       private int relativeMousePositionX = -1;
       private int relativeMousePositionY = -1;
+      private bool deleteActive = false;
+      public bool DeleteActive { get { return deleteActive; } set { if (IsFocused || EdgeIsFocused) { deleteActive = true; } else { deleteActive = false;  RaisePropertyChanged(() => DeleteActive); } } }
       private bool isFocused = false;
       public bool IsFocused { get { return isFocused; } set { isFocused = value; RaisePropertyChanged(() => IsFocused); } }
       private NodeViewModel focusedClass = null;
-      public NodeViewModel FocusedClass { get { return focusedClass; } private set { focusedClass = value; if (focusedClass == null) { IsFocused = false; } else { IsFocused = true; };} }
+      public NodeViewModel FocusedClass { get { return focusedClass; } private set { focusedClass = value; if (focusedClass == null) { IsFocused = false; } else { IsFocused = true; FocusedEdge = null; };} }
+      //Used for detecting focus on edges
+      private bool edgeIsFocused = false;
+      public bool EdgeIsFocused { get { return edgeIsFocused; } set { edgeIsFocused = value; RaisePropertyChanged(() => EdgeIsFocused); } }
+      private EdgeViewModel focusedEdge = null;
+      public EdgeViewModel FocusedEdge { get { return focusedEdge; } private set { focusedEdge = value; if (focusedEdge == null) { EdgeIsFocused = false; } else { EdgeIsFocused = true; FocusedClass=null; };} }
       private bool canPaste = false;
       public bool CanPaste { get { return canPaste; } set { canPaste = value; RaisePropertyChanged(() => CanPaste); } }
       private NodeViewModel copyClass = null;
@@ -124,10 +131,16 @@ namespace UMLDesigner.ViewModel {
          //Application.Current.MainWindow.InputBindings.Add(new KeyBinding(UndoCommand, new KeyGesture(Key.A, ModifierKeys.Control)));
       }
 
-
       private void delete()
       {
-          undoRedoController.AddAndExecute(new DeleteClassCommand(Classes,FocusedClass, Edges));
+          if (FocusedClass != null)
+          {
+              undoRedoController.AddAndExecute(new DeleteClassCommand(Classes, FocusedClass, Edges));
+          }
+          else if (FocusedEdge != null)
+          {
+              undoRedoController.AddAndExecute(new DeleteArrowCommand(Edges, FocusedEdge));
+          }
       }
 
 
@@ -205,6 +218,10 @@ namespace UMLDesigner.ViewModel {
                   Application.Current.MainWindow.Focus();
               }
               FocusedClass = null;
+          }
+          else if (clickedObj.DataContext is UMLDesigner.ViewModel.EdgeViewModel)
+          {
+              FocusedEdge = (EdgeViewModel)clickedObj.DataContext;
           }
 
       }
@@ -354,7 +371,9 @@ namespace UMLDesigner.ViewModel {
          // noden skaffes.
          FrameworkElement movingClass = (FrameworkElement)e.MouseDevice.Target;
          //Noden sættes i fokus
-         FocusedClass = (NodeViewModel)movingClass.DataContext;
+
+             FocusedClass = (NodeViewModel)movingClass.DataContext;
+
 
          if (isAddingEdge) {
             if (startEdge == null)
