@@ -175,18 +175,8 @@ namespace UMLDesigner.ViewModel {
 
       private void Copy()
       {
-          CopyClass = new NodeViewModel();
-          CopyClass.ClassName = FocusedClass.ClassName;
-          CopyClass.X = 0;
-          CopyClass.Y = 0;
-          foreach (Attribute attribute in FocusedClass.Attributes)
-          {
-              CopyClass.Attributes.Add(attribute);
-          }
-          foreach (Attribute method in FocusedClass.Methods)
-          {
-              CopyClass.Methods.Add(method);
-          }
+          CopyClass = FocusedClass;
+          
       }
 
       private void Paste()
@@ -197,15 +187,23 @@ namespace UMLDesigner.ViewModel {
               if (node.Id == classIndex - 1)
               {
                   node.ClassName = CopyClass.ClassName;
-                  node.X = CopyClass.X;
-                  node.Y = CopyClass.Y;
+                  node.X = 0;
+                  node.Y = 0;
                   foreach (Attribute attribute in CopyClass.Attributes)
                   {
-                      node.Attributes.Add(attribute);
+                      Attribute temp = new Attribute();
+                      temp.Name = attribute.Name;
+                      temp.Modifier = attribute.Modifier;
+                      temp.Type = attribute.Type;
+                      node.Attributes.Add(temp);
                   }
                   foreach (Attribute method in CopyClass.Methods)
                   {
-                      node.Methods.Add(method);
+                      Attribute tempmethod = new Attribute();
+                      tempmethod.Name = method.Name;
+                      tempmethod.Modifier = method.Modifier;
+                      tempmethod.Type = method.Type;
+                      node.Methods.Add(tempmethod);
                   }
                   FocusedClass = node;
               }
