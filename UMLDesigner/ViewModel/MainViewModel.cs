@@ -201,6 +201,7 @@ namespace UMLDesigner.ViewModel {
       private void MouseDownCanvas(MouseEventArgs obj)
       {
           FrameworkElement clickedObj = (FrameworkElement)obj.MouseDevice.Target;
+          
           if (obj.Source is MainWindow)
           {
               FocusedClass = null;
@@ -363,7 +364,6 @@ namespace UMLDesigner.ViewModel {
          FrameworkElement movingClass = (FrameworkElement)e.MouseDevice.Target;
          //Noden sættes i fokus
          FocusedClass = (NodeViewModel)movingClass.DataContext;
-
          if (isAddingEdge) {
             if (startEdge == null)
                startEdge = FocusedClass;
