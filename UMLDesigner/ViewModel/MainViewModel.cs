@@ -120,7 +120,7 @@ namespace UMLDesigner.ViewModel {
          MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
          CopyCommand = new RelayCommand(Copy);
          PasteCommand = new RelayCommand(Paste);
-         DeleteCommand = new RelayCommand(delete);
+         DeleteCommand = new RelayCommand(Delete);
 
          CollapseExpandCommand = new RelayCommand(CollapseViewChanged);
 
@@ -131,7 +131,7 @@ namespace UMLDesigner.ViewModel {
          //Application.Current.MainWindow.InputBindings.Add(new KeyBinding(UndoCommand, new KeyGesture(Key.A, ModifierKeys.Control)));
       }
 
-      private void delete()
+      private void Delete()
       {
           if (FocusedClass != null)
           {
