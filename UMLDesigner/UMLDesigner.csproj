@@ -33,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Images\logo4.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="GalaSoft.MvvmLight.Extras.WPF45">
       <HintPath>..\packages\MvvmLightLibs.4.1.27.0\lib\net45\GalaSoft.MvvmLight.Extras.WPF45.dll</HintPath>
@@ -69,6 +72,8 @@
     <Compile Include="Command\AddClassCommand.cs" />
     <Compile Include="Command\AddEdgeCommand.cs" />
     <Compile Include="Command\EditNodeCommand.cs" />
+    <Compile Include="Command\DeleteArrowCommand.cs" />
+    <Compile Include="Command\DeleteClassCommand.cs" />
     <Compile Include="Command\PasteCommand.cs" />
     <Compile Include="Command\IUndoRedoCommand.cs" />
     <Compile Include="Command\UndoRedoController.cs" />
@@ -162,18 +167,10 @@
     <Resource Include="MVVMLight.Nuget.Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\1353183085_save.png" />
     <Resource Include="Images\add.png" />
     <Resource Include="Images\copy.png" />
     <Resource Include="Images\cut.png" />
-    <Resource Include="Images\format_painter.png" />
-    <Resource Include="Images\go-next.png" />
-    <Resource Include="Images\go-previous.png" />
-    <Resource Include="Images\help.png" />
-    <Resource Include="Images\home.png" />
-    <Resource Include="Images\options.png" />
     <Resource Include="Images\paste.png" />
-    <Resource Include="Images\personal.png" />
     <Resource Include="Images\quit.png" />
     <Resource Include="Images\redo.png" />
     <Resource Include="Images\save.png" />
@@ -184,6 +181,36 @@
       <Project>{a3b4f6cc-6820-4327-8163-d2854513cba8}</Project>
       <Name>UMLDesigner.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\aggregation.png" />
+    <Resource Include="Images\assosiation.png" />
+    <Resource Include="Images\class.png" />
+    <Resource Include="Images\composition.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\cut_small.png" />
+    <Resource Include="Images\delete.png" />
+    <Resource Include="Images\dependency.png" />
+    <Resource Include="Images\directedassosiation.png" />
+    <Resource Include="Images\edit_class.png" />
+    <Resource Include="Images\generalization.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\open.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\save_small.png" />
+    <Resource Include="Images\settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\zoom.png" />
+    <Resource Include="Images\zoom_in.png" />
+    <Resource Include="Images\zoom_out.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\logo4.ico" />
+    <Resource Include="Images\logo4.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
