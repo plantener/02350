@@ -73,7 +73,7 @@ namespace UMLDesigner.ViewModel {
       public ICommand MouseUpNodeCommand { get; private set; }
       public ICommand KeyDownCommand { get; private set; }
       public ICommand KeyUpCommand { get; private set; }
-      public ICommand AddItemToNodeCommand { get; private set; }
+      public ICommand EditNodesCommand { get; private set; }
       public ICommand MouseDownCanvasCommand { get; private set; }
       public ICommand CopyCommand { get; private set; }
       public ICommand PasteCommand { get; private set; }
@@ -120,8 +120,8 @@ namespace UMLDesigner.ViewModel {
          KeyUpCommand = new RelayCommand<KeyEventArgs>(UndoRedo_KeyUp);
          KeyDownUndoCommand = new RelayCommand<object>(param => KeyDownUndo(param));
 
-         //   AddItemToNodeCommand = new RelayCommand(AddItemToNode);
-         AddItemToNodeCommand = new RelayCommand<object>(param => AddItemToNode(FocusedClass, Classes, param));
+         //   EditNodesCommand = new RelayCommand(EditNode);
+         EditNodesCommand = new RelayCommand(EditNode);
          MouseDownCanvasCommand = new RelayCommand<MouseEventArgs>(MouseDownCanvas);
          CopyCommand = new RelayCommand(Copy);
          PasteCommand = new RelayCommand(Paste);
@@ -246,13 +246,14 @@ namespace UMLDesigner.ViewModel {
           ExportToImage.ExportToPng(path, mainCanvas, getResolution());
       }
 
-      public void AddItemToNode(NodeViewModel FocusedClass, ObservableCollection<NodeViewModel> Classes, object parameter) {
-         undoRedoController.AddAndExecute(new AddItemToNodeCommand(FocusedClass, Classes, parameter));
+      public void EditNode() {
+          undoRedoController.AddAndExecute(new EditNodeCommand(focusedClass,Classes));
       }
 
       private void MouseDownCanvas(MouseEventArgs obj)
       {
           FrameworkElement clickedObj = (FrameworkElement)obj.MouseDevice.Target;
+          
           if (obj.Source is MainWindow)
           {
               FocusedClass = null;
@@ -419,8 +420,7 @@ namespace UMLDesigner.ViewModel {
          FrameworkElement movingClass = (FrameworkElement)e.MouseDevice.Target;
          //Noden sættes i fokus
 
-             FocusedClass = (NodeViewModel)movingClass.DataContext;
-
+         FocusedClass = (NodeViewModel)movingClass.DataContext;
 
          if (isAddingEdge) {
             if (startEdge == null)
@@ -457,16 +457,7 @@ namespace UMLDesigner.ViewModel {
             e.MouseDevice.Target.ReleaseMouseCapture();
          }
       }
-        /*//Currently not used
-        private Node GetNodeUnderMouse()
-        {
-            var item = Mouse.DirectlyOver as DockPanel;
-            if (item == null)
-            {
-                return null;
-            }
-            return item.DataContext as NodeViewModel;
-        }*/
+     
 
       public static T FindParent<T>(DependencyObject child) where T : DependencyObject {
          //get parent item

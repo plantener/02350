@@ -81,5 +81,6 @@ namespace UMLDesigner.Model
             get { return type; }
             set { type = value; RaisePropertyChanged(() => Type); }
         }
+      
     }
 }

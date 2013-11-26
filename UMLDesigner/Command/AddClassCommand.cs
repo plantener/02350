@@ -19,6 +19,7 @@ namespace UMLDesigner.Command
         private int _index = 1;
 
 
+
         public AddClassCommand(ObservableCollection<NodeViewModel> _classes, int index)
         {
             classes = _classes;
