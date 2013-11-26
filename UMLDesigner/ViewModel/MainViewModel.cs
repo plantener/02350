@@ -3,10 +3,12 @@ using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Xml.Serialization;
 using UMLDesigner.Command;
 using UMLDesigner.Model;
 using UMLDesigner.Utilities;
@@ -36,6 +38,8 @@ namespace UMLDesigner.ViewModel {
       public bool CanPaste { get { return canPaste; } set { canPaste = value; RaisePropertyChanged(() => CanPaste); } }
       private NodeViewModel copyClass = null;
       public NodeViewModel CopyClass { get { return copyClass; } private set { copyClass = value; if (copyClass == null) { CanPaste = false; } else { CanPaste = true; };} }
+      private int classIndex = 1;
+      public int ClassIndex { get { return classIndex++; } private set { classIndex = value; RaisePropertyChanged(() => ClassIndex);} }
       private Point _oldMousePos;
       private bool _pressed = false;
       FrameworkElement movingClass;
@@ -74,6 +78,7 @@ namespace UMLDesigner.ViewModel {
       public ICommand CopyCommand { get; private set; }
       public ICommand PasteCommand { get; private set; }
       public ICommand DeleteCommand { get; private set; }
+      public ICommand SaveCommand { get; private set; }
       //Used to collapse nodes from GUI
       public ICommand CollapseExpandCommand { get; set; }
        //Export canvas to image
@@ -121,6 +126,7 @@ namespace UMLDesigner.ViewModel {
          CopyCommand = new RelayCommand(Copy);
          PasteCommand = new RelayCommand(Paste);
          DeleteCommand = new RelayCommand(Delete);
+         SaveCommand = new RelayCommand(Save);
 
          CollapseExpandCommand = new RelayCommand(CollapseViewChanged);
 
@@ -129,6 +135,28 @@ namespace UMLDesigner.ViewModel {
          Debug.WriteLine("Højde" + Classes[0].Height);
 
          //Application.Current.MainWindow.InputBindings.Add(new KeyBinding(UndoCommand, new KeyGesture(Key.A, ModifierKeys.Control)));
+      }
+
+      private void SerializeObjectToXML<T>(T item, string filePath)
+      {
+          XmlSerializer xs = new XmlSerializer(typeof(T));
+          using (StreamWriter wr = new StreamWriter(filePath))
+          {
+              xs.Serialize(wr, item);
+          }
+      }
+
+      private void Save()
+      {
+          SerializeObjectToXML<ObservableCollection<NodeViewModel>>(Classes,"test.xml");
+          //foreach (NodeViewModel node in Classes)
+          //{
+          //    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(node.GetType());
+          //    serializer.Serialize(System.Console.Out, node);
+          //    System.Console.WriteLine();
+          //    System.Console.ReadLine();
+          //}
+
       }
 
       private void Delete()
@@ -163,8 +191,26 @@ namespace UMLDesigner.ViewModel {
 
       private void Paste()
       {
-          Classes.Add(CopyClass);
-          FocusedClass = CopyClass;
+          undoRedoController.AddAndExecute(new AddClassCommand(Classes,ClassIndex));
+          foreach (NodeViewModel node in Classes)
+          {
+              if (node.Id == classIndex - 1)
+              {
+                  node.ClassName = CopyClass.ClassName;
+                  node.X = CopyClass.X;
+                  node.Y = CopyClass.Y;
+                  foreach (Attribute attribute in CopyClass.Attributes)
+                  {
+                      node.Attributes.Add(attribute);
+                  }
+                  foreach (Attribute method in CopyClass.Methods)
+                  {
+                      node.Methods.Add(method);
+                  }
+                  FocusedClass = node;
+              }
+          }
+          
       }
 
 
@@ -228,7 +274,7 @@ namespace UMLDesigner.ViewModel {
       }
 
       public void AddNode() {
-         undoRedoController.AddAndExecute(new AddClassCommand(Classes));
+         undoRedoController.AddAndExecute(new AddClassCommand(Classes, ClassIndex));
       }
 
 

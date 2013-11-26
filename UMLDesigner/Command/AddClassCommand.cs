@@ -16,18 +16,20 @@ namespace UMLDesigner.Command
 
         private ObservableCollection<NodeViewModel> classes;
         private NodeViewModel _class = null;
+        private int _index = 1;
 
 
-        public AddClassCommand(ObservableCollection<NodeViewModel> _classes)
+        public AddClassCommand(ObservableCollection<NodeViewModel> _classes, int index)
         {
             classes = _classes;
+            _index = index;
         }
 
         public void Execute()
         {
             if (_class == null)
             {
-                classes.Add(_class = new NodeViewModel() { ClassName = "AddedClass", X = 100, Y = 100 });
+                classes.Add(_class = new NodeViewModel() { ClassName = "AddedClass", X = 100, Y = 100, Id = _index });
             }
             else
             {
