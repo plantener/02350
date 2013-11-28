@@ -59,8 +59,13 @@
                     </RibbonGroup>
                 </RibbonTab>
          <!-- Ribbon Tab #3: -->
-         <RibbonTab Header="View" KeyTip="L">
-            <RibbonGroup x:Name="ShowHideGroup" Header="Show or Hide">
+            <RibbonTab Header="View" KeyTip="L">
+                <RibbonGroup x:Name="ZoomGroup" Header="Zoom">
+                    <RibbonButton LargeImageSource="../Images/save.png" Label="Zoom in" Command="{Binding ZoomInCommand}"/>
+                    <RibbonButton LargeImageSource="../Images/save.png" Label="Zoom out" Command="{Binding ZoomOutCommand}"/>
+                    <RibbonButton LargeImageSource="../Images/save.png" Label="100%" Command="{Binding ZoomNormCommand}"/>
+                </RibbonGroup>
+                <RibbonGroup x:Name="ShowHideGroup" Header="Show or Hide">
                <RibbonCheckBox Label="Grid" IsChecked="{Binding GridVisibility}"/>
                <RibbonButton Label="Expand/Contract" Command="{Binding CollapseExpandCommand}"/>
             </RibbonGroup>
