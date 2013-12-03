@@ -105,6 +105,8 @@ namespace UMLDesigner.ViewModel
         private PointCollection thisArrow;
         private PointCollection rArrow;
 
+        public EdgeViewModel(){}
+
         public EdgeViewModel(NodeViewModel nVMEndA, NodeViewModel nVMEndB, string type)
         {
             edge = new Edge();

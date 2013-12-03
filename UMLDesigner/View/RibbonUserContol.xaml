@@ -14,7 +14,7 @@
          <!-- Quick Access Toolbar - located at the upper-left corner -->
          <Ribbon.QuickAccessToolBar>
             <RibbonQuickAccessToolBar>
-               <RibbonButton x:Name ="Save" SmallImageSource="..\Images\save_small.png" />
+               <RibbonButton x:Name ="Save" SmallImageSource="..\Images\save_small.png" Command="{Binding SaveCommand}"/>
                <RibbonButton x:Name ="Undo" KeyTip="CTRL+Z" Command="{Binding UndoCommand}" SmallImageSource="..\Images\undo.png" />
                <RibbonButton x:Name="Redo" Command="{Binding RedoCommand}" SmallImageSource="..\Images\redo.png" />
             </RibbonQuickAccessToolBar>

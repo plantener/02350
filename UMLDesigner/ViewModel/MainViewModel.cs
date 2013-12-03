@@ -137,18 +137,33 @@ namespace UMLDesigner.ViewModel {
          //Application.Current.MainWindow.InputBindings.Add(new KeyBinding(UndoCommand, new KeyGesture(Key.A, ModifierKeys.Control)));
       }
 
-      private void SerializeObjectToXML<T>(T item, string filePath)
+      private void SerializeObjectToXML<N,E>(N nodes, E edges, string filePath)
       {
-          XmlSerializer xs = new XmlSerializer(typeof(T));
+          
+          XmlSerializer ns = new XmlSerializer(typeof(N));
+          XmlSerializer es = new XmlSerializer(typeof(E));
           using (StreamWriter wr = new StreamWriter(filePath))
           {
-              xs.Serialize(wr, item);
+              ns.Serialize(wr, nodes);
+                  es.Serialize(wr, edges);
           }
       }
 
       private void Save()
       {
-          SerializeObjectToXML<ObservableCollection<NodeViewModel>>(Classes,"test.xml");
+          SaveFileDialog dialog = new SaveFileDialog()
+          {
+              Title = "Save diagram",
+              FileName = "classdiagram",
+              Filter = " XML (*.xml)|*.xml| All files (*.*)|*.*"
+          };
+
+
+          if (dialog.ShowDialog() != true)
+              return;
+
+          string path = dialog.FileName;
+          SerializeObjectToXML<ObservableCollection<NodeViewModel>,ObservableCollection<EdgeViewModel>>(Classes, Edges, path);
           //foreach (NodeViewModel node in Classes)
           //{
           //    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(node.GetType());
