@@ -3,10 +3,12 @@ using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Xml.Serialization;
 using UMLDesigner.Command;
 using UMLDesigner.Model;
 using UMLDesigner.Utilities;
@@ -36,6 +38,8 @@ namespace UMLDesigner.ViewModel {
       public bool CanPaste { get { return canPaste; } set { canPaste = value; RaisePropertyChanged(() => CanPaste); } }
       private NodeViewModel copyClass = null;
       public NodeViewModel CopyClass { get { return copyClass; } private set { copyClass = value; if (copyClass == null) { CanPaste = false; } else { CanPaste = true; };} }
+      private int classIndex = 1;
+      public int ClassIndex { get { return classIndex++; } private set { classIndex = value; RaisePropertyChanged(() => ClassIndex);} }
       private Point _oldMousePos;
       private bool _pressed = false;
       FrameworkElement movingClass;
@@ -46,7 +50,7 @@ namespace UMLDesigner.ViewModel {
 
       private bool isAddingEdge = false;
       private NodeViewModel startEdge;
-      private string type = "";
+      private EdgeType type = EdgeType.NOR;
 
       private string statusBar;
       public string StatusBar { get { return statusBar; } set { statusBar = value; RaisePropertyChanged(() => StatusBar); } }
@@ -82,6 +86,8 @@ namespace UMLDesigner.ViewModel {
       public ICommand CopyCommand { get; private set; }
       public ICommand PasteCommand { get; private set; }
       public ICommand DeleteCommand { get; private set; }
+      public ICommand SaveCommand { get; private set; }
+      public ICommand LoadCommand { get; private set; }
       //Used to collapse nodes from GUI
       public ICommand CollapseExpandCommand { get; set; }
        //Export canvas to image
@@ -133,6 +139,8 @@ namespace UMLDesigner.ViewModel {
          CopyCommand = new RelayCommand(Copy);
          PasteCommand = new RelayCommand(Paste);
          DeleteCommand = new RelayCommand(Delete);
+         SaveCommand = new RelayCommand(Save);
+         LoadCommand = new RelayCommand(Load);
 
          CollapseExpandCommand = new RelayCommand(CollapseViewChanged);
 
@@ -143,9 +151,94 @@ namespace UMLDesigner.ViewModel {
          //Application.Current.MainWindow.InputBindings.Add(new KeyBinding(UndoCommand, new KeyGesture(Key.A, ModifierKeys.Control)));
       }
 
-    private void Delete()
-    {
-        if (FocusedClass != null)
+      public class SaveLoadCollection
+      {
+          public ObservableCollection<NodeViewModel> tempClasses = new ObservableCollection<NodeViewModel>();
+          public ObservableCollection<EdgeViewModel> tempEdges = new ObservableCollection<EdgeViewModel>();
+          public SaveLoadCollection(ObservableCollection<NodeViewModel> classes, ObservableCollection<EdgeViewModel> edges)
+          {
+              tempClasses = classes;
+              tempEdges = edges;
+          }
+          public SaveLoadCollection() { }
+
+      }
+
+      private void SerializeObjectToXML(ObservableCollection<NodeViewModel> classes, ObservableCollection<EdgeViewModel> edges, string filepath)
+      {
+          SaveLoadCollection serializetype = new SaveLoadCollection(classes, edges);
+          XmlSerializer serializer = new XmlSerializer(typeof(SaveLoadCollection));
+          using (StreamWriter wr = new StreamWriter(filepath))
+          {
+              serializer.Serialize(wr, serializetype);
+          }
+
+      }
+
+      private void DeSerializeObjectToXML(string filepath)
+      {
+          XmlSerializer serializer = new XmlSerializer(typeof(SaveLoadCollection));
+          using (StreamReader wr = new StreamReader(filepath))
+          {
+              SaveLoadCollection Load = (SaveLoadCollection) serializer.Deserialize(wr);
+              Classes.Clear();
+              Edges.Clear();
+              foreach (NodeViewModel node in Load.tempClasses)
+              {
+                  Classes.Add(node);
+              }
+              foreach (EdgeViewModel edge in Load.tempEdges)
+              {
+                  EdgeViewModel tempEdge = new EdgeViewModel(edge.NVMEndA, edge.NVMEndB, edge.type);
+                  Edges.Add(edge);
+              }
+          }
+      }
+
+      private void Load()
+      {
+          OpenFileDialog dialog = new OpenFileDialog()
+          {
+              Title = "Load diagram",
+              Filter = "XML (*.xml)|*.xml"
+          };
+          if (dialog.ShowDialog() != true)
+              return;
+
+          string path = dialog.FileName;
+          DeSerializeObjectToXML(path);
+
+
+      }
+
+      private void Save()
+      {
+          SaveFileDialog dialog = new SaveFileDialog()
+          {
+              Title = "Save diagram",
+              FileName = "classdiagram",
+              Filter = " XML (*.xml)|*.xml| All files (*.*)|*.*"
+          };
+
+
+          if (dialog.ShowDialog() != true)
+              return;
+
+          string path = dialog.FileName;
+          SerializeObjectToXML(Classes, Edges, path);
+          //foreach (NodeViewModel node in Classes)
+          //{
+          //    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(node.GetType());
+          //    serializer.Serialize(System.Console.Out, node);
+          //    System.Console.WriteLine();
+          //    System.Console.ReadLine();
+          //}
+
+      }
+
+      private void Delete()
+      {
+          if (FocusedClass != null)
         {
             if (MessageBox.Show("Really delete " + FocusedClass.ClassName + "?", "Confirm delete", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
@@ -163,31 +256,45 @@ namespace UMLDesigner.ViewModel {
                 FocusedEdge = null;
             }
         }
-    }
+      }
 
 
       private void Copy()
       {
-          CopyClass = new NodeViewModel();
-          CopyClass.ClassName = FocusedClass.ClassName;
-          CopyClass.X = 0;
-          CopyClass.Y = 0;
-          foreach (Attribute attribute in FocusedClass.Attributes)
-          {
-              CopyClass.Attributes.Add(new Attribute() { Modifier = attribute.Modifier, Name = attribute.Name, Type = attribute.Type });
-          }
-          foreach (Attribute method in FocusedClass.Methods)
-          {
-              CopyClass.Methods.Add(new Attribute() { Modifier = method.Modifier, Name = method.Name, Type = method.Type });
-          }
+          CopyClass = FocusedClass;
           StatusBar = "Copied " + FocusedClass.ClassName;
       }
 
       private void Paste()
       {
-          Classes.Add(CopyClass);
-          FocusedClass = CopyClass;
+          undoRedoController.AddAndExecute(new AddClassCommand(Classes,ClassIndex));
+          foreach (NodeViewModel node in Classes)
+          {
+              if (node.Id == classIndex - 1)
+              {
+                  node.ClassName = CopyClass.ClassName;
+                  node.X = 0;
+                  node.Y = 0;
+                  foreach (Attribute attribute in CopyClass.Attributes)
+                  {
+                      Attribute temp = new Attribute();
+                      temp.Name = attribute.Name;
+                      temp.Modifier = attribute.Modifier;
+                      temp.Type = attribute.Type;
+                      node.Attributes.Add(temp);
+                  }
+                  foreach (Attribute method in CopyClass.Methods)
+                  {
+                      Attribute tempmethod = new Attribute();
+                      tempmethod.Name = method.Name;
+                      tempmethod.Modifier = method.Modifier;
+                      tempmethod.Type = method.Type;
+                      node.Methods.Add(tempmethod);
+                  }
+                  FocusedClass = node;
+              }
           StatusBar = "Pasted " + FocusedClass.ClassName;
+          }
       }
 
 
@@ -264,7 +371,7 @@ namespace UMLDesigner.ViewModel {
       }
 
       public void AddNode() {
-         undoRedoController.AddAndExecute(new AddClassCommand(Classes));
+         undoRedoController.AddAndExecute(new AddClassCommand(Classes, ClassIndex));
       }
 
 
@@ -310,40 +417,39 @@ namespace UMLDesigner.ViewModel {
           StatusBar = "Adding edge, press at the start node";
           isAddingEdge = true;
       }
+        public void AddAGG()
+        {
+            type = EdgeType.AGG;
+            AddEdge();
+        }
 
-      public void AddAGG()
-      {
-          type = "AGG";
-          AddEdge();
-      }
-
-      public void AddASS()
-      {
-          type = "ASS";
-          AddEdge();
-      }
+        public void AddASS()
+        {
+            type = EdgeType.ASS;
+            AddEdge();
+        }
 
         public void AddCOM()
         {
-            type = "COM";
+            type = EdgeType.COM;
             AddEdge();
         }
 
         public void AddDEP()
         {
-            type = "DEP";
+            type = EdgeType.DEP;
             AddEdge();
         }
 
         public void AddGEN()
         {
-            type = "GEN";
+            type = EdgeType.GEN;
             AddEdge();
         }
 
         public void AddNOR()
         {
-            type = "NOR";
+            type = EdgeType.NOR;
             AddEdge();
         }
 
@@ -440,19 +546,19 @@ namespace UMLDesigner.ViewModel {
          FocusedClass = (NodeViewModel)movingClass.DataContext;
 
          if (isAddingEdge) {
-             if (startEdge == null)
+            if (startEdge == null)
              {
                  startEdge = FocusedClass;
                  StatusBar = "Adding edge, start node is " + startEdge.ClassName + ", press at the end node";
              }
-             else if (startEdge != FocusedClass)
-             {
-                 undoRedoController.AddAndExecute(new AddEdgeCommand(Edges, new EdgeViewModel(startEdge, FocusedClass, type)));
+            else if (startEdge != FocusedClass)
+            {
+               undoRedoController.AddAndExecute(new AddEdgeCommand(Edges, new EdgeViewModel(startEdge, FocusedClass, type)));
                  StatusBar = "Adding edge, start node is " + startEdge.ClassName + ", end node " + focusedClass.ClassName;
-                 isAddingEdge = false;
-                 startEdge = null;
-                 type = "";
-             }
+               isAddingEdge = false;
+               startEdge = null;
+               type = EdgeType.NOR;
+            }
          } else {
             if (_oldMousePos == e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target))) {
                e.MouseDevice.Target.ReleaseMouseCapture();

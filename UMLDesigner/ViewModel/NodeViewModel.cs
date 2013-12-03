@@ -11,9 +11,16 @@ using UMLDesigner.Model;
 
 namespace UMLDesigner.ViewModel
 {
+    [System.Xml.Serialization.XmlInclude(typeof(NodeViewModel))]
     public class NodeViewModel : ViewModelBase
     {
         private Node node;
+
+        public int Id
+        {
+            get { return node.Id; }
+            set { node.Id = value; RaisePropertyChanged(() => Id); }
+        }
 
         public int X
         {

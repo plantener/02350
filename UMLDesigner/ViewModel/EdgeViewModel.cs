@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Xml;
 using UMLDesigner.Model;
 
 namespace UMLDesigner.ViewModel
@@ -24,7 +25,7 @@ namespace UMLDesigner.ViewModel
         public NodeViewModel NVMEndB { get { return nVMEndB; }
             set { nVMEndB = value; RaisePropertyChanged(() => NVMEndB); RaisePropertyChanged(() => Path); }
         }
-
+        
         public string MultA
         {
             get { return edge.MultA; }
@@ -80,7 +81,11 @@ namespace UMLDesigner.ViewModel
         }
 
         private EdgeType Type { get { return edge.Type; } set { edge.Type = value; RaisePropertyChanged(() => Type); } }
-
+        public EdgeType type
+        {
+            get { return Type; }
+            set { Type = value; RaisePropertyChanged(() => type); }
+        }
         private string colorFill;
         public string ColorFill { get { return colorFill; } set { colorFill = value; RaisePropertyChanged(() => ColorFill); } }
 
@@ -105,11 +110,15 @@ namespace UMLDesigner.ViewModel
         private PointCollection thisArrow;
         private PointCollection rArrow;
 
-        public EdgeViewModel(NodeViewModel nVMEndA, NodeViewModel nVMEndB, string type)
+        public EdgeViewModel(){}
+
+        public EdgeViewModel(NodeViewModel nVMEndA, NodeViewModel nVMEndB, EdgeType type)
         {
             edge = new Edge();
             NVMEndA = nVMEndA;
             NVMEndB = nVMEndB;
+            MultA = "";
+            MultB = "";
             Type = edgeTypeConverter(type);
             initArrow();
             newPath();
@@ -173,58 +182,58 @@ namespace UMLDesigner.ViewModel
             }
         }
 
-        private EdgeType edgeTypeConverter(string type)
+        private EdgeType edgeTypeConverter(EdgeType type)
         {
             switch (type)
             {
-                case "AGG":
+                case EdgeType.AGG:
                     thisArrow = rombArrow;
-                    dashed = "1 0";
-                    colorFill = "White";
-                    multAllowed = true;
-                    multBorder = 1;
+                    Dashed = "1 0";
+                    ColorFill = "White";
+                    MultAllowed = true;
+                    MultBorder = 1;
                     return EdgeType.AGG;
-                case "ASS":
+                case EdgeType.ASS:
                     thisArrow = normArrow;
-                    dashed = "1 0";
-                    colorFill = "Transperant";
-                    multAllowed = true;
-                    multBorder = 1;
+                    Dashed = "1 0";
+                    ColorFill = "Transperant";
+                    MultAllowed = true;
+                    MultBorder = 1;
                     return EdgeType.ASS;
-                case "COM":
+                case EdgeType.COM:
                     thisArrow = rombArrow;
-                    dashed = "1 0";
-                    colorFill = "#2E8DEF";
-                    multAllowed = true;
-                    multBorder = 1;
+                    Dashed = "1 0";
+                    ColorFill = "#2E8DEF";
+                    MultAllowed = true;
+                    MultBorder = 1;
                     return EdgeType.COM;
-                case "DEP":
+                case EdgeType.DEP:
                     thisArrow = normArrow;
-                    dashed = "5 5";
-                    colorFill = "Transperant";
-                    multAllowed = false;
-                    multBorder = 0;
+                    Dashed = "5 5";
+                    ColorFill = "Transperant";
+                    MultAllowed = false;
+                    MultBorder = 0;
                     return EdgeType.DEP;
-                case "GEN":
+                case EdgeType.GEN:
                     thisArrow = genArrow;
-                    dashed = "1 0";
-                    colorFill = "White";
-                    multAllowed = false;
-                    multBorder = 0;
+                    Dashed = "1 0";
+                    ColorFill = "White";
+                    MultAllowed = false;
+                    MultBorder = 0;
                     return EdgeType.GEN;
-                case "NOR":
+                case EdgeType.NOR:
                     thisArrow = new PointCollection();
-                    dashed = "1 0";
-                    colorFill = "Transperant";
-                    multAllowed = true;
-                    multBorder = 1;
+                    Dashed = "1 0";
+                    ColorFill = "Transperant";
+                    MultAllowed = true;
+                    MultBorder = 1;
                     return EdgeType.NOR;
                 default:
                     thisArrow = normArrow;
-                    dashed = "1 0";
-                    colorFill = "Transperant";
-                    multAllowed = true;
-                    multBorder = 1;
+                    Dashed = "1 0";
+                    ColorFill = "Transperant";
+                    MultAllowed = true;
+                    MultBorder = 1;
                     return EdgeType.ASS;
             }
         }
