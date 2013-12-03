@@ -48,6 +48,9 @@ namespace UMLDesigner.ViewModel {
       private NodeViewModel startEdge;
       private string type = "";
 
+      private string statusBar;
+      public string StatusBar { get { return statusBar; } set { statusBar = value; RaisePropertyChanged(() => StatusBar); } }
+
       private double scale = 1;
       public double Scale { get { return scale; } set { scale = value; RaisePropertyChanged(() => Scale); } }
       // Kommandoer som UI bindes til.
@@ -84,7 +87,7 @@ namespace UMLDesigner.ViewModel {
        //Export canvas to image
       public ICommand ExportCommand { get; private set; }
       //GUI binds to see if nodes should be collapsed
-      public string NodesAreCollapsed { get; set; }
+      public Visibility NodesAreCollapsed { get; set; }
 
       private Canvas canvas;
 
@@ -140,18 +143,27 @@ namespace UMLDesigner.ViewModel {
          //Application.Current.MainWindow.InputBindings.Add(new KeyBinding(UndoCommand, new KeyGesture(Key.A, ModifierKeys.Control)));
       }
 
-      private void Delete()
-      {
-          if (FocusedClass != null)
-          {
-              undoRedoController.AddAndExecute(new DeleteClassCommand(Classes, FocusedClass, Edges));
-              FocusedClass = null;
-          }
-          else if (FocusedEdge != null)
-          {
-              undoRedoController.AddAndExecute(new DeleteArrowCommand(Edges, FocusedEdge));
-          }
-      }
+    private void Delete()
+    {
+        if (FocusedClass != null)
+        {
+            if (MessageBox.Show("Really delete " + FocusedClass.ClassName + "?", "Confirm delete", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                undoRedoController.AddAndExecute(new DeleteClassCommand(Classes, FocusedClass, Edges));
+                StatusBar = "Deleted " + FocusedClass.ClassName;
+                FocusedClass = null;
+            }
+        }
+        else if (FocusedEdge != null)
+        {
+            if (MessageBox.Show("Really delete edge between " + FocusedEdge.NVMEndA.ClassName + " and " + FocusedEdge.NVMEndB.ClassName + "?", "Confirm delete", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                undoRedoController.AddAndExecute(new DeleteArrowCommand(Edges, FocusedEdge));
+                StatusBar = "Deleted edge between " + FocusedEdge.NVMEndA.ClassName + " and " + FocusedEdge.NVMEndB.ClassName;
+                FocusedEdge = null;
+            }
+        }
+    }
 
 
       private void Copy()
@@ -168,21 +180,25 @@ namespace UMLDesigner.ViewModel {
           {
               CopyClass.Methods.Add(new Attribute() { Modifier = method.Modifier, Name = method.Name, Type = method.Type });
           }
+          StatusBar = "Copied " + FocusedClass.ClassName;
       }
 
       private void Paste()
       {
           Classes.Add(CopyClass);
           FocusedClass = CopyClass;
+          StatusBar = "Pasted " + FocusedClass.ClassName;
       }
 
 
       //Switch status on collapsed/expanded. Could probably be done prettier
       private void CollapseViewChanged() {
-         if (NodesAreCollapsed == "Collapsed") {
-            NodesAreCollapsed = "Visible";
+         if (NodesAreCollapsed == Visibility.Collapsed) {
+             NodesAreCollapsed = Visibility.Visible;
+             StatusBar = "Classes expanded";
          } else {
-            NodesAreCollapsed = "Collapsed";
+             NodesAreCollapsed = Visibility.Collapsed;
+             StatusBar = "Classes collapsed";
          }
          RaisePropertyChanged(() => NodesAreCollapsed);
          for (int i = 0; i < Edges.Count; i++)
@@ -209,6 +225,7 @@ namespace UMLDesigner.ViewModel {
 
               string path = dialog.FileName;
               ExportToImage.ExportToPng(path, mainCanvas, getResolution());
+              StatusBar = "Exported canvas to " + path;
           }
       }
 
@@ -290,6 +307,7 @@ namespace UMLDesigner.ViewModel {
 
       public void AddEdge()
       {
+          StatusBar = "Adding edge, press at the start node";
           isAddingEdge = true;
       }
 
@@ -422,15 +440,19 @@ namespace UMLDesigner.ViewModel {
          FocusedClass = (NodeViewModel)movingClass.DataContext;
 
          if (isAddingEdge) {
-            if (startEdge == null)
-               startEdge = FocusedClass;
-            else if (startEdge != FocusedClass)
-            {
-               undoRedoController.AddAndExecute(new AddEdgeCommand(Edges, new EdgeViewModel(startEdge, FocusedClass, type)));
-               isAddingEdge = false;
-               startEdge = null;
-                    type = "";
-            }
+             if (startEdge == null)
+             {
+                 startEdge = FocusedClass;
+                 StatusBar = "Adding edge, start node is " + startEdge.ClassName + ", press at the end node";
+             }
+             else if (startEdge != FocusedClass)
+             {
+                 undoRedoController.AddAndExecute(new AddEdgeCommand(Edges, new EdgeViewModel(startEdge, FocusedClass, type)));
+                 StatusBar = "Adding edge, start node is " + startEdge.ClassName + ", end node " + focusedClass.ClassName;
+                 isAddingEdge = false;
+                 startEdge = null;
+                 type = "";
+             }
          } else {
             if (_oldMousePos == e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target))) {
                e.MouseDevice.Target.ReleaseMouseCapture();

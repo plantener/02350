@@ -11,14 +11,14 @@
         Title="UML Designer" Height="400" Width="525" WindowState="Maximized">
     <Window.Resources>
         <!-- Dette DataTemplate fortæller vinduet hvordan Node klassen skal vises grafisk. Denne grafiske beskrivelse er samlet i NodeUserControl. -->
-        <DataTemplate DataType="{x:Type VM:NodeViewModel}">
-            <Canvas>
-                <View:ClassUserControl/>
-            </Canvas>
-        </DataTemplate>
         <DataTemplate DataType="{x:Type VM:EdgeViewModel}">
             <Canvas>
                 <View:EdgeUserControl/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type VM:NodeViewModel}">
+            <Canvas>
+                <View:ClassUserControl/>
             </Canvas>
         </DataTemplate>
     </Window.Resources>
@@ -36,7 +36,7 @@
         <View:RibbonUserContol DockPanel.Dock="Top" Focusable="True" x:Name="QContol"/>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock>Her er en statusbar, den skal nok også laves som userControl</TextBlock>
+                <TextBlock Text="{Binding StatusBar}"/>
             </StatusBarItem>
         </StatusBar>
         <Grid>
@@ -49,8 +49,8 @@
             <Canvas.RenderTransform>
                 <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}"></ScaleTransform>
             </Canvas.RenderTransform>
-            <ItemsControl ItemsSource="{Binding Classes}"/>
             <ItemsControl ItemsSource="{Binding Edges}"/>
+            <ItemsControl ItemsSource="{Binding Classes}"/>
             </Canvas>
         </Grid>
     </DockPanel>

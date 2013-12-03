@@ -113,7 +113,6 @@ namespace UMLDesigner.ViewModel
             Type = edgeTypeConverter(type);
             initArrow();
             newPath();
-            Console.WriteLine(type);
         }
 
         public void newPath()
@@ -152,7 +151,6 @@ namespace UMLDesigner.ViewModel
         private void setPath()
         {
             string temp = "M";
-            Console.WriteLine(pathObjects.Count);
             for (int i = 0; i < pathObjects.Count; i++)
             {
                 temp += " " + pathObjects.ElementAt(i).X + "," + pathObjects.ElementAt(i).Y;
@@ -172,7 +170,6 @@ namespace UMLDesigner.ViewModel
                     
                 }
                 Arrow = temp;
-                Console.WriteLine(arrow);
             }
         }
 
@@ -234,9 +231,7 @@ namespace UMLDesigner.ViewModel
 
         public void rotateArrow()
         {
-            Console.WriteLine("new: " + newAnchor + " old: " + oldAnchor);
             if(oldAnchor != newAnchor){
-                Console.WriteLine(newAnchor + " " + angle);
                 oldAnchor = newAnchor;
                 double cTheta = Math.Cos(angle*(Math.PI/180));
                 double sTheta = Math.Sin(angle*(Math.PI/180));
@@ -245,7 +240,6 @@ namespace UMLDesigner.ViewModel
                 {
                     double x = (int) ((thisArrow.ElementAt(i).X - 0) * cTheta - (thisArrow.ElementAt(i).Y - 0) * sTheta);
                     double y = (int) ((thisArrow.ElementAt(i).X - 0) * sTheta + (thisArrow.ElementAt(i).Y - 0) * cTheta);
-                    Console.WriteLine("x: " + x + " y: " + y);
                     temp.Add(new Point(x,y));
                 }
                 rArrow = temp;
@@ -353,6 +347,14 @@ namespace UMLDesigner.ViewModel
                 setAnchor("north");
                 XMultA = new Point(NVMEndA.South.X + a, NVMEndA.South.Y + a);
                 XMultB = new Point(NVMEndB.North.X - l - a, NVMEndB.North.Y - h - a);
+            }
+            else
+            {
+                lengthHalf = (int)((NVMEndB.North.Y - NVMEndA.South.Y) / 2);
+                temp.Add(new Point(NVMEndA.X+NVMEndA.Width/2, NVMEndA.Y+NVMEndA.Height/2));
+                temp.Add(new Point(NVMEndB.X + NVMEndB.Width/2, NVMEndB.Y + NVMEndB.Height/2));
+                XMultA = new Point(NVMEndA.X + NVMEndA.Width/2 + a, NVMEndA.Y + NVMEndA.Height/2 + a);
+                XMultB = new Point(NVMEndB.X + NVMEndB.Width/2 - a, NVMEndB.Y + NVMEndB.Height/2 - a);
             }
             return temp;
         }
