@@ -267,6 +267,8 @@ namespace UMLDesigner.ViewModel
 
         private PointCollection getAnchor()
         {
+            MultAllowed = true;
+            MultBorder = 1;
             int lengthHalf;
             PointCollection temp = new PointCollection();
             int a = 5, h = 20, l = 25;

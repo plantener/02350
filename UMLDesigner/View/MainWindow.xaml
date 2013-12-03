@@ -46,6 +46,9 @@
                 <View:GridWithRulerxaml Visibility="{Binding GridVisibility, Converter={StaticResource CGridVisibility}}"  />
             </AdornerDecorator>
             <Canvas>
+            <Canvas.RenderTransform>
+                <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}"></ScaleTransform>
+            </Canvas.RenderTransform>
             <ItemsControl ItemsSource="{Binding Classes}"/>
             <ItemsControl ItemsSource="{Binding Edges}"/>
             </Canvas>

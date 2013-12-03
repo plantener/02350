@@ -48,6 +48,8 @@ namespace UMLDesigner.ViewModel {
       private NodeViewModel startEdge;
       private string type = "";
 
+      private double scale = 1;
+      public double Scale { get { return scale; } set { scale = value; RaisePropertyChanged(() => Scale); } }
       // Kommandoer som UI bindes til.
        private bool _gridVisibility;
       public bool GridVisibility { get { return _gridVisibility; } set { _gridVisibility = value; RaisePropertyChanged(() => GridVisibility); }}
@@ -64,6 +66,9 @@ namespace UMLDesigner.ViewModel {
       public ICommand AddDEPCommand { get; private set; }
       public ICommand AddGENCommand { get; private set; }
       public ICommand AddNORCommand { get; private set; }
+      public ICommand ZoomOutCommand { get; private set; }
+      public ICommand ZoomInCommand { get; private set; }
+      public ICommand ZoomNormCommand { get; private set; }
       public ICommand MouseDownNodeCommand { get; private set; }
       public ICommand MouseMoveNodeCommand { get; private set; }
       public ICommand MouseUpNodeCommand { get; private set; }
@@ -108,6 +113,10 @@ namespace UMLDesigner.ViewModel {
          AddDEPCommand = new RelayCommand(AddDEP);
          AddGENCommand = new RelayCommand(AddGEN);
          AddNORCommand = new RelayCommand(AddNOR);
+
+         ZoomOutCommand = new RelayCommand(ZoomOut);
+         ZoomInCommand = new RelayCommand(ZoomIn);
+         ZoomNormCommand = new RelayCommand(ZoomNorm);
          MouseDownNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseDownNode);
          MouseMoveNodeCommand = new RelayCommand<MouseEventArgs>(MouseMoveNode);
          MouseUpNodeCommand = new RelayCommand<MouseButtonEventArgs>(MouseUpNode);
@@ -153,11 +162,11 @@ namespace UMLDesigner.ViewModel {
           CopyClass.Y = 0;
           foreach (Attribute attribute in FocusedClass.Attributes)
           {
-              CopyClass.Attributes.Add(attribute);
+              CopyClass.Attributes.Add(new Attribute() { Modifier = attribute.Modifier, Name = attribute.Name, Type = attribute.Type });
           }
           foreach (Attribute method in FocusedClass.Methods)
           {
-              CopyClass.Methods.Add(method);
+              CopyClass.Methods.Add(new Attribute() { Modifier = method.Modifier, Name = method.Name, Type = method.Type });
           }
       }
 
@@ -184,20 +193,23 @@ namespace UMLDesigner.ViewModel {
 
       public void ExportImage()
       {
-          Canvas mainCanvas = FindParent<Canvas>(canvas);
-          SaveFileDialog dialog = new SaveFileDialog()
+          if (canvas != null)
           {
-              Title = "Export to image",
-              FileName = "Untitled",
-              Filter = " PNG (*.png)|*.png| JPEG (*.jpeg)|*.jpeg"
-          };
+              Canvas mainCanvas = FindParent<Canvas>(canvas);
+              SaveFileDialog dialog = new SaveFileDialog()
+              {
+                  Title = "Export to image",
+                  FileName = "Untitled",
+                  Filter = " PNG (*.png)|*.png| JPEG (*.jpeg)|*.jpeg"
+              };
 
 
-          if (dialog.ShowDialog() != true)
-              return;
+              if (dialog.ShowDialog() != true)
+                  return;
 
-          string path = dialog.FileName;
-          ExportToImage.ExportToPng(path, mainCanvas, getResolution());
+              string path = dialog.FileName;
+              ExportToImage.ExportToPng(path, mainCanvas, getResolution());
+          }
       }
 
       public void EditNode() {
@@ -207,23 +219,29 @@ namespace UMLDesigner.ViewModel {
       private void MouseDownCanvas(MouseEventArgs obj)
       {
           FrameworkElement clickedObj = (FrameworkElement)obj.MouseDevice.Target;
-          
-          if (obj.Source is MainWindow)
+          try
           {
-              FocusedClass = null;
-              //hotfix, ikke pænt
-              if (movingClass != null)
+              if (obj.Source is MainWindow)
               {
-                  DependencyObject scope = FocusManager.GetFocusScope(movingClass);
-                  FocusManager.SetFocusedElement(scope, clickedObj as IInputElement);
-                  Keyboard.ClearFocus();
-                  Application.Current.MainWindow.Focus();
+                  FocusedClass = null;
+                  FocusedEdge = null;
+                  //hotfix, ikke pænt
+                  if (movingClass != null)
+                  {
+                      DependencyObject scope = FocusManager.GetFocusScope(movingClass);
+                      FocusManager.SetFocusedElement(scope, clickedObj as IInputElement);
+                      Keyboard.ClearFocus();
+                      Application.Current.MainWindow.Focus();
+                  }
               }
-              FocusedClass = null;
+              else if (clickedObj.DataContext is UMLDesigner.ViewModel.EdgeViewModel)
+              {
+                  FocusedEdge = (EdgeViewModel)clickedObj.DataContext;
+              }
           }
-          else if (clickedObj.DataContext is UMLDesigner.ViewModel.EdgeViewModel)
+          catch // dont crasch out of window
           {
-              FocusedEdge = (EdgeViewModel)clickedObj.DataContext;
+
           }
 
       }
@@ -270,22 +288,22 @@ namespace UMLDesigner.ViewModel {
          }
       }
 
-        public void AddEdge()
-        {
-            isAddingEdge = true;
-        }
+      public void AddEdge()
+      {
+          isAddingEdge = true;
+      }
 
-        public void AddAGG()
-        {
-            type = "AGG";
-            AddEdge();
-        }
+      public void AddAGG()
+      {
+          type = "AGG";
+          AddEdge();
+      }
 
-        public void AddASS()
-        {
-            type = "ASS";
-            AddEdge();
-        }
+      public void AddASS()
+      {
+          type = "ASS";
+          AddEdge();
+      }
 
         public void AddCOM()
         {
@@ -309,6 +327,27 @@ namespace UMLDesigner.ViewModel {
         {
             type = "NOR";
             AddEdge();
+        }
+
+        public void ZoomOut()
+        {
+            if (Scale > 0.2)
+            {
+                Scale -= 0.1;
+            }
+        }
+
+        public void ZoomIn()
+        {
+            if (Scale < 2.0)
+            {
+                Scale += 0.1;
+            }
+        }
+
+        public void ZoomNorm()
+        {
+            Scale = 1;
         }
 
         // Captures the mouse, to move nodes
@@ -356,9 +395,15 @@ namespace UMLDesigner.ViewModel {
                 // derfor gemmes her positionen før det første ryk så den sammen med den sidste position kan benyttes til at flytte punktet med en kommando.
                 if (moveNodePoint == default(Point)) moveNodePoint = mousePosition;
                 // Punktets position ændres og beskeden bliver så sendt til UI med INotifyPropertyChanged mønsteret.
+                if((int)mousePosition.X - relativeMousePositionX >= 0)
+                    movingNode.X = (int)mousePosition.X - relativeMousePositionX;
+                else
+                    movingNode.X = 0;
 
-                movingNode.X = (int)mousePosition.X - relativeMousePositionX;
-                movingNode.Y = (int)mousePosition.Y - relativeMousePositionY;
+                if ((int)mousePosition.Y - relativeMousePositionY >= 0)
+                    movingNode.Y = (int)mousePosition.Y - relativeMousePositionY;
+                else
+                    movingNode.Y = 0;
 
                 for (int i = 0; i < Edges.Count; i++)
                 {
@@ -400,8 +445,26 @@ namespace UMLDesigner.ViewModel {
             Point mousePosition = Mouse.GetPosition(canvas);
 
             // Punktet flyttes med kommando. Den flyttes egentlig bare det sidste stykke i en række af mange men da de originale punkt gemmes er der ikke noget problem med undo/redo.
+            int newX, newY, oldX, oldY;
+            if ((int)mousePosition.X - relativeMousePositionX >= 0)
+                newX = (int)mousePosition.X - relativeMousePositionX;
+            else
+                newX = 0;
+            if ((int)mousePosition.Y - relativeMousePositionY >= 0)
+                newY = (int)mousePosition.Y - relativeMousePositionY;
+            else
+                newY = 0;
 
-            undoRedoController.AddAndExecute(new MoveNodeCommand(movingNode, (int)mousePosition.X - relativeMousePositionX, (int)mousePosition.Y - relativeMousePositionY, (int)moveNodePoint.X - relativeMousePositionX, (int)moveNodePoint.Y - relativeMousePositionY, Edges));
+            if ((int)moveNodePoint.X - relativeMousePositionX >= 0)
+                oldX = (int)moveNodePoint.X - relativeMousePositionX;
+            else
+                oldX = 0;
+            if ((int)moveNodePoint.Y - relativeMousePositionY >= 0)
+                oldY = (int)moveNodePoint.Y - relativeMousePositionY;
+            else
+                oldY = 0;
+
+            undoRedoController.AddAndExecute(new MoveNodeCommand(movingNode, newX, newY, oldX, oldY, Edges));
             // Nulstil værdier.
             moveNodePoint = new Point();
             //Reset the relative offsets for the moved node

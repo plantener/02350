@@ -12,6 +12,7 @@
             <TextBox Width="25" Height="20" Text="{Binding MultB, UpdateSourceTrigger=PropertyChanged}" Canvas.Top="{Binding XMultB.Y}" Canvas.Left="{Binding XMultB.X}" FontSize="12" Background="Transparent" BorderBrush="LightGray" IsEnabled="{Binding MultAllowed}" BorderThickness="{Binding MultBorder}"/>
         </Canvas>
         <Path Stroke="#2E8DEF" StrokeThickness="1" Data="{Binding Path}" StrokeDashArray="{Binding Dashed}"/>
+        <Path Stroke="Transparent" StrokeThickness="10" Data="{Binding Path}"/>
         <Polyline Points="{Binding Arrow}" Fill="{Binding ColorFill}" Stroke="#2E8DEF" StrokeThickness="1"/>
     </Grid>
 </UserControl>

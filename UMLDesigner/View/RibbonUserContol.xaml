@@ -47,8 +47,8 @@
             </RibbonGroup>
             <RibbonGroup x:Name="ArrowGroup" Header="Arrows">
                <RibbonButton SmallImageSource="../Images/aggregation.png" Label="Aggregation" Command="{Binding AddAGGCommand}"/>
-               <RibbonButton SmallImageSource="../Images/assosiation.png" Label="Association" Command="{Binding AddASSCommand}"/>
-               <RibbonButton SmallImageSource="../Images/directedassosiation.png" Label="Directed Association" Command="{Binding AddNORCommand}"/>
+                    <RibbonButton SmallImageSource="../Images/assosiation.png" Label="Association" Command="{Binding AddNORCommand}"/>
+                    <RibbonButton SmallImageSource="../Images/directedassosiation.png" Label="Directed Association" Command="{Binding AddASSCommand}"/>
                <RibbonButton SmallImageSource="../Images/composition.png" Label="Composition" Command="{Binding AddCOMCommand}"/>
                <RibbonButton SmallImageSource="../Images/generalization.png" Label="Generalization" Command="{Binding AddGENCommand}"/>
                <RibbonButton SmallImageSource="../Images/dependency.png" Label="Dependency" Command="{Binding AddDEPCommand}"/>
@@ -59,8 +59,13 @@
                     </RibbonGroup>
                 </RibbonTab>
          <!-- Ribbon Tab #3: -->
-         <RibbonTab Header="View" KeyTip="L">
-            <RibbonGroup x:Name="ShowHideGroup" Header="Show or Hide">
+            <RibbonTab Header="View" KeyTip="L">
+                <RibbonGroup x:Name="ZoomGroup" Header="Zoom">
+                    <RibbonButton LargeImageSource="../Images/save.png" Label="Zoom in" Command="{Binding ZoomInCommand}"/>
+                    <RibbonButton LargeImageSource="../Images/save.png" Label="Zoom out" Command="{Binding ZoomOutCommand}"/>
+                    <RibbonButton LargeImageSource="../Images/save.png" Label="100%" Command="{Binding ZoomNormCommand}"/>
+                </RibbonGroup>
+                <RibbonGroup x:Name="ShowHideGroup" Header="Show or Hide">
                <RibbonCheckBox Label="Grid" IsChecked="{Binding GridVisibility}"/>
                <RibbonButton Label="Expand/Contract" Command="{Binding CollapseExpandCommand}"/>
             </RibbonGroup>
