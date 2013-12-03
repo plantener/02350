@@ -332,7 +332,7 @@ namespace UMLDesigner.ViewModel {
 
       public void KeyDownUndo(object param) {
 
-         //Keyboard shortcuts for undo/redo when key is pressed
+         //Keyboard shortcuts for undo/redo when key is pressed. Look in MainWindow.xaml to see the different key combinations
          if ((string)param == "undo") {
             UndoRedoController.GetInstance().Undo();
          }
@@ -342,7 +342,7 @@ namespace UMLDesigner.ViewModel {
       }
 
       public void KeyDownSaveLoad(object param) {
-         //Keyboard shortcuts for save/load when key is pressed
+         //Keyboard shortcuts for save/load when key is pressed. Look in MainWindow.xaml to see the different key combinations
          if ((string)param == "save") {
             Save();
          }
@@ -352,7 +352,7 @@ namespace UMLDesigner.ViewModel {
       }
 
       public void KeyDownCopyPaste(object param) {
-         //Keyboard shortcuts for save/load when key is pressed
+         //Keyboard shortcuts for copy/paste when key is pressed. Look in MainWindow.xaml to see the different key combinations
          if ((string)param == "copy") {
             Copy();
          }
@@ -362,14 +362,14 @@ namespace UMLDesigner.ViewModel {
       }
 
       public void KeyDownExport(object param) {
-         //Keyboard shortcuts for save/load when key is pressed
+         //Keyboard shortcuts for export when key is pressed. Look in MainWindow.xaml to see the different key combinations
          if ((string)param == "export") {
             ExportImage();
          }
       }
 
       public void KeyDownNewNode(object param) {
-         //Keyboard shortcuts for save/load when key is pressed
+         //Keyboard shortcuts for creating a new Class (node) when key is pressed. Look in MainWindow.xaml to see the different key combinations
          if ((string)param == "newclass") {
             AddNode();
          }
