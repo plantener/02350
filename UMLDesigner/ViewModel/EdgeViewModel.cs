@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Xml;
 using UMLDesigner.Model;
 
 namespace UMLDesigner.ViewModel
@@ -24,7 +25,7 @@ namespace UMLDesigner.ViewModel
         public NodeViewModel NVMEndB { get { return nVMEndB; }
             set { nVMEndB = value; RaisePropertyChanged(() => NVMEndB); RaisePropertyChanged(() => Path); }
         }
-
+        
         public string MultA
         {
             get { return edge.MultA; }
@@ -80,7 +81,11 @@ namespace UMLDesigner.ViewModel
         }
 
         private EdgeType Type { get { return edge.Type; } set { edge.Type = value; RaisePropertyChanged(() => Type); } }
-
+        public EdgeType type
+        {
+            get { return Type; }
+            set { Type = value; RaisePropertyChanged(() => type); }
+        }
         private string colorFill;
         public string ColorFill { get { return colorFill; } set { colorFill = value; RaisePropertyChanged(() => ColorFill); } }
 
@@ -107,15 +112,16 @@ namespace UMLDesigner.ViewModel
 
         public EdgeViewModel(){}
 
-        public EdgeViewModel(NodeViewModel nVMEndA, NodeViewModel nVMEndB, string type)
+        public EdgeViewModel(NodeViewModel nVMEndA, NodeViewModel nVMEndB, EdgeType type)
         {
             edge = new Edge();
             NVMEndA = nVMEndA;
             NVMEndB = nVMEndB;
+            MultA = "";
+            MultB = "";
             Type = edgeTypeConverter(type);
             initArrow();
             newPath();
-            Console.WriteLine(type);
         }
 
         public void newPath()
@@ -154,7 +160,6 @@ namespace UMLDesigner.ViewModel
         private void setPath()
         {
             string temp = "M";
-            Console.WriteLine(pathObjects.Count);
             for (int i = 0; i < pathObjects.Count; i++)
             {
                 temp += " " + pathObjects.ElementAt(i).X + "," + pathObjects.ElementAt(i).Y;
@@ -174,50 +179,49 @@ namespace UMLDesigner.ViewModel
                     
                 }
                 Arrow = temp;
-                Console.WriteLine(arrow);
             }
         }
 
-        private EdgeType edgeTypeConverter(string type)
+        private EdgeType edgeTypeConverter(EdgeType type)
         {
             switch (type)
             {
-                case "AGG":
+                case EdgeType.AGG:
                     thisArrow = rombArrow;
                     dashed = "1 0";
                     colorFill = "White";
                     multAllowed = true;
                     multBorder = 1;
                     return EdgeType.AGG;
-                case "ASS":
+                case EdgeType.ASS:
                     thisArrow = normArrow;
                     dashed = "1 0";
                     colorFill = "Transperant";
                     multAllowed = true;
                     multBorder = 1;
                     return EdgeType.ASS;
-                case "COM":
+                case EdgeType.COM:
                     thisArrow = rombArrow;
                     dashed = "1 0";
                     colorFill = "#2E8DEF";
                     multAllowed = true;
                     multBorder = 1;
                     return EdgeType.COM;
-                case "DEP":
+                case EdgeType.DEP:
                     thisArrow = normArrow;
                     dashed = "5 5";
                     colorFill = "Transperant";
                     multAllowed = false;
                     multBorder = 0;
                     return EdgeType.DEP;
-                case "GEN":
+                case EdgeType.GEN:
                     thisArrow = genArrow;
                     dashed = "1 0";
                     colorFill = "White";
                     multAllowed = false;
                     multBorder = 0;
                     return EdgeType.GEN;
-                case "NOR":
+                case EdgeType.NOR:
                     thisArrow = new PointCollection();
                     dashed = "1 0";
                     colorFill = "Transperant";
@@ -236,9 +240,7 @@ namespace UMLDesigner.ViewModel
 
         public void rotateArrow()
         {
-            Console.WriteLine("new: " + newAnchor + " old: " + oldAnchor);
             if(oldAnchor != newAnchor){
-                Console.WriteLine(newAnchor + " " + angle);
                 oldAnchor = newAnchor;
                 double cTheta = Math.Cos(angle*(Math.PI/180));
                 double sTheta = Math.Sin(angle*(Math.PI/180));
@@ -247,7 +249,6 @@ namespace UMLDesigner.ViewModel
                 {
                     double x = (int) ((thisArrow.ElementAt(i).X - 0) * cTheta - (thisArrow.ElementAt(i).Y - 0) * sTheta);
                     double y = (int) ((thisArrow.ElementAt(i).X - 0) * sTheta + (thisArrow.ElementAt(i).Y - 0) * cTheta);
-                    Console.WriteLine("x: " + x + " y: " + y);
                     temp.Add(new Point(x,y));
                 }
                 rArrow = temp;

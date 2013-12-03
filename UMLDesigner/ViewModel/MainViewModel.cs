@@ -50,7 +50,7 @@ namespace UMLDesigner.ViewModel {
 
       private bool isAddingEdge = false;
       private NodeViewModel startEdge;
-      private string type = "";
+      private EdgeType type = EdgeType.NOR;
 
       // Kommandoer som UI bindes til.
        private bool _gridVisibility;
@@ -79,6 +79,7 @@ namespace UMLDesigner.ViewModel {
       public ICommand PasteCommand { get; private set; }
       public ICommand DeleteCommand { get; private set; }
       public ICommand SaveCommand { get; private set; }
+      public ICommand LoadCommand { get; private set; }
       //Used to collapse nodes from GUI
       public ICommand CollapseExpandCommand { get; set; }
        //Export canvas to image
@@ -127,6 +128,7 @@ namespace UMLDesigner.ViewModel {
          PasteCommand = new RelayCommand(Paste);
          DeleteCommand = new RelayCommand(Delete);
          SaveCommand = new RelayCommand(Save);
+         LoadCommand = new RelayCommand(Load);
 
          CollapseExpandCommand = new RelayCommand(CollapseViewChanged);
 
@@ -137,16 +139,64 @@ namespace UMLDesigner.ViewModel {
          //Application.Current.MainWindow.InputBindings.Add(new KeyBinding(UndoCommand, new KeyGesture(Key.A, ModifierKeys.Control)));
       }
 
-      private void SerializeObjectToXML<N,E>(N nodes, E edges, string filePath)
+      public class SaveLoadCollection
       {
-          
-          XmlSerializer ns = new XmlSerializer(typeof(N));
-          XmlSerializer es = new XmlSerializer(typeof(E));
-          using (StreamWriter wr = new StreamWriter(filePath))
+          public ObservableCollection<NodeViewModel> tempClasses = new ObservableCollection<NodeViewModel>();
+          public ObservableCollection<EdgeViewModel> tempEdges = new ObservableCollection<EdgeViewModel>();
+          public SaveLoadCollection(ObservableCollection<NodeViewModel> classes, ObservableCollection<EdgeViewModel> edges)
           {
-              ns.Serialize(wr, nodes);
-                  es.Serialize(wr, edges);
+              tempClasses = classes;
+              tempEdges = edges;
           }
+          public SaveLoadCollection() { }
+
+      }
+
+      private void SerializeObjectToXML(ObservableCollection<NodeViewModel> classes, ObservableCollection<EdgeViewModel> edges, string filepath)
+      {
+          SaveLoadCollection serializetype = new SaveLoadCollection(classes, edges);
+          XmlSerializer serializer = new XmlSerializer(typeof(SaveLoadCollection));
+          using (StreamWriter wr = new StreamWriter(filepath))
+          {
+              serializer.Serialize(wr, serializetype);
+          }
+
+      }
+
+      private void DeSerializeObjectToXML(string filepath)
+      {
+          XmlSerializer serializer = new XmlSerializer(typeof(SaveLoadCollection));
+          using (StreamReader wr = new StreamReader(filepath))
+          {
+              SaveLoadCollection Load = (SaveLoadCollection) serializer.Deserialize(wr);
+              Classes.Clear();
+              Edges.Clear();
+              foreach (NodeViewModel node in Load.tempClasses)
+              {
+                  Classes.Add(node);
+              }
+              foreach (EdgeViewModel edge in Load.tempEdges)
+              {
+                  EdgeViewModel tempEdge = new EdgeViewModel(edge.NVMEndA, edge.NVMEndB, edge.type);
+                  Edges.Add(edge);
+              }
+          }
+      }
+
+      private void Load()
+      {
+          OpenFileDialog dialog = new OpenFileDialog()
+          {
+              Title = "Load diagram",
+              Filter = "XML (*.xml)|*.xml"
+          };
+          if (dialog.ShowDialog() != true)
+              return;
+
+          string path = dialog.FileName;
+          DeSerializeObjectToXML(path);
+
+
       }
 
       private void Save()
@@ -163,7 +213,7 @@ namespace UMLDesigner.ViewModel {
               return;
 
           string path = dialog.FileName;
-          SerializeObjectToXML<ObservableCollection<NodeViewModel>,ObservableCollection<EdgeViewModel>>(Classes, Edges, path);
+          SerializeObjectToXML(Classes, Edges, path);
           //foreach (NodeViewModel node in Classes)
           //{
           //    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(node.GetType());
@@ -336,37 +386,37 @@ namespace UMLDesigner.ViewModel {
 
         public void AddAGG()
         {
-            type = "AGG";
+            type = EdgeType.AGG;
             AddEdge();
         }
 
         public void AddASS()
         {
-            type = "ASS";
+            type = EdgeType.ASS;
             AddEdge();
         }
 
         public void AddCOM()
         {
-            type = "COM";
+            type = EdgeType.COM;
             AddEdge();
         }
 
         public void AddDEP()
         {
-            type = "DEP";
+            type = EdgeType.DEP;
             AddEdge();
         }
 
         public void AddGEN()
         {
-            type = "GEN";
+            type = EdgeType.GEN;
             AddEdge();
         }
 
         public void AddNOR()
         {
-            type = "NOR";
+            type = EdgeType.NOR;
             AddEdge();
         }
 
@@ -443,7 +493,7 @@ namespace UMLDesigner.ViewModel {
                undoRedoController.AddAndExecute(new AddEdgeCommand(Edges, new EdgeViewModel(startEdge, FocusedClass, type)));
                isAddingEdge = false;
                startEdge = null;
-                    type = "";
+               type = EdgeType.NOR;
             }
          } else {
             if (_oldMousePos == e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target))) {

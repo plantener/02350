@@ -23,7 +23,7 @@
          <Ribbon.ApplicationMenu>
             <RibbonApplicationMenu KeyTip="F">
                <RibbonApplicationMenuItem Header="New File" ImageSource="..\Images\add.png" />
-               <RibbonApplicationMenuItem Header="Open" ImageSource="..\Images\open.png"/>
+               <RibbonApplicationMenuItem Header="Open" ImageSource="..\Images\open.png" Command="{Binding LoadCommand}"/>
                <RibbonApplicationMenuItem Header="Save" ImageSource="..\Images\save.png" />
                <RibbonApplicationMenuItem Header="Export" ImageSource="..\Images\save.png" Command="{Binding ExportCommand}" />
                <RibbonApplicationMenuItem Header="Settings" ImageSource="..\Images\settings.png" />
