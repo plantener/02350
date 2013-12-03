@@ -196,7 +196,7 @@ namespace UMLDesigner.ViewModel
                 case EdgeType.ASS:
                     thisArrow = normArrow;
                     Dashed = "1 0";
-                    ColorFill = "Transperant";
+                    ColorFill = "Transparent";
                     MultAllowed = true;
                     MultBorder = 1;
                     return EdgeType.ASS;
@@ -210,7 +210,7 @@ namespace UMLDesigner.ViewModel
                 case EdgeType.DEP:
                     thisArrow = normArrow;
                     Dashed = "5 5";
-                    ColorFill = "Transperant";
+                    ColorFill = "Transparent";
                     MultAllowed = false;
                     MultBorder = 0;
                     return EdgeType.DEP;
@@ -224,14 +224,14 @@ namespace UMLDesigner.ViewModel
                 case EdgeType.NOR:
                     thisArrow = new PointCollection();
                     Dashed = "1 0";
-                    ColorFill = "Transperant";
+                    ColorFill = "Transparent";
                     MultAllowed = true;
                     MultBorder = 1;
                     return EdgeType.NOR;
                 default:
                     thisArrow = normArrow;
                     Dashed = "1 0";
-                    ColorFill = "Transperant";
+                    ColorFill = "Transparent";
                     MultAllowed = true;
                     MultBorder = 1;
                     return EdgeType.ASS;
