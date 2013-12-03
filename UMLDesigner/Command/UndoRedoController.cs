@@ -64,5 +64,11 @@ namespace UMLDesigner.Command
                 command.Execute();
                 }
             }
+
+            public void Reset()
+            {
+                undoStack.Clear();
+                redoStack.Clear();
+            }
         }
 }

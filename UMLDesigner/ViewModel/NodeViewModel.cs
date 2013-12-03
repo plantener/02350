@@ -14,7 +14,8 @@ namespace UMLDesigner.ViewModel
     [System.Xml.Serialization.XmlInclude(typeof(NodeViewModel))]
     public class NodeViewModel : ViewModelBase
     {
-        private Node node;
+        public Node node;
+        
 
         public int Id
         {
@@ -70,6 +71,10 @@ namespace UMLDesigner.ViewModel
         public NodeViewModel()
         {
             node = new Node();
+        }
+        public NodeViewModel(Node node)
+        {
+            this.node = node;
         }
     }
 }
