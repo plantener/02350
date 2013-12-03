@@ -219,23 +219,29 @@ namespace UMLDesigner.ViewModel {
       private void MouseDownCanvas(MouseEventArgs obj)
       {
           FrameworkElement clickedObj = (FrameworkElement)obj.MouseDevice.Target;
-          
-          if (obj.Source is MainWindow)
+          try
           {
-              FocusedClass = null;
-              //hotfix, ikke pænt
-              if (movingClass != null)
+              if (obj.Source is MainWindow)
               {
-                  DependencyObject scope = FocusManager.GetFocusScope(movingClass);
-                  FocusManager.SetFocusedElement(scope, clickedObj as IInputElement);
-                  Keyboard.ClearFocus();
-                  Application.Current.MainWindow.Focus();
+                  FocusedClass = null;
+                  FocusedEdge = null;
+                  //hotfix, ikke pænt
+                  if (movingClass != null)
+                  {
+                      DependencyObject scope = FocusManager.GetFocusScope(movingClass);
+                      FocusManager.SetFocusedElement(scope, clickedObj as IInputElement);
+                      Keyboard.ClearFocus();
+                      Application.Current.MainWindow.Focus();
+                  }
               }
-              FocusedClass = null;
+              else if (clickedObj.DataContext is UMLDesigner.ViewModel.EdgeViewModel)
+              {
+                  FocusedEdge = (EdgeViewModel)clickedObj.DataContext;
+              }
           }
-          else if (clickedObj.DataContext is UMLDesigner.ViewModel.EdgeViewModel)
+          catch // dont crasch out of window
           {
-              FocusedEdge = (EdgeViewModel)clickedObj.DataContext;
+
           }
 
       }
