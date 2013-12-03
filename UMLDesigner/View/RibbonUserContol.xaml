@@ -27,7 +27,7 @@
                <RibbonApplicationMenuItem Header="Save" ImageSource="..\Images\save.png" />
                <RibbonApplicationMenuItem Header="Export" ImageSource="..\Images\export.png" Command="{Binding ExportCommand}" />
                <RibbonApplicationMenuItem Header="Settings" ImageSource="..\Images\settings.png" />
-               <RibbonApplicationMenuItem Header="Exit" ImageSource="..\Images\quit.png" />
+               <RibbonApplicationMenuItem Header="Exit" ImageSource="..\Images\quit.png"  />
             </RibbonApplicationMenu>
          </Ribbon.ApplicationMenu>
          <!-- Ribbon Tab #1: Home -->
@@ -60,6 +60,11 @@
          </RibbonTab>
          <!-- Ribbon Tab #3: -->
          <RibbonTab Header="View" KeyTip="L">
+            <RibbonGroup x:Name="ZoomGroup" Header="Zoom">
+               <RibbonButton LargeImageSource="../Images/zoom_in.png" Label="Zoom in" Command="{Binding ZoomInCommand}"/>
+               <RibbonButton LargeImageSource="../Images/zoom_out.png" Label="Zoom out" Command="{Binding ZoomOutCommand}"/>
+               <RibbonButton LargeImageSource="../Images/zoom.png" Label="100%" Command="{Binding ZoomNormCommand}"/>
+            </RibbonGroup>
             <RibbonGroup x:Name="ShowHideGroup" Header="Show or Hide">
                <RibbonCheckBox Label="Grid" IsChecked="{Binding GridVisibility}"/>
                <RibbonButton SmallImageSource="..\Images\expand.png" Label="Expand/Contract" Command="{Binding CollapseExpandCommand}"/>
