@@ -28,12 +28,12 @@ namespace UMLDesigner.ViewModel {
       private bool isFocused = false;
       public bool IsFocused { get { return isFocused; } set { isFocused = value; RaisePropertyChanged(() => IsFocused); RaisePropertyChanged(() => DeleteActive); } }
       private NodeViewModel focusedClass = null;
-      public NodeViewModel FocusedClass { get { return focusedClass; } private set { focusedClass = value; if (focusedClass == null) { IsFocused = false;  } else { IsFocused = true; FocusedEdge = null; };} }
+      public NodeViewModel FocusedClass { get { return focusedClass; } private set { if (focusedClass != null) { FocusedClass.Selected = false; } focusedClass = value; if (focusedClass == null) { IsFocused = false; } else { IsFocused = true; FocusedClass.Selected = true; FocusedEdge = null; };} }
       //Used for detecting focus on edges
       private bool edgeIsFocused = false;
       public bool EdgeIsFocused { get { return edgeIsFocused; } set { edgeIsFocused = value; RaisePropertyChanged(() => EdgeIsFocused); RaisePropertyChanged(() => DeleteActive); } }
       private EdgeViewModel focusedEdge = null;
-      public EdgeViewModel FocusedEdge { get { return focusedEdge; } private set { focusedEdge = value; if (focusedEdge == null) { EdgeIsFocused = false; } else { EdgeIsFocused = true; FocusedClass=null; };} }
+      public EdgeViewModel FocusedEdge { get { return focusedEdge; } private set { if (focusedEdge != null) { FocusedEdge.Selected = false; } focusedEdge = value; if (focusedEdge == null) { EdgeIsFocused = false; } else { EdgeIsFocused = true; FocusedEdge.Selected = true; FocusedClass = null; };} }
       private bool canPaste = false;
       public bool CanPaste { get { return canPaste; } set { canPaste = value; RaisePropertyChanged(() => CanPaste); } }
       private NodeViewModel copyClass = null;
@@ -64,7 +64,10 @@ namespace UMLDesigner.ViewModel {
       public ICommand UndoCommand { get; private set; }
       public ICommand RedoCommand { get; private set; }
       public ICommand KeyDownUndoCommand { get; private set; }
-
+      public ICommand KeyDownSaveLoadCommand { get; private set; }
+      public ICommand KeyDownCopyPasteCommand { get; private set; }
+      public ICommand KeyDownExportCommand { get; private set; }
+      public ICommand KeyDownNewNodeCommand { get; private set; }
       // Kommandoer som UI bindes til.
       public ICommand AddClassCommand { get; private set; }
       public ICommand AddAGGCommand { get; private set; }
@@ -88,6 +91,7 @@ namespace UMLDesigner.ViewModel {
       public ICommand DeleteCommand { get; private set; }
       public ICommand SaveCommand { get; private set; }
       public ICommand LoadCommand { get; private set; }
+      public ICommand ExitCommand { get; private set; }
       //Used to collapse nodes from GUI
       public ICommand CollapseExpandCommand { get; set; }
        //Export canvas to image
@@ -100,15 +104,9 @@ namespace UMLDesigner.ViewModel {
       public MainViewModel() {
          // Her fyldes listen af classes med to classes. Her benyttes et alternativ til konstruktorer med syntaksen 'new Type(){ Attribut = Værdi }'
          // Det der sker er at der først laves et nyt object og så sættes objektets attributer til de givne værdier.
-         Classes = new ObservableCollection<NodeViewModel>()
-            { 
-                new NodeViewModel() { ClassName = "TestClass", X = 30, Y = 40,  Methods = { new Attribute { Name = "metode", Modifier = true, Type = "int" } }},
-                new NodeViewModel() { ClassName = "TestClass", X = 140, Y = 230, },
-                new NodeViewModel() { ClassName = "NewClass", Attributes = { new Attribute { Name = "Testattribut", Modifier = true, Type = "int" } } }
-            };
+         Classes = new ObservableCollection<NodeViewModel>();
 
-         Edges = new ObservableCollection<EdgeViewModel>() {
-         };
+         Edges = new ObservableCollection<EdgeViewModel>();
 
          // Kommandoerne som UI kan kaldes bindes til de metoder der skal kaldes. Her vidersendes metode kaldne til UndoRedoControlleren.
          UndoCommand = new RelayCommand(undoRedoController.Undo, undoRedoController.CanUndo);
@@ -123,6 +121,7 @@ namespace UMLDesigner.ViewModel {
          AddGENCommand = new RelayCommand(AddGEN);
          AddNORCommand = new RelayCommand(AddNOR);
 
+         ExitCommand = new RelayCommand(ExitApplication);
          ZoomOutCommand = new RelayCommand(ZoomOut);
          ZoomInCommand = new RelayCommand(ZoomIn);
          ZoomNormCommand = new RelayCommand(ZoomNorm);
@@ -132,6 +131,10 @@ namespace UMLDesigner.ViewModel {
          KeyDownCommand = new RelayCommand<KeyEventArgs>(KeyDownNode);
          KeyUpCommand = new RelayCommand<KeyEventArgs>(UndoRedo_KeyUp);
          KeyDownUndoCommand = new RelayCommand<object>(param => KeyDownUndo(param));
+         KeyDownSaveLoadCommand = new RelayCommand<object>(param => KeyDownSaveLoad(param));
+         KeyDownCopyPasteCommand = new RelayCommand<object>(param => KeyDownCopyPaste(param));
+         KeyDownExportCommand = new RelayCommand<object>(param => KeyDownExport(param));
+         KeyDownNewNodeCommand = new RelayCommand<object>(param => KeyDownNewNode(param));
 
          //   EditNodesCommand = new RelayCommand(EditNode);
          EditNodesCommand = new RelayCommand(EditNode);
@@ -146,10 +149,9 @@ namespace UMLDesigner.ViewModel {
 
          ExportCommand = new RelayCommand(ExportImage);
 
-         Debug.WriteLine("Højde" + Classes[0].Height);
-
          //Application.Current.MainWindow.InputBindings.Add(new KeyBinding(UndoCommand, new KeyGesture(Key.A, ModifierKeys.Control)));
       }
+
 
       public class SaveLoadCollection
       {
@@ -162,6 +164,12 @@ namespace UMLDesigner.ViewModel {
           }
           public SaveLoadCollection() { }
 
+      }
+
+
+      public void ExitApplication()
+      {
+          App.Current.Shutdown();
       }
 
       private void SerializeObjectToXML(ObservableCollection<NodeViewModel> classes, ObservableCollection<EdgeViewModel> edges, string filepath)
@@ -391,7 +399,8 @@ namespace UMLDesigner.ViewModel {
       //Captures a keyboard press if on a node
       public void KeyDownNode(KeyEventArgs e) {
          //clears focus from current node if 'enter' is pressed
-         if (e.Key == Key.Return) {
+          if (e.Key == Key.Return || e.Key == Key.Escape)
+          {
             FrameworkElement parent = (FrameworkElement)movingClass.Parent;
             while (parent != null && parent is IInputElement && !((IInputElement)parent).Focusable) {
                parent = (FrameworkElement)parent.Parent;
@@ -405,6 +414,40 @@ namespace UMLDesigner.ViewModel {
          }
       }
 
+       public void KeyDownSaveLoad(object param) {
+          //Keyboard shortcuts for save/load when key is pressed. Look in MainWindow.xaml to see the different key combinations
+          if ((string)param == "save") {
+             Save();
+          }
+          if ((string)param == "load") {
+             Load();
+          }
+       }
+ 
+       public void KeyDownCopyPaste(object param) {
+          //Keyboard shortcuts for copy/paste when key is pressed. Look in MainWindow.xaml to see the different key combinations
+          if ((string)param == "copy") {
+             Copy();
+          }
+          if ((string)param == "paste") {
+             Paste();
+          }
+       }
+ 
+       public void KeyDownExport(object param) {
+          //Keyboard shortcuts for export when key is pressed. Look in MainWindow.xaml to see the different key combinations
+          if ((string)param == "export") {
+             ExportImage();
+          }
+       }
+ 
+       public void KeyDownNewNode(object param) {
+          //Keyboard shortcuts for creating a new Class (node) when key is pressed. Look in MainWindow.xaml to see the different key combinations
+          if ((string)param == "newclass") {
+             AddNode();
+          }
+       }
+
       //Keyboard shortcut for undo/redo when key is released
       public void UndoRedo_KeyUp(KeyEventArgs e) {
          if (_pressed) {
@@ -416,6 +459,8 @@ namespace UMLDesigner.ViewModel {
       {
           StatusBar = "Adding edge, press at the start node";
           isAddingEdge = true;
+          FocusedClass = null;
+          FocusedEdge = null;
       }
         public void AddAGG()
         {
@@ -455,6 +500,7 @@ namespace UMLDesigner.ViewModel {
 
         public void ZoomOut()
         {
+            StatusBar = "Zoom out";
             if (Scale > 0.2)
             {
                 Scale -= 0.1;
@@ -463,6 +509,7 @@ namespace UMLDesigner.ViewModel {
 
         public void ZoomIn()
         {
+            StatusBar = "Zoom in";
             if (Scale < 2.0)
             {
                 Scale += 0.1;
@@ -471,6 +518,7 @@ namespace UMLDesigner.ViewModel {
 
         public void ZoomNorm()
         {
+            StatusBar = "Zoom 100%";
             Scale = 1;
         }
 
@@ -558,6 +606,7 @@ namespace UMLDesigner.ViewModel {
                isAddingEdge = false;
                startEdge = null;
                type = EdgeType.NOR;
+               System.Console.WriteLine(Edges[Edges.Count - 1].type + " " + Edges[Edges.Count - 1].MultAllowed + " " + Edges[Edges.Count - 1].MultBorder);
             }
          } else {
             if (_oldMousePos == e.GetPosition(FindParent<Canvas>((FrameworkElement)e.MouseDevice.Target))) {

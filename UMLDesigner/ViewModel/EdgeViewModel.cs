@@ -112,6 +112,11 @@ namespace UMLDesigner.ViewModel
 
         public EdgeViewModel(){}
 
+        private bool selected = false;
+        public bool Selected { get { return selected; } set { selected = value; RaisePropertyChanged(() => Selected); RaisePropertyChanged(() => SelectedColor); } }
+
+        public String SelectedColor { get { return Selected ? "Gray" : "#2E8DEF"; } }
+
         public EdgeViewModel(NodeViewModel nVMEndA, NodeViewModel nVMEndB, EdgeType type)
         {
             edge = new Edge();
@@ -227,6 +232,7 @@ namespace UMLDesigner.ViewModel
                     ColorFill = "Transparent";
                     MultAllowed = true;
                     MultBorder = 1;
+                    Console.WriteLine("zdsfadfa");
                     return EdgeType.NOR;
                 default:
                     thisArrow = normArrow;
@@ -270,8 +276,6 @@ namespace UMLDesigner.ViewModel
 
         private PointCollection getAnchor()
         {
-            MultAllowed = true;
-            MultBorder = 1;
             int lengthHalf;
             PointCollection temp = new PointCollection();
             int a = 5, h = 20, l = 25;

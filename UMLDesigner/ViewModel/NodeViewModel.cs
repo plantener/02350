@@ -64,6 +64,11 @@ namespace UMLDesigner.ViewModel
             set { node.ClassName = value; }
         }
 
+        private bool selected = false;
+        public bool Selected { get { return selected; } set { selected = value; RaisePropertyChanged(() => Selected); RaisePropertyChanged(() => SelectedColor); } }
+
+        public String SelectedColor { get { return Selected ? "Gray" : "#2E8DEF"; } }
+
         public ObservableCollection<UMLDesigner.Model.Attribute> Attributes { get { return node.Attributes; } set { node.Attributes = value; RaisePropertyChanged(() => Attributes); } }
         public ObservableCollection<UMLDesigner.Model.Attribute> Methods { get { return node.Methods; } set { node.Methods = value; RaisePropertyChanged(() => Methods); } }
 

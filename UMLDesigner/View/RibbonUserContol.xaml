@@ -13,37 +13,34 @@
       <Ribbon x:Name="RibbonWin"  SelectedIndex="0">
          <!-- Quick Access Toolbar - located at the upper-left corner -->
          <Ribbon.QuickAccessToolBar>
-            <RibbonQuickAccessToolBar>
-               <RibbonButton x:Name ="Save" SmallImageSource="..\Images\save_small.png" Command="{Binding SaveCommand}"/>
-               <RibbonButton x:Name ="Undo" KeyTip="CTRL+Z" Command="{Binding UndoCommand}" SmallImageSource="..\Images\undo.png" />
-               <RibbonButton x:Name="Redo" Command="{Binding RedoCommand}" SmallImageSource="..\Images\redo.png" />
-            </RibbonQuickAccessToolBar>
+                <RibbonQuickAccessToolBar Margin="0 2px 0 0">
+                    <RibbonButton x:Name ="Save" SmallImageSource="..\Images\save_small.png" Command="{Binding SaveCommand}" ToolTipTitle="CTRL+S" />
+                    <RibbonButton x:Name ="Undo" Command="{Binding UndoCommand}" SmallImageSource="..\Images\undo.png" ToolTipTitle="CTRL+Z"  />
+                    <RibbonButton x:Name="Redo" Command="{Binding RedoCommand}" SmallImageSource="..\Images\redo.png" ToolTipTitle="CTRL+Y" />
+                </RibbonQuickAccessToolBar>
          </Ribbon.QuickAccessToolBar>
          <!-- Application Menu, located at the left-hand side (down arrow) -->
          <Ribbon.ApplicationMenu>
             <RibbonApplicationMenu KeyTip="F">
-               <RibbonApplicationMenuItem Header="New File" ImageSource="..\Images\add.png" />
-               <RibbonApplicationMenuItem Header="Open" ImageSource="..\Images\open.png" Command="{Binding LoadCommand}"/>
-               <RibbonApplicationMenuItem Header="Save" ImageSource="..\Images\save.png" />
-               <RibbonApplicationMenuItem Header="Export" ImageSource="..\Images\save.png" Command="{Binding ExportCommand}" />
-               <RibbonApplicationMenuItem Header="Settings" ImageSource="..\Images\settings.png" />
-               <RibbonApplicationMenuItem Header="Exit" ImageSource="..\Images\quit.png" />
+               <RibbonApplicationMenuItem Header="Open" ImageSource="..\Images\open.png" Command="{Binding LoadCommand}" />
+               <RibbonApplicationMenuItem Header="Save" ImageSource="..\Images\save.png" Command="{Binding SaveCommand}" />
+               <RibbonApplicationMenuItem Header="Export" ImageSource="..\Images\export.png" Command="{Binding ExportCommand}" />
+               <RibbonApplicationMenuItem Header="Exit" ImageSource="..\Images\quit.png" Command ="{Binding ExitCommand}"/>
             </RibbonApplicationMenu>
          </Ribbon.ApplicationMenu>
          <!-- Ribbon Tab #1: Home -->
          <RibbonTab Header="Home" KeyTip="H" >
             <!-- Home  group-->
             <RibbonGroup x:Name="ClipboardGroup" Header="Clipboard">
-               <RibbonButton LargeImageSource="..\Images\paste.png" Label="Paste" KeyTip="V" Command="{Binding PasteCommand}" IsEnabled="{Binding CanPaste}"/>
-               <RibbonButton LargeImageSource="..\Images\copy.png" Label="Copy" KeyTip="C" Command="{Binding CopyCommand}" IsEnabled="{Binding IsFocused}" />
-               <RibbonButton SmallImageSource="..\Images\cut_small.png" Label="Cut" KeyTip="X" />
-               <RibbonButton SmallImageSource="..\Images\save_small.png" Label="Delete" KeyTip="D" Command="{Binding DeleteCommand}" IsEnabled="{Binding DeleteActive}"/>
-            </RibbonGroup>
+                    <RibbonButton LargeImageSource="..\Images\paste.png" Label="Paste" KeyTip="V" Command="{Binding PasteCommand}" IsEnabled="{Binding CanPaste}" ToolTipTitle="CTRL+V" />
+                    <RibbonButton LargeImageSource="..\Images\copy.png" Label="Copy" KeyTip="C" Command="{Binding CopyCommand}" IsEnabled="{Binding IsFocused}" ToolTipTitle="CTRL+C" />
+                    <RibbonButton SmallImageSource="..\Images\delete.png" Label="Delete" KeyTip="D" Command="{Binding DeleteCommand}" IsEnabled="{Binding DeleteActive}" />
+                </RibbonGroup>
          </RibbonTab>
          <!-- Ribbon Tab #2: -->
          <RibbonTab Header="Class Diagram" KeyTip="I">
             <RibbonGroup x:Name="NewGroup" Header="New..">
-               <RibbonButton LargeImageSource="../Images/class.png" Label="Class" Command="{Binding AddClassCommand}"/>
+                    <RibbonButton LargeImageSource="../Images/class.png" Label="Class" Command="{Binding AddClassCommand}" ToolTipTitle="CTRL+N" />
             </RibbonGroup>
             <RibbonGroup x:Name="ArrowGroup" Header="Arrows">
                <RibbonButton SmallImageSource="../Images/aggregation.png" Label="Aggregation" Command="{Binding AddAGGCommand}"/>
@@ -52,22 +49,22 @@
                <RibbonButton SmallImageSource="../Images/composition.png" Label="Composition" Command="{Binding AddCOMCommand}"/>
                <RibbonButton SmallImageSource="../Images/generalization.png" Label="Generalization" Command="{Binding AddGENCommand}"/>
                <RibbonButton SmallImageSource="../Images/dependency.png" Label="Dependency" Command="{Binding AddDEPCommand}"/>
-            </RibbonGroup>
-                    <RibbonGroup x:Name="AddItemGroup" Header="Edit..">
-                        <RibbonButton SmallImageSource="../Images/save.png" Label="Node content" Command="{Binding EditNodesCommand}"  IsEnabled="{Binding IsFocused}"/>
-                    </RibbonGroup>
-                </RibbonTab>
-         <!-- Ribbon Tab #3: -->
+                </RibbonGroup>
+                <RibbonGroup x:Name="AddItemGroup" Header="Edit..">
+                    <RibbonButton SmallImageSource="../Images/edit_class.png" Label="Node content" Command="{Binding EditNodesCommand}"  IsEnabled="{Binding IsFocused}"/>
+                </RibbonGroup>
+            </RibbonTab>
+            <!-- Ribbon Tab #3: -->
             <RibbonTab Header="View" KeyTip="L">
                 <RibbonGroup x:Name="ZoomGroup" Header="Zoom">
-                    <RibbonButton LargeImageSource="../Images/save.png" Label="Zoom in" Command="{Binding ZoomInCommand}"/>
-                    <RibbonButton LargeImageSource="../Images/save.png" Label="Zoom out" Command="{Binding ZoomOutCommand}"/>
-                    <RibbonButton LargeImageSource="../Images/save.png" Label="100%" Command="{Binding ZoomNormCommand}"/>
+                    <RibbonButton LargeImageSource="../Images/zoom_in.png" Label="Zoom in" Command="{Binding ZoomInCommand}"/>
+                    <RibbonButton LargeImageSource="../Images/zoom_out.png" Label="Zoom out" Command="{Binding ZoomOutCommand}"/>
+                    <RibbonButton LargeImageSource="../Images/zoom.png" Label="100%" Command="{Binding ZoomNormCommand}"/>
                 </RibbonGroup>
                 <RibbonGroup x:Name="ShowHideGroup" Header="Show or Hide">
-               <RibbonCheckBox Label="Grid" IsChecked="{Binding GridVisibility}"/>
-               <RibbonButton Label="Expand/Contract" Command="{Binding CollapseExpandCommand}"/>
-            </RibbonGroup>
+                    <RibbonCheckBox Label="Grid" IsChecked="{Binding GridVisibility}"/>
+                    <RibbonButton SmallImageSource="..\Images\expand.png" Label="Expand/Contract" Command="{Binding CollapseExpandCommand}"/>
+                </RibbonGroup>
          </RibbonTab>
       </Ribbon>
    </Grid>

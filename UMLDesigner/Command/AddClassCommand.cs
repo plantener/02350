@@ -30,7 +30,7 @@ namespace UMLDesigner.Command
         {
             if (_class == null)
             {
-                classes.Add(_class = new NodeViewModel() { ClassName = "AddedClass", X = 100, Y = 100, Id = _index });
+                classes.Add(_class = new NodeViewModel() { ClassName = "New Class", X = 100, Y = 100, Id = _index });
             }
             else
             {

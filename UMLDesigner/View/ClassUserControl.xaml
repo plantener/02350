@@ -24,7 +24,7 @@
         </ContextMenu>
     </UserControl.ContextMenu>
 
-    <Border BorderBrush="#2E8DEF" BorderThickness="2" CornerRadius="0" Cursor="Hand" SnapsToDevicePixels="True" >
+    <Border BorderBrush="{Binding SelectedColor}" BorderThickness="2" CornerRadius="0" Cursor="Hand" SnapsToDevicePixels="True" >
         <DockPanel MinHeight="10" Background="White">
 
             <DockPanel.Resources>
@@ -61,6 +61,14 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
+                    <Style TargetType="{x:Type Grid}">
+                        <Setter Property="Background" Value="#2E8DEF" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsFocused, ElementName=className}" Value="true">
+                                <Setter Property="Background" Value="Black" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
 
                 </Grid.Resources>
                 <TextBox x:Name="className" Text="{Binding ClassName, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" BorderThickness="0" Margin="30,0,30,0"/>
@@ -68,7 +76,7 @@
 
             <!--Note the " : " is acutally being written to the GUI-->
             <!--IsHitTestVisible set to false, so the itemscontrols cannot be clicked -->
-            <ItemsControl Visibility="{Binding DataContext.NodesAreCollapsed, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" x:Name="attributeList" ItemsSource="{Binding Attributes}" BorderThickness="0,0,0,1" DockPanel.Dock="Top" IsHitTestVisible="False">
+            <ItemsControl Visibility="{Binding DataContext.NodesAreCollapsed, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" x:Name="attributeList" ItemsSource="{Binding Attributes}" BorderThickness="0,0,0,1" Margin="5,0,5,0" DockPanel.Dock="Top" IsHitTestVisible="False">
                 <ItemsControl.BorderBrush>
                     <DrawingBrush Viewport="0,0,4,4" ViewportUnits="Absolute" TileMode="Tile">
                         <DrawingBrush.Drawing>
