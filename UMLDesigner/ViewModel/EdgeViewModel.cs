@@ -14,7 +14,7 @@ namespace UMLDesigner.ViewModel
 {
     public class EdgeViewModel : ViewModelBase
     {
-        private Edge edge;
+        public Edge edge;
 
         private NodeViewModel nVMEndA;
         public NodeViewModel NVMEndA { get { return nVMEndA; }
@@ -125,6 +125,16 @@ namespace UMLDesigner.ViewModel
             MultA = "";
             MultB = "";
             Type = edgeTypeConverter(type);
+            initArrow();
+            newPath();
+        }
+
+        public EdgeViewModel(NodeViewModel nVMEndA, NodeViewModel nVMEndB, Edge edge)
+        {
+            this.edge = edge;
+            NVMEndA = nVMEndA;
+            NVMEndB = nVMEndB;
+            Type = edgeTypeConverter(this.edge.Type);
             initArrow();
             newPath();
         }
