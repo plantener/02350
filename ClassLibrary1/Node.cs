@@ -11,6 +11,13 @@ namespace UMLDesigner.Model
 {
     public class Node : ViewModelBase
     {
+        private int id;
+        public int Id
+        {
+            get { return id; }
+            set { id = value; }
+        }
+
         private int x;
         public int X
         {

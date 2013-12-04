@@ -11,21 +11,27 @@
         Title="UML Designer" Height="400" Width="525" WindowState="Maximized">
     <Window.Resources>
         <!-- Dette DataTemplate fortæller vinduet hvordan Node klassen skal vises grafisk. Denne grafiske beskrivelse er samlet i NodeUserControl. -->
-        <DataTemplate DataType="{x:Type VM:NodeViewModel}">
-            <Canvas>
-                <View:ClassUserControl/>
-            </Canvas>
-        </DataTemplate>
         <DataTemplate DataType="{x:Type VM:EdgeViewModel}">
             <Canvas>
                 <View:EdgeUserControl/>
+            </Canvas>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type VM:NodeViewModel}">
+            <Canvas>
+                <View:ClassUserControl/>
             </Canvas>
         </DataTemplate>
     </Window.Resources>
    <Window.InputBindings>
       <KeyBinding Command="{Binding KeyDownUndoCommand}" CommandParameter="undo" Gesture="CTRL+Z"/>
       <KeyBinding Command="{Binding KeyDownUndoCommand}" CommandParameter="redo" Gesture="CTRL+Y" />
-   </Window.InputBindings>
+      <KeyBinding Command="{Binding KeyDownSaveLoadCommand}" CommandParameter="save" Gesture="CTRL+S"/>
+      <KeyBinding Command="{Binding KeyDownSaveLoadCommand}" CommandParameter="load" Gesture="CTRL+O"/>
+      <KeyBinding Command="{Binding KeyDownCopyPasteCommand}" CommandParameter="copy" Gesture="CTRL+C"/>
+      <KeyBinding Command="{Binding KeyDownCopyPasteCommand}" CommandParameter="paste" Gesture="CTRL+V"/>
+      <KeyBinding Command="{Binding KeyDownExportCommand}" CommandParameter="export" Gesture="CTRL+P" />
+      <KeyBinding Command="{Binding KeyDownNewNodeCommand}" CommandParameter="newclass" Gesture="CTRL+N" />
+    </Window.InputBindings>
    
     <DockPanel>
 
@@ -36,7 +42,7 @@
         <View:RibbonUserContol DockPanel.Dock="Top" Focusable="True" x:Name="QContol"/>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock>Her er en statusbar, den skal nok også laves som userControl</TextBlock>
+                <TextBlock Text="{Binding StatusBar}"/>
             </StatusBarItem>
         </StatusBar>
         <Grid>
@@ -49,8 +55,8 @@
             <Canvas.RenderTransform>
                 <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}"></ScaleTransform>
             </Canvas.RenderTransform>
-            <ItemsControl ItemsSource="{Binding Classes}"/>
             <ItemsControl ItemsSource="{Binding Edges}"/>
+            <ItemsControl ItemsSource="{Binding Classes}"/>
             </Canvas>
         </Grid>
     </DockPanel>

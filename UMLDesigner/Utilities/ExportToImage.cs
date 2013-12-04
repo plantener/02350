@@ -17,7 +17,6 @@ namespace UMLDesigner.Utilities
         {
             if (path == null) return;
             surface.Background = new SolidColorBrush(Colors.White);
-            surface.RenderTransform = new ScaleTransform(1,1);
             // Save current canvas transform
             Transform transform = surface.LayoutTransform;
             // reset current transform (in case it is scaled or rotated)
@@ -51,7 +50,7 @@ namespace UMLDesigner.Utilities
                 // save the data to the stream
                 encoder.Save(outStream);
             }
-            surface.Background = new SolidColorBrush(Colors.Transparent);
+            surface.Background = null;
             surface.LayoutTransform = transform;
         }
     }
