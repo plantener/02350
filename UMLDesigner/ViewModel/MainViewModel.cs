@@ -146,13 +146,15 @@ namespace UMLDesigner.ViewModel
 
         public class SaveLoadCollection
         {
-            public ObservableCollection<NodeViewModel> tempClasses = new ObservableCollection<NodeViewModel>();
+            public ObservableCollection<Node> tempNodes = new ObservableCollection<Node>();
             public ObservableCollection<EdgeViewModel> tempEdges = new ObservableCollection<EdgeViewModel>();
             public SaveLoadCollection(ObservableCollection<NodeViewModel> classes, ObservableCollection<EdgeViewModel> edges)
             {
-                tempClasses = classes;
+                foreach (NodeViewModel node in classes)
+                {
+                    tempNodes.Add(node.node);
+                }
                 tempEdges = edges;
-                System.Console.WriteLine("classes save: " + classes[0].Attributes.Count + " load: " + tempClasses[0].Attributes.Count);
             }
             public SaveLoadCollection() { }
 
@@ -177,13 +179,10 @@ namespace UMLDesigner.ViewModel
                 SaveLoadCollection Load = (SaveLoadCollection)serializer.Deserialize(wr);
                 Classes.Clear();
                 Edges.Clear();
-                ClassIndex = Load.tempClasses.Count;
-                foreach (NodeViewModel tempNode in Load.tempClasses)
+                ClassIndex = Load.tempNodes.Count;
+                foreach (Node tempNode in Load.tempNodes)
                 {
-                    System.Console.WriteLine();
-                    System.Console.WriteLine("Classes load: " + tempNode.node.Attributes.Count);
-                    System.Console.WriteLine();
-                    Classes.Add(tempNode);
+                    Classes.Add(new NodeViewModel(tempNode));
 
                 }
                 foreach (EdgeViewModel edge in Load.tempEdges)
