@@ -72,9 +72,5 @@ namespace UMLDesigner.ViewModel
         {
             node = new Node();
         }
-        public NodeViewModel(Node node)
-        {
-            this.node = node;
-        }
     }
 }

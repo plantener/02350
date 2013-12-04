@@ -12,6 +12,7 @@ using System.Xml.Serialization;
 using UMLDesigner.Command;
 using UMLDesigner.Model;
 using UMLDesigner.Utilities;
+using System.Threading;
 
 namespace UMLDesigner.ViewModel
 {
@@ -151,23 +152,24 @@ namespace UMLDesigner.ViewModel
             {
                 tempClasses = classes;
                 tempEdges = edges;
+                System.Console.WriteLine("classes save: " + classes[0].Attributes.Count + " load: " + tempClasses[0].Attributes.Count);
             }
             public SaveLoadCollection() { }
 
         }
 
-        private void SerializeObjectToXML(ObservableCollection<NodeViewModel> classes, ObservableCollection<EdgeViewModel> edges, string filepath)
-        {
-            SaveLoadCollection serializetype = new SaveLoadCollection(classes, edges);
-            XmlSerializer serializer = new XmlSerializer(typeof(SaveLoadCollection));
-            using (StreamWriter wr = new StreamWriter(filepath))
+            public void SerializeObjectToXML(string filepath)
             {
-                serializer.Serialize(wr, serializetype);
+                SaveLoadCollection serializetype = new SaveLoadCollection(Classes, Edges);
+                XmlSerializer serializer = new XmlSerializer(typeof(SaveLoadCollection));
+                using (StreamWriter wr = new StreamWriter(filepath))
+                {
+                    serializer.Serialize(wr, serializetype);
+                }
+
             }
 
-        }
-
-        private void DeSerializeObjectToXML(string filepath)
+            private void DeSerializeObjectToXML(string filepath)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(SaveLoadCollection));
             using (StreamReader wr = new StreamReader(filepath))
@@ -175,34 +177,38 @@ namespace UMLDesigner.ViewModel
                 SaveLoadCollection Load = (SaveLoadCollection)serializer.Deserialize(wr);
                 Classes.Clear();
                 Edges.Clear();
-                ClassIndex = 1;
+                ClassIndex = Load.tempClasses.Count;
                 foreach (NodeViewModel tempNode in Load.tempClasses)
                 {
+                    System.Console.WriteLine();
+                    System.Console.WriteLine("Classes load: " + tempNode.node.Attributes.Count);
+                    System.Console.WriteLine();
                     Classes.Add(tempNode);
 
                 }
-                    foreach (EdgeViewModel edge in Load.tempEdges)
+                foreach (EdgeViewModel edge in Load.tempEdges)
+                {
+                    NodeViewModel NVMEndA = null;
+                    NodeViewModel NVMEndB = null;
+                    foreach (NodeViewModel node in Classes)
                     {
-                        NodeViewModel NVMEndA = null;
-                        NodeViewModel NVMEndB = null;
-                        foreach (NodeViewModel node in Classes)
+                        if (edge.NVMEndA.Id == node.Id)
                         {
-                            if (edge.NVMEndA.Id == node.Id)
-                            {
-                                NVMEndA = node;
-                            }
-                            else if (edge.NVMEndB.Id == node.Id)
-                            {
-                                NVMEndB = node;
-                            }
+                            NVMEndA = node;
                         }
-                        EdgeViewModel tempEdge = new EdgeViewModel(NVMEndA, NVMEndB, edge.edge);
-                        undoRedoController.AddAndExecute(new AddEdgeCommand(Edges, tempEdge));
+                        else if (edge.NVMEndB.Id == node.Id)
+                        {
+                            NVMEndB = node;
+                        }
                     }
+                    EdgeViewModel tempEdge = new EdgeViewModel(NVMEndA, NVMEndB, edge.edge);
+                    undoRedoController.AddAndExecute(new AddEdgeCommand(Edges, tempEdge));
+                }
                 undoRedoController.Reset();
 
             }
         }
+
 
         private void Load()
         {
@@ -234,7 +240,8 @@ namespace UMLDesigner.ViewModel
                 return;
 
             string path = dialog.FileName;
-            SerializeObjectToXML(Classes, Edges, path);
+            Thread saveThread = new Thread(() => SerializeObjectToXML(path));
+            saveThread.Start();
             //foreach (NodeViewModel node in Classes)
             //{
             //    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(node.GetType());
