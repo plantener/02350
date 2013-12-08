@@ -289,29 +289,35 @@ namespace UMLDesigner.ViewModel
             int lengthHalf;
             PointCollection temp = new PointCollection();
             int a = 5, h = 20, l = 25;
-            if (NVMEndA.West.X - 30 <= NVMEndB.East.X && NVMEndA.West.X + 30 >= NVMEndB.East.X && (NVMEndA.North.Y >= NVMEndB.South.Y || NVMEndA.South.Y <= NVMEndB.North.Y))
+            if (NVMEndA.West.X >= NVMEndB.East.X && NVMEndA.West.X + 30 >= NVMEndB.East.X && (NVMEndA.North.Y >= NVMEndB.South.Y || NVMEndA.South.Y <= NVMEndB.North.Y))
             {
                 if (NVMEndA.North.Y >= NVMEndB.South.Y)
                 {
                     temp.Add(NVMEndA.North);
                     XMultA = new Point(NVMEndA.North.X - l - a, NVMEndA.North.Y - h - a);
+                    temp.Add(new Point(NVMEndA.North.X, NVMEndB.East.Y));
+                    temp.Add(NVMEndB.East);
+                    setAnchor("east");
+                    XMultB = new Point(NVMEndB.East.X + a, NVMEndB.East.Y - h - a);
                 }
                 else
                 {
                     temp.Add(NVMEndA.South);
-                    XMultA = new Point(NVMEndA.South.X + a, NVMEndA.South.Y + a);
+                    XMultA = new Point(NVMEndA.West.X - l - a, NVMEndA.West.Y + a);
+                    temp.Add(NVMEndA.West);
+                    temp.Add(new Point(NVMEndB.North.X, NVMEndA.West.Y));
+                    temp.Add(NVMEndB.North);
+                    setAnchor("north");
+                    XMultB = new Point(NVMEndB.North.X - l - a, NVMEndB.North.Y - h - a);
                 }
-                temp.Add(new Point(NVMEndA.North.X, NVMEndB.East.Y));
-                temp.Add(NVMEndB.East);
-                setAnchor("east");
-                XMultB = new Point(NVMEndB.East.X + a, NVMEndB.East.Y - h - a);
 
             }
-            else if (NVMEndB.West.X - 30 <= NVMEndA.East.X && NVMEndB.West.X + 30 >= NVMEndA.East.X && (NVMEndA.North.Y > NVMEndB.South.Y || NVMEndA.South.Y < NVMEndB.North.Y))
+            else if (NVMEndA.East.X <= NVMEndB.West.X && NVMEndB.West.X + 30 >= NVMEndA.East.X && (NVMEndA.North.Y > NVMEndB.South.Y || NVMEndA.South.Y < NVMEndB.North.Y))
             {
-                temp.Add(NVMEndA.East);
                 if (NVMEndA.North.Y >= NVMEndB.South.Y)
                 {
+                    temp.Add(NVMEndA.East);
+                    XMultA = new Point(NVMEndA.East.X + a, NVMEndA.East.Y - h - a);
                     temp.Add(new Point(NVMEndB.South.X, NVMEndA.East.Y));
                     temp.Add(NVMEndB.South);
                     setAnchor("south");
@@ -319,12 +325,13 @@ namespace UMLDesigner.ViewModel
                 }
                 else
                 {
-                    temp.Add(new Point(NVMEndB.North.X, NVMEndA.East.Y));
-                    temp.Add(NVMEndB.North);
-                    setAnchor("north");
-                    XMultB = new Point(NVMEndB.North.X - l - a, NVMEndB.North.Y - h - a);
+                    temp.Add(NVMEndA.South);
+                    XMultA = new Point(NVMEndA.South.X + a, NVMEndA.South.Y + a);
+                    temp.Add(new Point(NVMEndA.South.X, NVMEndB.West.Y));
+                    temp.Add(NVMEndB.West);
+                    setAnchor("west");
+                    XMultB = new Point(NVMEndB.West.X - l - a, NVMEndB.West.Y + a);
                 }
-                XMultA = new Point(NVMEndA.East.X + a, NVMEndA.East.Y - h - a);
 
             }
             else if (NVMEndA.West.X >= NVMEndB.East.X)

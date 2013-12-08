@@ -22,21 +22,22 @@
             </Canvas>
         </DataTemplate>
     </Window.Resources>
-   <Window.InputBindings>
-      <KeyBinding Command="{Binding KeyDownUndoCommand}" CommandParameter="undo" Gesture="CTRL+Z"/>
-      <KeyBinding Command="{Binding KeyDownUndoCommand}" CommandParameter="redo" Gesture="CTRL+Y" />
-      <KeyBinding Command="{Binding KeyDownSaveLoadCommand}" CommandParameter="save" Gesture="CTRL+S"/>
-      <KeyBinding Command="{Binding KeyDownSaveLoadCommand}" CommandParameter="load" Gesture="CTRL+O"/>
-      <KeyBinding Command="{Binding KeyDownCopyPasteCommand}" CommandParameter="copy" Gesture="CTRL+C"/>
-      <KeyBinding Command="{Binding KeyDownCopyPasteCommand}" CommandParameter="paste" Gesture="CTRL+V"/>
-      <KeyBinding Command="{Binding KeyDownExportCommand}" CommandParameter="export" Gesture="CTRL+P" />
-      <KeyBinding Command="{Binding KeyDownNewNodeCommand}" CommandParameter="newclass" Gesture="CTRL+N" />
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding KeyDownUndoCommand}" CommandParameter="undo" Gesture="CTRL+Z"/>
+        <KeyBinding Command="{Binding KeyDownUndoCommand}" CommandParameter="redo" Gesture="CTRL+Y" />
+        <KeyBinding Command="{Binding KeyDownSaveLoadCommand}" CommandParameter="save" Gesture="CTRL+S"/>
+        <KeyBinding Command="{Binding KeyDownSaveLoadCommand}" CommandParameter="load" Gesture="CTRL+O"/>
+        <KeyBinding Command="{Binding KeyDownCopyPasteCommand}" CommandParameter="copy" Gesture="CTRL+C"/>
+        <KeyBinding Command="{Binding KeyDownCopyPasteCommand}" CommandParameter="paste" Gesture="CTRL+V"/>
+        <KeyBinding Command="{Binding KeyDownExportCommand}" CommandParameter="export" Gesture="CTRL+P" />
+        <KeyBinding Command="{Binding KeyDownNewNodeCommand}" CommandParameter="newclass" Gesture="CTRL+N" />
+        <KeyBinding Command="{Binding KeyDownDeleteCommand}" CommandParameter="delete" Gesture="CTRL+DEL" />
     </Window.InputBindings>
-   
+
     <DockPanel>
 
         <DockPanel.Resources>
-        <util:BoolToStringConverter x:Key="CGridVisibility" FalseValue="Collapsed" TrueValue="Visible" />
+            <util:BoolToStringConverter x:Key="CGridVisibility" FalseValue="Collapsed" TrueValue="Visible" />
         </DockPanel.Resources>
 
         <View:RibbonUserContol DockPanel.Dock="Top" Focusable="True" x:Name="QContol"/>
@@ -52,11 +53,11 @@
                 <View:GridWithRulerxaml Visibility="{Binding GridVisibility, Converter={StaticResource CGridVisibility}}"  />
             </AdornerDecorator>
             <Canvas>
-            <Canvas.RenderTransform>
-                <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}"></ScaleTransform>
-            </Canvas.RenderTransform>
-            <ItemsControl ItemsSource="{Binding Edges}"/>
-            <ItemsControl ItemsSource="{Binding Classes}"/>
+                <Canvas.RenderTransform>
+                    <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}"></ScaleTransform>
+                </Canvas.RenderTransform>
+                <ItemsControl ItemsSource="{Binding Edges}"/>
+                <ItemsControl ItemsSource="{Binding Classes}"/>
             </Canvas>
         </Grid>
     </DockPanel>

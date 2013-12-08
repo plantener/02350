@@ -53,8 +53,8 @@ namespace UMLDesigner.Utilities
             FrameworkElement elem = e.OriginalSource as FrameworkElement;
             if (elem != null)
             {
-                SetObservedWidth(elem, elem.ActualWidth);
-                SetObservedHeight(elem, elem.ActualHeight);
+                elem.SetCurrentValue(ObservedWidthProperty, elem.ActualWidth);
+                elem.SetCurrentValue(ObservedHeightProperty, elem.ActualHeight);
             }
         }
 
