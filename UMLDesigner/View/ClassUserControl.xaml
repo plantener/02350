@@ -9,7 +9,7 @@
              xmlns:ViewModel="clr-namespace:UMLDesigner.ViewModel" x:Class="UMLDesigner.View.ClassUserControl" 
              mc:Ignorable="d"
              Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}"
-             d:DesignHeight="300" d:DesignWidth="300" 
+             d:DesignHeight="300" d:DesignWidth="300"
              Util:SizeObserver.Observe="true" Util:SizeObserver.ObservedHeight="{Binding Height, Mode=OneWayToSource}"
              Util:SizeObserver.ObservedWidth="{Binding Width, Mode=OneWayToSource}">
 

@@ -8,7 +8,6 @@
     <Grid>
         <Canvas>
             <TextBox Width="25" Height="20" TextAlignment="Center" Text="{Binding MultA, UpdateSourceTrigger=PropertyChanged}" Canvas.Top="{Binding XMultA.Y}" Canvas.Left="{Binding XMultA.X}" FontSize="12" Background="Transparent" BorderBrush="LightGray" IsEnabled="{Binding MultAllowed}" BorderThickness="{Binding MultBorder}"/>
-            <!--<TextBox Width="75" Height="20" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Canvas.Top="{Binding PosName.Y}" Canvas.Left="{Binding PosName.X}" FontSize="12" Background="Transparent" BorderBrush="LightGray" BorderThickness="1" TextAlignment="Center"/>-->
             <TextBox Width="25" Height="20" TextAlignment="Center" Text="{Binding MultB, UpdateSourceTrigger=PropertyChanged}" Canvas.Top="{Binding XMultB.Y}" Canvas.Left="{Binding XMultB.X}" FontSize="12" Background="Transparent" BorderBrush="LightGray" IsEnabled="{Binding MultAllowed}" BorderThickness="{Binding MultBorder}"/>
         </Canvas>
         <Path Stroke="{Binding SelectedColor}" StrokeThickness="1" Data="{Binding Path}" StrokeDashArray="{Binding Dashed}"/>
